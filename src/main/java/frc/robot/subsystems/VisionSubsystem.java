@@ -52,7 +52,8 @@ public class VisionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println(openMV.);
+    openMV.read(true, bytes, 4);
+    System.out.println(ByteBuffer.wrap(bytes).getFloat());
   }
 
   @Override
