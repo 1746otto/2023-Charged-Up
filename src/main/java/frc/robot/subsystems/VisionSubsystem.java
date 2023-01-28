@@ -4,20 +4,25 @@
 
 package frc.robot.subsystems;
 
+import java.nio.ByteBuffer;
+import java.util.function.Consumer;
+
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.lang.Integer;
 
 public class VisionSubsystem extends SubsystemBase {
   private SPI openMV;
-  private byte[] bytes = new byte[]{(byte)0xff, (byte)0x0f};
+  private byte[] bytes = new byte[4];
   /** Creates a new ExampleSubsystem. */
   public VisionSubsystem() {
     openMV = new SPI(Port.kOnboardCS0);
     openMV.setClockRate(4000000);//4mil
     openMV.setChipSelectActiveLow();
-    openMV.write(bytes, 2);
+    openMV.setMode(SPI.Mode.kMode2);
+    
   }
 
   /**
@@ -25,14 +30,6 @@ public class VisionSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public CommandBase exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
@@ -43,10 +40,19 @@ public class VisionSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
+  
+  public byte[] intToByteArray(int num) {
+    byte[] returnBytes = new byte[4];
+    for(int i = 0; i < 4; i++) {
+      returnBytes[i] = (byte)((3-i) >> num & 0xff);
+    }
+    return returnBytes;
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    System.out.println(openMV.);
   }
 
   @Override
