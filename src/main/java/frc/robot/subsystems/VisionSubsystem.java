@@ -23,7 +23,7 @@ public class VisionSubsystem extends SubsystemBase {
   private SerialPort openMV;
   private byte[] bytes = new byte[bytesTransfered];
   private int[] buffer = new int[1];
-  private ByteBuffer byteBuffer = ByteBuffer.allocate(bytesTransfered);
+  private ByteBuffer byteBuffer = ByteBuffer.allocateDirect(16);
   /** Creates a new ExampleSubsystem. */
   public VisionSubsystem() {
     openMVSPI = new SPI(Port.kOnboardCS0);
@@ -31,9 +31,9 @@ public class VisionSubsystem extends SubsystemBase {
     openMVSPI.setChipSelectActiveLow();
     openMVSPI.setMode(SPI.Mode.kMode2);
     openMVSPI.initAuto(bytesTransfered);
-    openMVSPI.setAutoTransmitData(new byte[]{0x31}, 0);
+    openMVSPI.setAutoTransmitData(new byte[]{0x31}, 0);//this can be used for checking if we are connected
     openMVSPI.startAutoRate(1.0/(double)baudRate);
-    openMVSPI.initAccumulator(1.0/(double)baudRate, 0, bytesTransfered, 0, 0, 0, bytesTransfered*8, false, false);
+    
     // try {
     //   openMV = new SerialPort(9600, SerialPort.Port.kUSB);
     //   System.out.println("Connected on kUSB");
@@ -94,10 +94,19 @@ public class VisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //openMV.read(true, bytes, 20);
     // openMVSPI.read(true, bytes, 4);
+    byteBuffer.clear();
+    try {
     openMVSPI.readAutoReceivedData(byteBuffer, bytesTransfered, 0.01);
+    }
+    catch(Exception e) {
+      System.out.println("no Data"); //this accurately detects if we do not send anything.
+      return;
+    }
+    
     //System.out.println(ByteBuffer.wrap(bytes).getFloat());
     System.out.println(String.format("%8s", Integer.toBinaryString(byteBuffer.getInt())).replace(' ', '0'));
     System.out.println(openMVSPI.getAccumulatorCount());
+    openMVSPI.resetAccumulator();
   }
 
   @Override
