@@ -18,7 +18,7 @@ import java.lang.Integer;
 public class VisionSubsystem extends SubsystemBase {
   //private SPI openMVSPI;
   private static final int bytesTransfered = 4;
-  private static final int baudRate = 100000000/128;//400MHz on the cpu, half that on the ahb, half that on the apb = 100MHz. a prescaler of 128 is closest to our desired baudrate
+  private static final int baudRate = 120000000/128;//480MHz on the cpu, half that on the ahb, half that on the apb = 120MHz. a prescaler of 128 is closest to our desired baudrate
   private SPI openMVSPI;
   private SerialPort openMV;
   private byte[] bytes = new byte[bytesTransfered];
