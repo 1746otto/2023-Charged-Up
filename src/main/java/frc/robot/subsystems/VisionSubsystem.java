@@ -4,67 +4,34 @@
 
 package frc.robot.subsystems;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.function.Consumer;
-
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.lang.Integer;
+import edu.wpi.first.wpilibj.AnalogInput;
 
 public class VisionSubsystem extends SubsystemBase {
-  //private SPI openMVSPI;
-  private static final int bytesTransfered = 4;
-  private static final int baudRate = 120000000/128;//480MHz on the cpu, half that on the ahb, half that on the apb = 120MHz. a prescaler of 128 is closest to our desired baudrate
-  private SPI openMVSPI;
-  private SerialPort openMV;
-  private byte[] bytes = new byte[bytesTransfered];
-  private int[] buffer = new int[1];
-  private ByteBuffer byteBuffer = ByteBuffer.allocateDirect(16);
+  AnalogInput openMV;
+  int intOpenMVValue;
+  
   /** Creates a new ExampleSubsystem. */
   public VisionSubsystem() {
-    openMVSPI = new SPI(Port.kOnboardCS0);
-    openMVSPI.setClockRate(baudRate);
-    openMVSPI.setChipSelectActiveLow();
-    openMVSPI.setMode(SPI.Mode.kMode2);
-    openMVSPI.initAuto(bytesTransfered);
-    openMVSPI.setAutoTransmitData(new byte[]{0x31}, 0);//this can be used for checking if we are connected
-    openMVSPI.startAutoRate(1.0/(double)baudRate);
-    
-    // try {
-    //   openMV = new SerialPort(9600, SerialPort.Port.kUSB);
-    //   System.out.println("Connected on kUSB");
-    // }
-    // catch (Exception e) {
-    //     System.out.println("Failed, trying kUSB1");
-    //     try {
-    //       openMV = new SerialPort(9600, SerialPort.Port.kUSB1);
-    //       System.out.println("Connected on kUSB1");
-    //     }
-    //     catch (Exception e1) {
-    //       System.out.println("Failed, trying kUSB2");
-    //       try {
-    //         openMV = new SerialPort(9600, SerialPort.Port.kUSB2);
-    //         System.out.println("Connected on kUSB2");
-    //       }
-    //       catch (Exception e2) {
-    //         System.out.println("Failed all connections");
-    //       }
-    //     }
-    // }
-  
-    // openMV.setTimeout(0.01);
-    
-  }
+    openMV = new AnalogInput(2);
+    openMV.setAverageBits(8);//48-52@0 143-146@100 536-540@400 1025-1034@1000 1515-1522@1500 2006-2013@2000 2499-2515@2500 2992-3006@3000 3487-3503@3500 3981-3995@4000 4072-4086@4095
+    //global sample rate is 50kHz
 
+  }
   /**
    * Example command factory method.
    *
    * @return a command
    */
+  public CommandBase exampleMethodCommand() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          /* one-time action goes here */
+        });
+  }
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
@@ -75,38 +42,22 @@ public class VisionSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
-  
-  public byte[] intToByteArray(int num) {
-    byte[] returnBytes = new byte[4];
-    for(int i = 0; i < 4; i++) {
-      returnBytes[i] = (byte)((3-i) >> num & 0xff);
-    }
-    return returnBytes;
+
+  public double parseRotation(int rawVal) {
+    return ((rawVal & 0b1111111111)/1000.0) + (rawVal >> 10) - Math.PI/2.0;
   }
-  public String byteToHex(byte num) {
-    char[] hexDigits = new char[2];
-    hexDigits[0] = Character.forDigit((num >> 4) & 0xF, 16);
-    hexDigits[1] = Character.forDigit((num & 0xF), 16);
-    return new String(hexDigits);
-}
+
   @Override
   public void periodic() {
+    intOpenMVValue = ((int)(((openMV.getAverageVoltage()*819.2*1.515151515152)-45.1258591)/0.98497929));
+    if (intOpenMVValue > 4096){
+      intOpenMVValue = 4096;
+    }
+    else if(intOpenMVValue < 0){
+      intOpenMVValue = 0;
+    }
+    System.out.println(parseRotation(intOpenMVValue));
     // This method will be called once per scheduler run
-    //openMV.read(true, bytes, 20);
-    // openMVSPI.read(true, bytes, 4);
-    byteBuffer.clear();
-    try {
-    openMVSPI.readAutoReceivedData(byteBuffer, bytesTransfered, 0.01);
-    }
-    catch(Exception e) {
-      System.out.println("no Data"); //this accurately detects if we do not send anything.
-      return;
-    }
-    
-    //System.out.println(ByteBuffer.wrap(bytes).getFloat());
-    System.out.println(String.format("%8s", Integer.toBinaryString(byteBuffer.getInt())).replace(' ', '0'));
-    System.out.println(openMVSPI.getAccumulatorCount());
-    openMVSPI.resetAccumulator();
   }
 
   @Override
