@@ -10,7 +10,8 @@ import frc.robot.Constants.IndexerConstants;
 
 
 public class Indexersubsystem extends SubsystemBase {
-    CANSparkMax Motor;
+    
+    CANSparkMax MotorTread;
     CANSparkMax Motor1;
     CANSparkMax Motor2;
     
@@ -18,31 +19,36 @@ public class Indexersubsystem extends SubsystemBase {
 
     public Indexersubsystem() {
 
-        Motor = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
+        MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
 
     }
 
-    public void runCustomPower(double input) {
+    
 
-        Motor1.set(input);
-        Motor2.set(input);
-        Motor.set(input);
-
-
+    
+    public void runMotor1Clockwise() {
+        Motor1.set(IndexerConstants.speed);
+      }
+    public void runMotor2Counterclockwise() {
+        Motor2.set(IndexerConstants.speed);
     }
+    public void runMotorTread() {
+        MotorTread.set(IndexerConstants.speed);
+    }
+    public void runAllMotors() {
+        runMotor1Clockwise();
+        runMotor2Counterclockwise();
+        runMotorTread();
+      }
+      public void runZeroPower() {
 
-    public void runZeroPower() {
-
-        Motor.stopMotor();
+        MotorTread.stopMotor();
         Motor1.stopMotor();
         Motor2.stopMotor();
     }
-    public void turnOnIndexer() {
-        runCustomPower(IndexerConstants.kIndexerMotor);
 
-    }
 
     public void turnOffIntake() {
         runZeroPower();
