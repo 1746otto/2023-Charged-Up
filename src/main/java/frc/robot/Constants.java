@@ -16,6 +16,17 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class ControllerConstants {
+    public static final int kport = 0;
+    public static final int kport2 = 1;
+    public static final double kdeadZone = .125;
+    public static final double kDriveControl = 2.0;
+  }
+
+
+
+
   public static class IndexerConstants {
 
     public static final int kIndexerMotor = 1;
