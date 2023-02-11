@@ -22,6 +22,7 @@ public class Indexersubsystem extends SubsystemBase {
         MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
+        Motor2.setInverted(true);
 
     }
 
