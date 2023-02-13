@@ -31,6 +31,17 @@ public final class Constants {
 
     public static final int kIndexerMotor = 1;
     public static final int speed = 2;
+    public static final int reverseSpeed = -2;
+    public static final int kChannel = 2;
+    public static final int kExtendSolenoidChannel = 12;
+    public static final int kRetractSolenoidChannel = 13;
+   
+
 
   }
+
+  public static class RobotConstants {
+    public static final int kREVPH = 2;
+  }
+
 }

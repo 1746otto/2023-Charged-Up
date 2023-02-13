@@ -28,6 +28,8 @@ import frc.robot.commands.*;
  */
 public class RobotContainer {
   private final XboxController m_controller = new XboxController(ControllerConstants.kport);
+  private final XboxController m_controller2 = new XboxController(ControllerConstants.kport2);
+
 
   // The robot's subsystems and commands are defined here...
   private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
@@ -49,11 +51,14 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton xBoxY = new JoystickButton(m_controller, XboxController.Button.kY.value);
+    JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
+    JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
+    JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
    
 
-    
-    xBoxY.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
+    xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
+    xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
+    xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
   }
 
   public Command getAutonomousCommand() {
