@@ -6,6 +6,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.VisionSubsystem.pipelineStates;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 
 public class VisionSubsystem extends SubsystemBase {
   private boolean validTarget;
@@ -20,7 +23,10 @@ public class VisionSubsystem extends SubsystemBase {
   private double tvert;
   private double getpipe;
   private double camtran;
+  private int tagID;
   private double[] botPose; //XYZRPY
+
+  public static enum pipelineStates{APRILTAG, RRTAPE, ERROR};
 
   public VisionSubsystem() {
 
@@ -52,7 +58,11 @@ public class VisionSubsystem extends SubsystemBase {
           .getDouble(0.0);
       camtran = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("camtran")
           .getDouble(0.0);
-      botPose = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("botpose").getDoubleArray(new double[6]);
+      tagID = (int)NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tid")
+          .getDouble(0.0);
+      botPose = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("botpose")
+          .getDoubleArray(new double[6]);
+
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
@@ -106,15 +116,45 @@ public class VisionSubsystem extends SubsystemBase {
     return camtran;
   }
 
+  public int getTagID() {
+    return tagID;
+  }
+
   public Pose2d getPose2d() {
     return new Pose2d(new Translation2d(botPose[0], botPose[2]), Rotation2d.fromDegrees(botPose[5]));
+  }
+
+  public pipelineStates getPipline() {
+    switch((int)NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("getpipe").getInteger(0)) {
+      case 0:
+        return pipelineStates.APRILTAG;
+      case 1:
+        return pipelineStates.RRTAPE;
+      default:
+        return pipelineStates.ERROR;
+    }
+  }
+
+  public void setToAprilTag(pipelineStates state) {
+    // switch(state) {
+    //   case APRILTAG:
+    //     NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("pipeline").setNumber(0);
+    //   case RRTAPE:
+    //   NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("pipeline").setNumber(1);
+    //   default:
+    //     return;
+    // }
+    NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("pipeline").setNumber(0);
+  }
+  public void setToRRTape(pipelineStates state) {
+    NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("pipeline").setNumber(1);
   }
 
   @Override
   public void periodic() {
       // TODO Auto-generated method stub
       fetchvision();
-      System.out.println(getPose2d().getRotation());
+      System.out.println(getXOffset());
   }
 }
 
