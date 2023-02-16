@@ -42,6 +42,8 @@ public final class Constants {
     public static final int CANID1 = 10;
     public static final int CANID2 = 11;
     public static final double kFullPower = 0.4;
-    public static final int kLimitSwitch = 1;
+    public static final int kLimitSwitch1 = 1;
+    public static final int kLimitSwitch2 = 1;
+    public static final double kZeroPower = 0.0;
   }
 }

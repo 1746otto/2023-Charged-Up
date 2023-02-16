@@ -34,6 +34,15 @@ public class IntakeRollerSubsystem extends SubsystemBase {
   public void runZeroPower() {
     masterMotor.set(0);
   }
+
+  public void runClockwise(double input) {
+    masterMotor.set(input);
+  }
+
+  public void runCounterClockwise(double input) {
+    masterMotor.set((-1 * input));
+  }
+
   /**
    * Example command factory method.
    *

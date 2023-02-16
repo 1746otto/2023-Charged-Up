@@ -16,15 +16,38 @@ public class IntakeExtendSubsystem extends SubsystemBase {
 /** Creates a new ExampleSubsystem. */
   CANSparkMax masterMotor;
   CANSparkMax slaveMotor;
-  DigitalInput limitSwitch;
+  DigitalInput limitSwitch1;
+  DigitalInput limitSwitch2;
+
 
   public IntakeExtendSubsystem() {
     masterMotor = new CANSparkMax(IntakeExtendConstants.CANID1, MotorType.kBrushless);
     slaveMotor = new CANSparkMax(IntakeExtendConstants.CANID2, MotorType.kBrushless);
-    limitSwitch = new DigitalInput(IntakeExtendConstants.kLimitSwitch);
+    limitSwitch1 = new DigitalInput(IntakeExtendConstants.kLimitSwitch1);
+    limitSwitch2 = new DigitalInput(IntakeExtendConstants.kLimitSwitch2);
 
     slaveMotor.follow(masterMotor);
     slaveMotor.setInverted(true);
+  }
+
+  public void extend() {
+    masterMotor.set(IntakeExtendConstants.kFullPower);
+  }
+
+  public void retract() {
+    masterMotor.set(-IntakeExtendConstants.kFullPower);
+  }
+  
+  public void stopRunning() {
+    masterMotor.set(IntakeExtendConstants.kZeroPower);
+  }
+
+  public boolean isExtended() {
+    return limitSwitch1.get();
+  }
+
+  public boolean isRetracted() {
+    return limitSwitch2.get();
   }
 
   /**
