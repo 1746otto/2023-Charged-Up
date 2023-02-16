@@ -73,7 +73,8 @@ public class RobotContainer {
 
         xBoxLBumper.toggleOnTrue(new PlacerHorizontalCommand(m_PlacerHorizontalSubsystem));
         xBoxRBumper.toggleOnTrue(new PlacerVerticalCommand(m_PlacerVerticalSubsystem));
-        xboxX.toggleOnTrue(new IntakeExtendCommand(m_IntakeExtendSubsystem).andThen(new IntakeRollCommand(m_IntakeRollerSubsystem, m_IntakeExtendSubsystem)));
+
+        xboxX.toggleOnTrue(new IntakeExtendCommand(m_IntakeExtendSubsystem).alongWith(new IntakeRollCommand(m_IntakeRollerSubsystem, m_IntakeExtendSubsystem)));
         xboxX.toggleOnFalse(new IntakeRetractCommand(m_IntakeExtendSubsystem));
 
 
