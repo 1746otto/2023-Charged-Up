@@ -27,6 +27,11 @@ public class RobotContainer {
   
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    
+
+    // The robot's subsystems and commands are defined here...
+    private final PlungerSubsystem m_PlacerVerticalSubsystem = new PlungerSubsystem();
+  
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -48,6 +53,10 @@ public class RobotContainer {
 
     
 
+
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -89,6 +98,20 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+      JoystickButton xBoxY = new JoystickButton(m_controller, XboxController.Button.kY.value);
+      JoystickButton xBoxB = new JoystickButton(m_controller, XboxController.Button.kB.value);
+      JoystickButton xBoxA = new JoystickButton(m_controller, XboxController.Button.kA.value);
+      JoystickButton xboxX = new JoystickButton(m_controller, XboxController.Button.kX.value);
+      JoystickButton xBoxLBumper =
+          new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+      JoystickButton xBoxRBumper =
+          new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+  
+        
+          xBoxRBumper.toggleOnTrue(new PlungerCommand(m_PlacerVerticalSubsystem));
+  
+  
+  
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
@@ -101,6 +124,14 @@ public class RobotContainer {
         xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
     }
 
+ 
+
+/**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
