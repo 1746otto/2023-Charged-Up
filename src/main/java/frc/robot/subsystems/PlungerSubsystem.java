@@ -10,25 +10,25 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.PlacerConstants;
+import frc.robot.Constants.PlungerConstants;
 import frc.robot.Constants.RobotConstants;
 
-public class PlacerVerticalSubsystem extends SubsystemBase {
+public class PlungerSubsystem extends SubsystemBase {
     private final Solenoid pistons;
     private final Solenoid extend;
     private final Solenoid disengage;
-    public PlacerVerticalSubsystem() {
+    public PlungerSubsystem() {
         pistons =
-        new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, PlacerConstants.kChannel);
+        new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, PlungerConstants.kChannel);
     extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        PlacerConstants.kExtendSolenoidChannel);
+        PlungerConstants.kExtendSolenoidChannel);
     disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        PlacerConstants.kRetractSolenoidChannel);
+        PlungerConstants.kRetractSolenoidChannel);
   }
 
     
 public boolean getEngaged() {
-    return pistons.get() == PlacerConstants.kPlacerEngaged;
+    return pistons.get() == PlungerConstants.kPlacerEngaged;
 }
 public void extendPlacerUp() {
     extend.set(true);

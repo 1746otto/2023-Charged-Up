@@ -1,11 +1,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PlacerVerticalSubsystem;
+import frc.robot.subsystems.PlungerSubsystem;
 
-public class PlacerVerticalCommand extends CommandBase{
-    private final PlacerVerticalSubsystem m_placer;
-    public PlacerVerticalCommand(PlacerVerticalSubsystem subsystem) {
+public class PlungerCommand extends CommandBase{
+    private final PlungerSubsystem m_placer;
+    public PlungerCommand(PlungerSubsystem subsystem) {
         m_placer = subsystem;
         addRequirements(subsystem);
     }
