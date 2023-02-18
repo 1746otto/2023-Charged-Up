@@ -13,6 +13,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
   public static class VisionConstants {
     public static final double kStrafeSignal = 0.3;
+    public static final int kFilterPasses = 10;
   }
     public static final double stickDeadband = 0.1;
 

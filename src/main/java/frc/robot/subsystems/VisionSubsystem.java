@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.VisionSubsystem.pipelineStates;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -25,11 +27,20 @@ public class VisionSubsystem extends SubsystemBase {
   private double camtran;
   private int tagID;
   private double[] botPose; //XYZRPY
+  private int alliance;
 
   public static enum pipelineStates{APRILTAG, RRTAPE, ERROR};
 
   public VisionSubsystem() {
-
+    if (DriverStation.getAlliance().equals(Alliance.Blue)) {
+      alliance = -1;
+    }
+    else if (DriverStation.getAlliance().equals(Alliance.Red)) {
+      alliance = 1;
+    }
+    else {
+      alliance = 0;
+    }
   }
 
   public void fetchvision() {
@@ -121,7 +132,8 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose2d() {
-    return new Pose2d(new Translation2d(botPose[0], botPose[2]), Rotation2d.fromDegrees(botPose[5]));
+    //multiplying by alliance allows us to use one autonomous by always giving us the opposite cordinates.
+    return new Pose2d(new Translation2d(botPose[0]*alliance, botPose[1]), Rotation2d.fromDegrees(botPose[5]*alliance));
   }
 
   public pipelineStates getPipline() {
@@ -153,6 +165,17 @@ public class VisionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
       // TODO Auto-generated method stub
+      if (alliance == 0) {
+        if (DriverStation.getAlliance().equals(Alliance.Blue)) {
+          alliance = -1;
+        }
+        else if (DriverStation.getAlliance().equals(Alliance.Red)) {
+          alliance = 1;
+        }
+        else {
+          alliance = 0;
+        }
+      }
       fetchvision();
       System.out.println(getXOffset());
   }
