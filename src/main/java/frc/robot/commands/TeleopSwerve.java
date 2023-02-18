@@ -60,6 +60,7 @@ public class TeleopSwerve extends CommandBase {
         if(faceLeftSup.getAsBoolean()) {
             rotationAngle = 90;
         }
+        
         /* Get Values, Deadband*/
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
         //translationVal = Math.copySign(translationVal*translationVal, translationSup.getAsDouble());
