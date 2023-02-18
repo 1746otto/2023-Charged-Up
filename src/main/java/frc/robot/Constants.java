@@ -16,4 +16,20 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class ControllerConstants{
+    public static final int kport = 0;
+    public static final int kport2 = 1;
+    public static final double kdeadzone = .125;
+    public static final double kDriveControl = 2.0;
+
+  }
+  public static class ClamperConstants {
+    public static final int kExtendSolenoidChannel = 12;
+    public static final int kRetractSolenoidChannel = 13;
+    public static final int kChannel = 0;
+    public static final boolean kPlacerEngaged = false;
+  }
+  public static class RobotConstants{
+    public static final int kREVPH = 2;
+  }
 }
