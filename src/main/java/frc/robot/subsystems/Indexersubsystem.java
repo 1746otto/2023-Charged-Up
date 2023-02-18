@@ -93,7 +93,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.stopMotor();
     }
     public void RunLowGoal(){
-        runAllMotorsRev();
+        runAllMotors();
         DisengagePistons();
 
 
@@ -101,7 +101,7 @@ public class Indexersubsystem extends SubsystemBase {
     }
 
 
-    public void turnOffIntake() {
+    public void turnOffIndexer() {
         runZeroPower();
 
     }
