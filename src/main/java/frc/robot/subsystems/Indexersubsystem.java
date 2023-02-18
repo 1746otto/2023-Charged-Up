@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +20,9 @@ public class Indexersubsystem extends SubsystemBase {
     private final Solenoid extend;
     private final Solenoid disengage;
     private final Solenoid pistons;
+    private final AnalogInput beambreak;
+
+    private boolean beambreakLastState = false;
 
 
   
@@ -36,6 +41,7 @@ public class Indexersubsystem extends SubsystemBase {
         IndexerConstants.kExtendSolenoidChannel);
     disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
         IndexerConstants.kRetractSolenoidChannel);
+        beambreak = new AnalogInput(IndexerConstants.kbeambreak);
 
 
     }
@@ -103,6 +109,16 @@ public class Indexersubsystem extends SubsystemBase {
         runZeroPower();
         engagePistons();
 
+    }
+    public boolean beambreakBroken() {
+      return beambreakLastState;
+    }
+    public void autoIndexer() {
+      if (beambreakBroken()) {
+        runZeroPower();
+      } else {
+        runAllMotors();
+      }
     }
     
 
