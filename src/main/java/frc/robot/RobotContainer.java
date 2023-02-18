@@ -22,8 +22,6 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeExtendCommand;
 import frc.robot.commands.IntakeRetractCommand;
 import frc.robot.commands.IntakeRollCommand;
-import frc.robot.commands.PlacerHorizontalCommand;
-import frc.robot.commands.PlacerVerticalCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -71,8 +69,7 @@ public class RobotContainer {
     JoystickButton xBoxRBumper =
         new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
 
-        xBoxLBumper.toggleOnTrue(new PlacerHorizontalCommand(m_PlacerHorizontalSubsystem));
-        xBoxRBumper.toggleOnTrue(new PlacerVerticalCommand(m_PlacerVerticalSubsystem));
+       
 
         xboxX.toggleOnTrue(new IntakeExtendCommand(m_IntakeExtendSubsystem).alongWith(new IntakeRollCommand(m_IntakeRollerSubsystem, m_IntakeExtendSubsystem)));
         xboxX.toggleOnFalse(new IntakeRetractCommand(m_IntakeExtendSubsystem));
