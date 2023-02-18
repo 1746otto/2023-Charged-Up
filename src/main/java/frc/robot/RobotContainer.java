@@ -22,13 +22,10 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeExtendCommand;
 import frc.robot.commands.IntakeRetractCommand;
 import frc.robot.commands.IntakeRollCommand;
-import frc.robot.commands.PlacerHorizontalCommand;
-import frc.robot.commands.PlacerVerticalCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
-import frc.robot.subsystems.PlacerHorizontalSubsystem;
-import frc.robot.subsystems.PlacerVerticalSubsystem;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -40,8 +37,7 @@ public class RobotContainer {
   private final XboxController m_controller = new XboxController(ControllerConstants.kport);
 
   // The robot's subsystems and commands are defined here...
-  private final PlacerVerticalSubsystem m_PlacerVerticalSubsystem = new PlacerVerticalSubsystem();
-  private final PlacerHorizontalSubsystem m_PlacerHorizontalSubsystem = new PlacerHorizontalSubsystem();
+
   private final IntakeExtendSubsystem m_IntakeExtendSubsystem = new IntakeExtendSubsystem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final IntakeRollerSubsystem m_IntakeRollerSubsystem = new IntakeRollerSubsystem();
@@ -71,8 +67,7 @@ public class RobotContainer {
     JoystickButton xBoxRBumper =
         new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
 
-        xBoxLBumper.toggleOnTrue(new PlacerHorizontalCommand(m_PlacerHorizontalSubsystem));
-        xBoxRBumper.toggleOnTrue(new PlacerVerticalCommand(m_PlacerVerticalSubsystem));
+       
 
         xboxX.toggleOnTrue(new IntakeExtendCommand(m_IntakeExtendSubsystem).alongWith(new IntakeRollCommand(m_IntakeRollerSubsystem, m_IntakeExtendSubsystem)));
         xboxX.toggleOnFalse(new IntakeRetractCommand(m_IntakeExtendSubsystem));

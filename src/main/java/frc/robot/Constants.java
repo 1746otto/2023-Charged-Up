@@ -23,12 +23,7 @@ public final class Constants {
     public static final double kDriveControl = 2.0;
 
   }
-  public static class PlacerConstants {
-    public static final int kExtendSolenoidChannel = 12;
-    public static final int kRetractSolenoidChannel = 13;
-    public static final int kChannel = 0;
-    public static final boolean kPlacerEngaged = false;
-  }
+ 
   public static class RobotConstants{
     public static final int kREVPH = 2;
   }
