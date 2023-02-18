@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.lang.Math;
 
 import frc.robot.Autos.Auton;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -20,6 +21,10 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    private final XboxController m_controller = new XboxController(ControllerConstants.kport);
+    private final XboxController m_controller2 = new XboxController(ControllerConstants.kport2);
+  
+  
     /* Controllers */
     private final Joystick driver = new Joystick(0);
 
@@ -39,11 +44,15 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+
     
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+     
+    
        // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
         s_Swerve.setDefaultCommand(
            /*  new TeleopSwerve(
@@ -82,6 +91,14 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
+        JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
+        JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
+       
+    
+        xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
+        xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
+        xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
     }
 
     /**
