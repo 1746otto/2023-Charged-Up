@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.lang.Math;
-import frc.robot.Autos.*;
+
+import frc.robot.Autos.Auton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -43,9 +44,16 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-       
+       // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
         s_Swerve.setDefaultCommand(
-         
+           /*  new TeleopSwerve(
+                s_Swerve, 
+                () -> -driver.getRawAxis((int) limiterT.calculate(translationAxis)), 
+                () -> -driver.getRawAxis((int)limiterT.calculate(strafeAxis)), 
+                () -> -driver.getRawAxis(rotationAxis), 
+                () -> false   //robotCentric.getAsBoolean()
+                
+            )*/
             new TeleopSwerve(
                 s_Swerve, 
                 () -> -driver.getRawAxis(translationAxis), 
@@ -83,7 +91,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new Auton();
+        return new Auton(s_Swerve);
     }
 }
 
