@@ -13,11 +13,11 @@ import frc.robot.Constants;
 import frc.robot.Constants.ClamperConstants;
 import frc.robot.Constants.RobotConstants;
 
-public class Clamper extends SubsystemBase {
+public class ClamperSubsystem extends SubsystemBase {
     private final Solenoid pistons;
     private final Solenoid extend;
     private final Solenoid disengage;
-    public Clamper() {
+    public ClamperSubsystem() {
         pistons =
         new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, ClamperConstants.kChannel);
     extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
