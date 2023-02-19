@@ -36,8 +36,8 @@ public class ResetVisionCommand extends CommandBase {
         if (m_visionSubsystem.isTargetValid()) {
             if (m_visionSubsystem.getPose2d().getRotation().getRadians() != m_lastRot) {
                 m_pose2ds[m_accumulatorCount] = m_visionSubsystem.getPose2d();
-                m_accumulatorCount++;
                 m_lastRot = m_pose2ds[m_accumulatorCount].getRotation().getRadians();
+                m_accumulatorCount++;
             }
         }
     }
