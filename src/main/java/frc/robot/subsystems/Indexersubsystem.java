@@ -35,24 +35,23 @@ public class Indexersubsystem extends SubsystemBase {
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2.setInverted(true);
-        pistons =
-        new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
-    extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
+        pistons =new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
+        extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
         IndexerConstants.kExtendSolenoidChannel);
-    disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
+        disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
         IndexerConstants.kRetractSolenoidChannel);
         beambreak = new AnalogInput(IndexerConstants.kbeambreak);
 
 
     }
 
-  public void DisengagePistons() {
-    disengage.set(true);
-  }
+    public void DisengagePistons() {
+      disengage.set(true);
+    }
 
-  public void engagePistons() {
-    disengage.set(false);
-  }
+    public void engagePistons() {
+      disengage.set(false);
+    }
 
 
 
