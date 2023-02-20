@@ -11,6 +11,35 @@ import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
+  public static class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
+  }
+  public static class ControllerConstants{
+    public static final int kport = 0;
+    public static final int kport2 = 1;
+    public static final double kdeadzone = .125;
+    public static final double kDriveControl = 2.0;
+
+  }
+ 
+  public static class RobotConstants{
+    public static final int kREVPH = 2;
+  }
+  public static class IntakeRollerConstants {
+    public static final int CANID1= 10;
+    public static final int CANID2= 11;
+    public static final double kFullPower = 0.4;
+  }
+
+  public static class IntakeExtendConstants {
+    public static final int CANID1 = 10;
+    public static final int CANID2 = 11;
+    public static final double kFullPower = 0.4;
+    public static final int kLimitSwitch1 = 1;
+    public static final int kLimitSwitch2 = 1;
+    public static final double kZeroPower = 0.0;
+  }
+
     public static final double stickDeadband = 0.1;
 
     public static final class Swerve {
@@ -147,25 +176,13 @@ public final class Constants {
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
-    public static class OperatorConstants {
-        public static final int kDriverControllerPort = 0;
-      }
-      public static class ControllerConstants{
-        public static final int kport = 0;
-        public static final int kport2 = 1;
-        public static final double kdeadzone = .125;
-        public static final double kDriveControl = 2.0;
-    
-      }
       public static class PlungerConstants {
         public static final int kExtendSolenoidChannel = 12;
         public static final int kRetractSolenoidChannel = 13;
         public static final int kChannel = 0;
         public static final boolean kPlacerEngaged = false;
       }
-      public static class RobotConstants{
-        public static final int kREVPH = 2;
-      }
+
     public static class IndexerConstants{
       public static final int kIndexerMotor = 1;
     public static int speed = 2;
@@ -174,9 +191,9 @@ public final class Constants {
     public static final int kExtendSolenoidChannel = 12;
     public static final int kRetractSolenoidChannel = 13;
    public static final int kbeambreak = 3;
-    }
+  }
     
-    }
+}
   
   
 
