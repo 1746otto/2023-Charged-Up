@@ -71,7 +71,7 @@ public class VisionSubsystem extends SubsystemBase {
           .getDouble(0.0);
       tagID = (int)NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tid")
           .getDouble(0.0);
-      botPose = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("botpose")
+      botPose = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("botpose_wpiblue")
           .getDoubleArray(new double[6]);
 
     } catch (Exception e) {
@@ -132,8 +132,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose2d() {
-    //multiplying by alliance allows us to use one autonomous by always giving us the opposite cordinates.
-    return new Pose2d(new Translation2d(botPose[0]*alliance, botPose[1]), Rotation2d.fromDegrees(botPose[5]*alliance));
+    return new Pose2d(new Translation2d(botPose[0], botPose[1]), Rotation2d.fromDegrees(botPose[5]));
   }
 
   public pipelineStates getPipline() {
@@ -164,7 +163,6 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-      // TODO Auto-generated method stub
       if (alliance == 0) {
         if (DriverStation.getAlliance().equals(Alliance.Blue)) {
           alliance = -1;
@@ -177,7 +175,7 @@ public class VisionSubsystem extends SubsystemBase {
         }
       }
       fetchvision();
-      System.out.println(getXOffset());
+      //System.out.println(getXOffset());
   }
 }
 
