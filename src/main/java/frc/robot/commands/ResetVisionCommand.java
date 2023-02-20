@@ -65,8 +65,11 @@ public class ResetVisionCommand extends CommandBase {
             Arrays.sort(xs);
             Arrays.sort(ys);
             Arrays.sort(rots);
-
-            if (VisionConstants.kFilterPasses >> 2 * 4 == VisionConstants.kFilterPasses) {
+            //VS Code thinks that this will never run because it is looking at the constant and evaluating it. 
+            //We have changed the passes to 16 and it has detected that the logic is correct.
+            //The bitwise operator >> must always be in parentheses because java has strange oder of operations.
+            //We will leave the number of passes at 16 now because it makes the code easier to read. 
+            if ((VisionConstants.kFilterPasses >> 2) * 4 == VisionConstants.kFilterPasses) {
                 double xq1 = (xs[VisionConstants.kFilterPasses >> 2 - 1] + xs[VisionConstants.kFilterPasses >> 2])/2.0;
                 double yq1 = (ys[VisionConstants.kFilterPasses >> 2 - 1] + ys[VisionConstants.kFilterPasses >> 2])/2.0;
                 double rotq1 = (rots[VisionConstants.kFilterPasses >> 2 - 1] + rots[VisionConstants.kFilterPasses >> 2])/2.0;
