@@ -70,7 +70,7 @@ public class TeleopSwerve extends CommandBase {
         double slowZone = 25.0;// Get current facing of robot and determine which direction is the fastest to target
 
         double currentAngle = MathUtil.inputModulus(s_Swerve.getYaw().getDegrees(), 0, 360);
-        System.out.println("Current Angle: " + currentAngle);
+        //System.out.println("Current Angle: " + currentAngle);
 
         if(joystickBeingUsed(rotationVal)) {
             rotationAngle = -600;
@@ -78,9 +78,9 @@ public class TeleopSwerve extends CommandBase {
 
         if(rotationAngle >= 0) {
             double clockwiseDist =  MathUtil.inputModulus(currentAngle - rotationAngle, 0, 360);
-            System.out.println("Clock Dist: " + clockwiseDist);
+            //System.out.println("Clock Dist: " + clockwiseDist);
             double counterClockwiseDist = 360 - clockwiseDist;//360 - MathUtil.inputModulus(currentAngle, 0, 360);
-            System.out.println("CounterClock Dist: " + counterClockwiseDist);
+            //System.out.println("CounterClock Dist: " + counterClockwiseDist);
 
             boolean moveClockwise = !(clockwiseDist <= counterClockwiseDist);
 

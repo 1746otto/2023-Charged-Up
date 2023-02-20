@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.lang.Math;
+import java.util.function.BooleanSupplier;
 
 import frc.robot.Autos.Auton;
+import frc.robot.Autos.BalanceAuton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -36,6 +38,7 @@ public class RobotContainer {
     private final JoystickButton faceDown = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton faceRight = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton faceLeft = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton balance = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -82,6 +85,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        balance.onTrue(new BalancingCommand(s_Swerve, robotCentric));
     }
 
     /**
@@ -91,7 +95,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new Auton(s_Swerve);
+        return new BalanceAuton(s_Swerve, robotCentric);
+        //return new Auton(s_Swerve);
     }
 }
 
