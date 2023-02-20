@@ -23,7 +23,7 @@ public class TeleopSwerve extends CommandBase {
     private int rotationAngle; 
     private double prevError;
 
-    private double kP = 1;
+    private double kP = 0.015;
     private double kD = 1;
 
     public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup, BooleanSupplier faceUpSup, BooleanSupplier faceDownSup, BooleanSupplier faceRightSup, BooleanSupplier faceLeftSup) {
@@ -82,9 +82,9 @@ public class TeleopSwerve extends CommandBase {
 
         if(rotationAngle >= 0) {
             double clockwiseDist =  MathUtil.inputModulus(currentAngle - rotationAngle, 0, 360);
-            System.out.println("Clock Dist: " + clockwiseDist);
+            //System.out.println("Clock Dist: " + clockwiseDist);
             double counterClockwiseDist = 360 - clockwiseDist;//360 - MathUtil.inputModulus(currentAngle, 0, 360);
-            System.out.println("CounterClock Dist: " + counterClockwiseDist);
+            //System.out.println("CounterClock Dist: " + counterClockwiseDist);
 
             boolean moveCounterClockwise = !(clockwiseDist <= counterClockwiseDist);
 
