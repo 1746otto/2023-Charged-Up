@@ -23,16 +23,16 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-public class autonFive extends SequentialCommandGroup{
-    public autonFive(Swerve s_Swerve){
-        addCommands(new SequentialCommandGroup(new autonFiveTrajectory1(s_Swerve),
+public class autonFiveBottom extends SequentialCommandGroup{
+    public autonFiveBottom(Swerve s_Swerve){
+        addCommands(new SequentialCommandGroup(
         new LowGoalCommand(new Indexersubsystem()), 
-        new autonFiveTrajectory2(s_Swerve), 
+        new autonFiveBottomTrj2(s_Swerve), 
         new IntakeExtendCommand(new IntakeExtendSubsystem()), 
         new IntakeRollCommand(new IntakeRollerSubsystem(), 
         new IntakeExtendSubsystem()), 
         new IntakeRetractCommand(new IntakeExtendSubsystem()), 
-        new autonFiveTrajectory3(s_Swerve), 
+        new autonFiveBottomTrj3(s_Swerve), 
         new LowGoalCommand(new Indexersubsystem())));
     }
     

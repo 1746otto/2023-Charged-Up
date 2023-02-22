@@ -1,4 +1,4 @@
-package frc.robot.Auton.AutonFive;
+package frc.robot.Auton.AutonFiveTop;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-public class autonFiveTrj2 extends SequentialCommandGroup {
-    public autonFiveTrj2(Swerve s_Swerve){
+public class AutonFiveTopTrj3 extends SequentialCommandGroup {
+    public AutonFiveTopTrj3(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -27,14 +27,14 @@ public class autonFiveTrj2 extends SequentialCommandGroup {
                 .setKinematics(Constants.Swerve.swerveKinematics); //Changed max speed to 2 instead of 3
 
         // An example trajectory to follow.  All units in meters.
-        Trajectory secondTrajectory =
+        Trajectory thirdTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 0.92, new Rotation2d(0)),
+                new Pose2d(5.69, 4.26, new Rotation2d(0)),
                 // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(Units.feetToMeters(6), 0.92), new Translation2d(Units.feetToMeters(12), 0.92)),
+                List.of(new Translation2d(Units.feetToMeters(12), 4.26), new Translation2d(Units.feetToMeters(6), 0.92)),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(Units.feetToMeters(18), 0.92, new Rotation2d(0)),
+                new Pose2d(Units.feetToMeters(0), 4.26, new Rotation2d(0)),
                 config);
         
 
@@ -45,7 +45,7 @@ public class autonFiveTrj2 extends SequentialCommandGroup {
 
         SwerveControllerCommand swerveControllerCommand =
             new SwerveControllerCommand(
-                secondTrajectory,
+                thirdTrajectory,
                 s_Swerve::getPose,
                 Constants.Swerve.swerveKinematics,
                 new PIDController(Constants.AutoConstants.kPXController, 0, 0),
@@ -56,7 +56,7 @@ public class autonFiveTrj2 extends SequentialCommandGroup {
 
 
         addCommands(
-            new InstantCommand(() -> s_Swerve.resetOdometry(secondTrajectory.getInitialPose())),
+            new InstantCommand(() -> s_Swerve.resetOdometry(thirdTrajectory.getInitialPose())),
             swerveControllerCommand
         );
     }
