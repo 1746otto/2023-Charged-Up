@@ -14,8 +14,6 @@ public class IntakeExtendCommand extends CommandBase {
 
   /**
    * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
    */
   public IntakeExtendCommand(IntakeExtendSubsystem subsystem) {
     m_subsystem = subsystem;
