@@ -32,10 +32,10 @@ public class BalancingCommand extends CommandBase{
         speed = kP * xError;
         // xSpeed = (xError - xPrevError) * kD + (kP * xError);
 
-        if (speed > .2){
-            speed = .2;
-        }else if (speed < -.2){
-            speed = -.2;
+        if (speed > Constants.Swerve.autonDriveSpeed){
+            speed = Constants.Swerve.autonDriveSpeed;
+        }else if (speed < -Constants.Swerve.autonDriveSpeed){
+            speed = -Constants.Swerve.autonDriveSpeed;
         }
 
         xPrevError = xError;

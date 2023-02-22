@@ -16,52 +16,36 @@ public class UnbalancingCommand extends CommandBase{
     private double kP = 0.01;
     private double kD = 0.1;
     private double speed;
+    private double currRoll;
 
     public UnbalancingCommand(Swerve s_Swerve, BooleanSupplier robotCentricSup){
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
         this.robotCentricSup = robotCentricSup;
+        this.currRoll = -(s_Swerve.gyro.getRoll());
     }
 
     @Override
     public void execute() {
-        if (s_Swerve.gyro.getRoll() != 0){
         xError = s_Swerve.gyro.getRoll();
         System.out.println("Roll: " + xError);
 
         speed = kP * xError;
         // xSpeed = (xError - xPrevError) * kD + (kP * xError);
-
-        if (speed > .2){
-            speed = .2;
-        }else if (speed < -.2){
-            speed = -.2;
+        
+        if (speed > Constants.Swerve.autonDriveSpeed){
+            speed = Constants.Swerve.autonDriveSpeed;
+        }else if (speed < -Constants.Swerve.autonDriveSpeed){
+            speed = -Constants.Swerve.autonDriveSpeed;
         }
 
         xPrevError = xError;
-        }
-
-        // if (s_Swerve.gyro.getPitch() != 0){
-        //     yError = -(s_Swerve.gyro.getPitch());
-
-        //     speed = kP * yError;
-        //     // ySpeed = (yError - yPrevError) * kD + (kP * yError);
-
-        //     if (speed > .2){
-        //         speed = .2;
-        //     }else if (speed < -.2){
-        //         speed = -.2;
-        //     }
-
-        //     yPrevError = yError;
-        // }
-
         s_Swerve.drive(new Translation2d(speed, 0).times(Constants.Swerve.maxSpeed),
         0.0, robotCentricSup.getAsBoolean(), true);
     }
 
     @Override 
     public boolean isFinished(){
-        return (s_Swerve.gyro.getRoll() == 0);
+        return (s_Swerve.gyro.getRoll() > currRoll + 5);
     }
 }
