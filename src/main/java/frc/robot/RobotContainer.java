@@ -21,12 +21,17 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final XboxController m_controller = new XboxController(ControllerConstants.kport);
-  private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
-
-
+    private final XboxController m_controller = new XboxController(ControllerConstants.kport);
+    private final XboxController m_controller2 = new XboxController(ControllerConstants.kport2);
+  
+  
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    
+
+    // The robot's subsystems and commands are defined here...
+    private final PlungerSubsystem m_PlacerVerticalSubsystem = new PlungerSubsystem();
+  
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -44,11 +49,21 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+    private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
+
+
     
 
 
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+     
+    
        // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
         s_Swerve.setDefaultCommand(
            /*  new TeleopSwerve(
@@ -85,23 +100,53 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+      JoystickButton xBoxY = new JoystickButton(m_controller, XboxController.Button.kY.value);
+      JoystickButton xBoxB = new JoystickButton(m_controller, XboxController.Button.kB.value);
+      JoystickButton xBoxA = new JoystickButton(m_controller, XboxController.Button.kA.value);
+      JoystickButton xboxX = new JoystickButton(m_controller, XboxController.Button.kX.value);
+      JoystickButton xBoxLBumper =
+          new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+      JoystickButton xBoxRBumper =
+          new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+  
+        
+          xBoxRBumper.toggleOnTrue(new PlungerCommand(m_PlacerVerticalSubsystem));
+  
+  
+  
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        JoystickButton xBoxY = new JoystickButton(m_controller, XboxController.Button.kY.value);
-        JoystickButton xBoxB = new JoystickButton(m_controller, XboxController.Button.kB.value);
-        JoystickButton xBoxA = new JoystickButton(m_controller, XboxController.Button.kA.value);
-        JoystickButton xboxX = new JoystickButton(m_controller, XboxController.Button.kX.value);
-        JoystickButton xBoxLBumper =
+        JoystickButton xBoxYButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
+        JoystickButton xBoxButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
+        JoystickButton xBoxAButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
+        JoystickButton xboxXButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
+        JoystickButton xBoxLBumperButton =
             new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
-        JoystickButton xBoxRBumper =
+        JoystickButton xBoxRBumperButton =
             new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
     
             xBoxLBumper.toggleOnTrue(new ClamperCommand(m_ClamperSubsystem));
             
     
     
+        JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
+        JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
+        JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
+       
+    
+        xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
+        xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
+        xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
     }
 
+ 
+
+/**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *

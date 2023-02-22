@@ -166,4 +166,21 @@ public final class Constants {
     public static class RobotConstants{
       public static final int kREVPH = 2;
     }
+    public static class PlungerConstants {
+      public static final int kExtendSolenoidChannel = 14;
+      public static final int kRetractSolenoidChannel = 15;
+      public static final int kChannel = 1;
+      public static final boolean kPlacerEngaged = false;
+    }
+    
+  public static class IndexerConstants{
+    public static final int kIndexerMotor = 1;
+  public static int speed = 2;
+  public static int reverseSpeed = -2;
+  public static final int kChannel = 2;
+  public static final int kExtendSolenoidChannel = 12;
+  public static final int kRetractSolenoidChannel = 13;
+ public static final int kbeambreak = 3;
+  }
+  
 }

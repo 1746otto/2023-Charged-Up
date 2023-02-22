@@ -4,23 +4,23 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClamperSubsystem;
 
 public class ClamperCommand extends CommandBase{
-    private final ClamperSubsystem m_placer2;
+    private final ClamperSubsystem m_ClamperSubsystem;
     public ClamperCommand(ClamperSubsystem subsystem) {
-        m_placer2 = subsystem;
+        m_ClamperSubsystem = subsystem;
         addRequirements(subsystem);
     }
     private void addRequirements(ClamperSubsystem subsystem) {
     }
     @Override
     public void initialize() {
-        m_placer2.extendPlacerIn();
+        m_ClamperSubsystem.extendPlacerIn();
     }
     @Override
     public void end(boolean interrupted) {
-        m_placer2.DisengagePlacer();
+        m_ClamperSubsystem.DisengagePlacer();
     }
     @Override
     public boolean isFinished() {
-        return !m_placer2.isAtSide();
+        return !m_ClamperSubsystem.isAtSide();
     }
 }
