@@ -18,6 +18,7 @@ public class DriveTo5DegreesCommand extends CommandBase{
         this.robotCentricSup = robotCentricSup;
         initRoll = s_Swerve.gyro.getRoll();
     }
+
     @Override
     public void execute(){
         s_Swerve.drive(new Translation2d(speed, 0).times(Constants.Swerve.maxSpeed),
@@ -27,6 +28,6 @@ public class DriveTo5DegreesCommand extends CommandBase{
 
     @Override 
     public boolean isFinished(){
-        return ((s_Swerve.gyro.getRoll() > initRoll + 5));
+        return (s_Swerve.gyro.getRoll() > (initRoll + 5));
     }
 }

@@ -17,6 +17,7 @@ public class DriveForwardsCommand extends CommandBase{
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
         this.robotCentricSup = robotCentricSup;
+        time = new Timer();
     }
 
     @Override
@@ -32,6 +33,6 @@ public class DriveForwardsCommand extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        return (time.hasElapsed(3.0));
+        return (time.hasElapsed(2.0));
     }
 }

@@ -2,9 +2,9 @@ package frc.robot.Autos;
 
 import frc.robot.Constants;
 import frc.robot.commands.BalancingCommand;
-import frc.robot.commands.DriveToNeg5DegreesCommand;
-import frc.robot.commands.UnbalancingCommand;
-import frc.robot.commands.DriveBackToNeg5DegreesCommand;
+import frc.robot.commands.DriveTo5DegreesCommand;
+import frc.robot.commands.DriveBackTo5DegreesCommand;
+import frc.robot.commands.DriveForwardsCommand;
 import frc.robot.subsystems.Swerve;
 
 import java.util.List;
@@ -24,10 +24,10 @@ import java.util.function.BooleanSupplier;
 
 public class BalanceAuton extends SequentialCommandGroup{
     public BalanceAuton(Swerve s_Swerve, BooleanSupplier robotCentricSup){
-        addCommands(new SequentialCommandGroup(new DriveToNeg5DegreesCommand(s_Swerve, robotCentricSup)
-        // , new UnbalancingCommand(s_Swerve, robotCentricSup)
-        // , new DriveBackToNeg5DegreesCommand(s_Swerve, robotCentricSup),
-        //  new BalancingCommand(s_Swerve, robotCentricSup)
+        addCommands(new SequentialCommandGroup(new DriveTo5DegreesCommand(s_Swerve, robotCentricSup)
+        , new DriveForwardsCommand(s_Swerve, robotCentricSup)
+        , new DriveBackTo5DegreesCommand(s_Swerve, robotCentricSup)
+        , new BalancingCommand(s_Swerve, robotCentricSup)
          ));
     }
     

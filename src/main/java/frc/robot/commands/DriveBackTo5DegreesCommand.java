@@ -20,11 +20,13 @@ public class DriveBackTo5DegreesCommand extends CommandBase{
     }
     @Override
     public void execute(){
-        s_Swerve.drive(new Translation2d(-speed, 0).times(Constants.Swerve.maxSpeed), 0.0, robotCentricSup.getAsBoolean(), true);
+        s_Swerve.drive(new Translation2d(-speed, 0).times(Constants.Swerve.maxSpeed),
+         0.0, robotCentricSup.getAsBoolean(), true);
+         System.out.println("Roll: " + s_Swerve.gyro.getRoll());
     }
 
     @Override 
     public boolean isFinished(){
-        return (s_Swerve.gyro.getRoll() > initRoll + 5);
+        return (s_Swerve.gyro.getRoll() > (initRoll + 5));
     }
 }
