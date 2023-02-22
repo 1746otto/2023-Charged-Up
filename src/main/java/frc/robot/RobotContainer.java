@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Auton.AutonFive.autonFive;
+import frc.robot.Auton.AutonFive.autonFiveBottom;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.IntakeExtendCommand;
@@ -170,7 +170,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new autonFive(s_Swerve);
+        return new autonFiveBottom(s_Swerve);
     }
 }
 
