@@ -1,4 +1,4 @@
-package frc.robot.Autos;
+package frc.robot.Auton.AutonFive;
 
 import frc.robot.Constants;
 import frc.robot.commands.IntakeExtendCommand;
@@ -23,18 +23,17 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-public class Auton extends SequentialCommandGroup{
-    public Auton(Swerve s_Swerve){
-        addCommands(new SequentialCommandGroup(new firstTrajectory(s_Swerve),
+public class autonFive extends SequentialCommandGroup{
+    public autonFive(Swerve s_Swerve){
+        addCommands(new SequentialCommandGroup(new autonFiveTrajectory1(s_Swerve),
         new LowGoalCommand(new Indexersubsystem()), 
-        new secondTrajectory(s_Swerve), 
+        new autonFiveTrajectory2(s_Swerve), 
         new IntakeExtendCommand(new IntakeExtendSubsystem()), 
         new IntakeRollCommand(new IntakeRollerSubsystem(), 
         new IntakeExtendSubsystem()), 
         new IntakeRetractCommand(new IntakeExtendSubsystem()), 
-        new thirdTrajectory(s_Swerve), 
+        new autonFiveTrajectory3(s_Swerve), 
         new LowGoalCommand(new Indexersubsystem())));
     }
     
 }
-

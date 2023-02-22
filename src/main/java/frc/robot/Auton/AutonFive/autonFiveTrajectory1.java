@@ -1,4 +1,4 @@
-package frc.robot.Autos;
+package frc.robot.Auton.AutonFive;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.math.util.Units;
-public class firstTrajectory extends SequentialCommandGroup {
-    public firstTrajectory(Swerve s_Swerve){
+public class autonFiveTrajectory1 extends SequentialCommandGroup {
+    public autonFiveTrajectory1(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
