@@ -7,10 +7,16 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ResetVisionCommand;
+import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.VisionSubsystem;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -23,6 +29,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
+  private final Swerve s_Swerve = new Swerve();
+  XboxController m_controller = new XboxController(0);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -43,9 +51,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    JoystickButton xBoxA = new JoystickButton(m_controller, XboxController.Button.kA.value);
+    JoystickButton xBoxB = new JoystickButton(m_controller, XboxController.Button.kB.value);
 
+    xBoxA.toggleOnTrue(new ScoringAlignCommand(s_Swerve, false));
+    xBoxB.toggleOnTrue(new ResetVisionCommand(m_VisionSubsystem, s_Swerve));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_VisionSubsystem.getSubsystem();
