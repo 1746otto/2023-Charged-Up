@@ -198,7 +198,11 @@ public final class Constants {
     public static final int kChannel = 0;
     public static final boolean kPlacerEngaged = false;
   }
-    
+  public static class ElevatorConstants{
+    public static final int kElevatorMotor1ID = 41;
+    public static final double kElevatorD = 0.1;
+    public static final double kElevatorP = 0;
+  }
 }
   
 
