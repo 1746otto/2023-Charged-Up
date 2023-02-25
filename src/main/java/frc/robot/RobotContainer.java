@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ElevatorRunToRequestCommand;
 import java.lang.Math;
 
 import frc.robot.Autos.Auton;
@@ -98,9 +100,9 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(rotationAxis), 
                 () -> false,   //robotCentric.getAsBoolean()
                 () -> faceUp.getAsBoolean(),
-                () -> faceDown.getAsBoolean(),
-                () -> faceRight.getAsBoolean(),
-                () -> faceLeft.getAsBoolean()
+                () -> faceUp.getAsBoolean(),
+                () -> faceUp.getAsBoolean(),
+                () -> faceUp.getAsBoolean()
                 
             )
                 
@@ -117,29 +119,20 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-      JoystickButton xBoxY = new JoystickButton(m_controller, XboxController.Button.kY.value);
-      JoystickButton xBoxB = new JoystickButton(m_controller, XboxController.Button.kB.value);
-      JoystickButton xBoxA = new JoystickButton(m_controller, XboxController.Button.kA.value);
-      JoystickButton xboxX = new JoystickButton(m_controller, XboxController.Button.kX.value);
-      JoystickButton xBoxLBumper =
-          new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
-      JoystickButton xBoxRBumper =
-          new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
-  
-  
   
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         JoystickButton xBoxYButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
-        JoystickButton xBoxButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
+        JoystickButton xBoxBButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
         JoystickButton xBoxAButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
-        JoystickButton xboxXButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
+        JoystickButton xBoxXButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
+        JoystickButton xBoxStartButton = new JoystickButton(m_controller, XboxController.Button.kStart.value);
         JoystickButton xBoxLBumperButton =
             new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
         JoystickButton xBoxRBumperButton =
             new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
     
-            xBoxLBumper.toggleOnTrue(new ClamperCommand(m_ClamperSubsystem));
+            xBoxLBumperButton.toggleOnTrue(new ClamperCommand(m_ClamperSubsystem));
             
     
     
@@ -151,7 +144,9 @@ public class RobotContainer {
         xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
         xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
         xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
-        xBoxAButton.toggleOnTrue(new runElevatorCommand(m_ElevatorSubsystem));
+        xBoxRBumperButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kLowPosition));
+        xBoxYButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
+        xBoxBButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
     }
 
  
@@ -161,15 +156,9 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
         return new Auton(s_Swerve);
     }
+  
 }
-

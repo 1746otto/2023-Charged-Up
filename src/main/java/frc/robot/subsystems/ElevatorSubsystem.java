@@ -16,6 +16,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     private double error;
     private double prevError;
     private double motorSpeed;
+    private double speedConstant = ElevatorConstants.kElevatorSpeed;
     private double kP = ElevatorConstants.kElevatorP;
     private double kD = ElevatorConstants.kElevatorD;
     private boolean beamBreakLastState = false;
@@ -25,39 +26,36 @@ public class ElevatorSubsystem extends SubsystemBase{
         elevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotor1ID, MotorType.kBrushless);
        // beamBreak = new AnalogInput(ElevatorConstants.kElevatorAnalogInputChannel);
         // elevatorMotor.invert();
-        
+        elevatorMotor.getEncoder().setPosition(0);
     }
   
     public void stopElevator(){
-        elevatorMotor.setVoltage(0);
+        elevatorMotor.stopMotor();
     }
     public boolean beamBreakBroken(){
         return beamBreakLastState;
     }
-    public void runElevatorUp(){
-        elevatorMotor.setVoltage(0.1*12);
-    }
 
     public void runToRequest(int reqPosition){
-        error = currState - reqPosition;
+        error = reqPosition - currState;
 
         motorSpeed = error * kP;
         // motorSpeed = (error - prevError) * kD + (kP * error);
 
-        if (motorSpeed > 0.1){
-            motorSpeed = 0.1;
-        }else if (motorSpeed < -0.1){
-            motorSpeed = -0.1;
+        if (motorSpeed > speedConstant){
+            motorSpeed = speedConstant;
+        }else if (motorSpeed < -speedConstant){
+            motorSpeed = -speedConstant;
         }
-        elevatorMotor.setVoltage(motorSpeed*12);
+        elevatorMotor.set(motorSpeed);
 
         prevError = error;
     }
 
     @Override
     public void periodic() {
-        beamBreakLastState = ((Math.floor(beamBreak.getVoltage()) == 0) && (motorSpeed > 0));
+        //beamBreakLastState = ((Math.floor(beamBreak.getVoltage()) == 0) && (motorSpeed < 0));
         currState = elevatorMotor.getEncoder().getPosition();
-        System.out.println(currState);
+        System.out.println("Current State: " + currState);
     }
 }

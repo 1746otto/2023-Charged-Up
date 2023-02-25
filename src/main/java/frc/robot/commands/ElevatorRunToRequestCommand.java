@@ -25,9 +25,9 @@ public class ElevatorRunToRequestCommand extends CommandBase{
         m_elevator.stopElevator();
     }
 
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return m_elevator.beamBreakBroken();
-    }
+    // // Returns true when the command should end.
+    // @Override
+    // public boolean isFinished() {
+    //     return m_elevator.beamBreakBroken();
+    // }
 }

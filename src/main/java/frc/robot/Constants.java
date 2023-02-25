@@ -184,7 +184,9 @@ public final class Constants {
       }
 
     public static class IndexerConstants{
-      public static final int kIndexerMotor = 1;
+      public static final int kIndexerMotor = 31;
+      public static final int kIndexerMotor2 = 32;
+      public static final int kIndexerMotor3 = 33;
     public static int speed = 2;
     public static int reverseSpeed = -2;
     public static final int kChannel = 2;
@@ -193,16 +195,19 @@ public final class Constants {
    public static final int kbeambreak = 3;
   }
   public static class ClamperConstants {
-    public static final int kExtendSolenoidChannel = 12;
-    public static final int kRetractSolenoidChannel = 13;
+    public static final int kExtendSolenoidChannel = 14;
+    public static final int kRetractSolenoidChannel = 15;
     public static final int kChannel = 0;
     public static final boolean kPlacerEngaged = false;
   }
   public static class ElevatorConstants{
     public static final int kElevatorMotor1ID = 41;
-    public static final double kElevatorD = 0.1;
-    public static final double kElevatorP = 0;
+    public static final double kElevatorD = 0.2;
+    public static final double kElevatorP = .02;
+    public static final int kOriginPosition = 1;
+    public static final int kLowPosition = 20;
+    public static final int kMidPosition = 100;
+    public static final int kHighPosition = 200;
+    public static final double kElevatorSpeed = 0.4;
   }
 }
-  
-
