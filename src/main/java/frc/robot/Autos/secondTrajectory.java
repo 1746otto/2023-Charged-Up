@@ -1,4 +1,4 @@
-package frc.robot.Auton.AutonFiveTop;
+package frc.robot.Autos;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-public class AutonFiveTopTrj2 extends SequentialCommandGroup {
-    public AutonFiveTopTrj2(Swerve s_Swerve){
+public class secondTrajectory extends SequentialCommandGroup {
+    public secondTrajectory(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -30,11 +30,11 @@ public class AutonFiveTopTrj2 extends SequentialCommandGroup {
         Trajectory secondTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 4.26, new Rotation2d(0)),
+                new Pose2d(0, 0.92, new Rotation2d(0)),
                 // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(Units.feetToMeters(6), 4.26), new Translation2d(Units.feetToMeters(12), 4.26)),
+                List.of(new Translation2d(Units.feetToMeters(6), 0.92), new Translation2d(Units.feetToMeters(12), 0.92)),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(Units.feetToMeters(18), 4.26, new Rotation2d(0)),
+                new Pose2d(Units.feetToMeters(18), 0.92, new Rotation2d(0)),
                 config);
         
 
