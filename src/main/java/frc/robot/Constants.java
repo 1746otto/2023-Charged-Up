@@ -148,7 +148,9 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
     public static class IndexerConstants{
-      public static final int kIndexerMotor = 1;
+      public static final int kIndexerMotor = 31;
+      public static final int kIndexerMotor2 = 32;
+      public static final int kIndexerMotorT = 33;
     public static int speed = 2;
     public static int reverseSpeed = -2;
     public static final int kChannel = 2;
