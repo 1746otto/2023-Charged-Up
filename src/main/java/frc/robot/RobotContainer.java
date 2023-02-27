@@ -43,6 +43,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 public class RobotContainer {
     private final XboxController m_controller = new XboxController(ControllerConstants.kport);
     private final XboxController m_controller2 = new XboxController(ControllerConstants.kport2);
+
+    private Robot m_robot;
   
   
     /* Controllers */
@@ -168,9 +170,18 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
+
+    public Command getAutonOne(){
+        return new autonFiveBottom(s_Swerve);
+    }
+    public Command getAutonTwo() {
         // An ExampleCommand will run in autonomous
         return new autonFiveBottom(s_Swerve);
     }
+    public Command getAutonThree() {
+        // An ExampleCommand will run in autonomous
+        return new autonFiveBottom(s_Swerve);
+    }
+
 }
 
