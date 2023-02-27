@@ -31,6 +31,7 @@ public class RobotContainer {
   public final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
   private final Swerve s_Swerve = new Swerve();
   XboxController m_controller = new XboxController(0);
+  private final Autos autos = new Autos(s_Swerve, new ScoringAlignCommand(s_Swerve, true));
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -68,6 +69,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return autos.exampleAuto();
   }
 }

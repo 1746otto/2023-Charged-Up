@@ -5,15 +5,20 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Swerve;
+import frc.robot.Constants;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
@@ -22,6 +27,7 @@ import frc.robot.commands.ExampleCommand;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 public final class Autos {
     Swerve m_swerve;
@@ -33,20 +39,99 @@ public final class Autos {
     }
 
     public Command exampleAuto() {
-        PathPlannerTrajectory exampleTrajectory = PathPlanner.loadPath("Example Path", new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
-        ArrayList<PathPlannerTrajectory> pathGroup = new ArrayList<PathPlannerTrajectory>();
+        //This is the combined trajectories of autons we want to use.
+        //Each trajectory we want to use is seperated by a stop point.
+        //We store each path in the deploy/Path Planner/ folder.
+        //You can have multiple constraints for each path, but for our purposes it is not required.
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Example Path", new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
         
-        pathGroup.add(
-            PathPlanner.generatePath(
-                new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared), 
-                new PathPoint(new Translation2d(m_swerve.getPose().getX(), m_swerve.getPose().getY()), Rotation2d.fromDegrees(0), m_swerve.getPose().getRotation()),
-                new PathPoint(new Translation2d(exampleTrajectory.getInitialState().poseMeters.getX(), exampleTrajectory.getInitialState().poseMeters.getY()), 
-                exampleTrajectory.getInitialState().poseMeters.getRotation(), exampleTrajectory.getInitialState().holonomicRotation)
+        //Then we use the position we got from vision to get our actual initial pose and make a trajectory to go to it.
+        PathPlannerTrajectory goToStart = PathPlanner.generatePath(
+            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared), 
+            new PathPoint(new Translation2d(m_swerve.getPose().getX(), m_swerve.getPose().getY()), Rotation2d.fromDegrees(0), m_swerve.getPose().getRotation()),
+            new PathPoint(new Translation2d(pathGroup.get(0).getInitialState().poseMeters.getX(), pathGroup.get(0).getInitialState().poseMeters.getY()), 
+            pathGroup.get(0).getInitialState().poseMeters.getRotation(), pathGroup.get(0).getInitialState().holonomicRotation)
+        );
+
+
+        //Next we must pass the trajectory into a command that follows it.
+        //Currently this commmand is commented out because we don't have a limelight.
+        // PPSwerveControllerCommand goToStartCommand = 
+        //     new PPSwerveControllerCommand(
+        //         goToStart, 
+        //         m_swerve::getPose, 
+        //         Constants.Swerve.swerveKinematics, 
+        //         new PIDController(0, 0, 0), 
+        //         new PIDController(0, 0, 0), 
+        //         new PIDController(0, 0, 0), 
+        //         m_swerve::setModuleStates, 
+        //         true, 
+        //         m_swerve
+        //     )
+        // ;
+        
+        PPSwerveControllerCommand exampleTrajectoryCommandPart1 = 
+            new PPSwerveControllerCommand(
+                pathGroup.get(0), 
+                m_swerve::getPose, 
+                Constants.Swerve.swerveKinematics, 
+                new PIDController(0, 0, 0), 
+                new PIDController(0, 0, 0), 
+                new PIDController(0, 0, 0), 
+                m_swerve::setModuleStates, 
+                true, 
+                m_swerve
             )
+        ;
+        PPSwerveControllerCommand exampleTrajectoryCommandPart2 = 
+            new PPSwerveControllerCommand(
+                pathGroup.get(1), 
+                m_swerve::getPose, 
+                Constants.Swerve.swerveKinematics, 
+                new PIDController(0, 0, 0), 
+                new PIDController(0, 0, 0), 
+                new PIDController(0, 0, 0), 
+                m_swerve::setModuleStates, 
+                true, 
+                m_swerve
+            )
+        ;
+
+        PPSwerveControllerCommand exampleTrajectoryCommandPart3 = 
+            new PPSwerveControllerCommand(
+                pathGroup.get(2), 
+                m_swerve::getPose, 
+                Constants.Swerve.swerveKinematics, 
+                new PIDController(0, 0, 0), 
+                new PIDController(0, 0, 0), 
+                new PIDController(0, 0, 0), 
+                m_swerve::setModuleStates, 
+                true, 
+                m_swerve
+            )
+        ;
+
+        //Now we create an event map that will hold the name of the marker and the corresponding event.
+        HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap.put("do sumthin", new InstantCommand(() -> {
+            //do sumthin here
+        }));
+        eventMap.put("do sumthin else", new InstantCommand(() -> {
+            //do sumthin else here
+        }));
+
+        //Make the auton command
+        SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+            //goToStartCommand,
+            exampleTrajectoryCommandPart1,
+            new FollowPathWithEvents(exampleTrajectoryCommandPart2, pathGroup.get(1).getMarkers(), eventMap),
+            exampleTrajectoryCommandPart3
         );
+        //Add the requirments for the command
+        autonCommmand.addRequirements(m_swerve);
         
-        return new SequentialCommandGroup(
-            
-        );
+
+        return autonCommmand;
+        
     }
 }
