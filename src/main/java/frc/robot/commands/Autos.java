@@ -1,4 +1,3 @@
-package frc.robot.Autos;
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -23,20 +22,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.ScoringAlignCommand;
-import frc.robot.commands.ExampleCommand;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 
 public final class Autos {
     Swerve m_swerve;
-    ScoringAlignCommand m_scoringAlignCommand;
+   // ScoringAlignCommand m_scoringAlignCommand;
 
-    public Autos(Swerve swerve, ScoringAlignCommand alignCommand) {
+   public Autos(Swerve swerve) {
         m_swerve = swerve;
-        m_scoringAlignCommand = alignCommand;
+     //   m_scoringAlignCommand = alignCommand;
     }
 
     public Command exampleAuto() {
@@ -128,7 +124,7 @@ public final class Autos {
             new FollowPathWithEvents(exampleTrajectoryCommandPart2, pathGroup.get(1).getMarkers(), eventMap),
             exampleTrajectoryCommandPart3
         );
-        //Add the requirments for the command
+        // Add the requirments for the command
         autonCommmand.addRequirements(m_swerve);
         
 
