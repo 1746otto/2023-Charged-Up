@@ -62,7 +62,7 @@ public class RobotContainer {
     
     private final JoystickButton faceUp = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton faceDown = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton faceRight = new JoystickButton(driver, XboxController.Button.kB.value);
+    //private final JoystickButton faceRight = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton faceLeft = new JoystickButton(driver, XboxController.Button.kX.value);
 
     /* Subsystems */
@@ -144,9 +144,9 @@ public class RobotContainer {
         xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
         xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
         xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
-        xBoxRBumperButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kLowPosition));
-        xBoxYButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
-        xBoxBButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
+        xBoxBButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
+        xBoxXButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
+        xBoxAButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
     }
 
  
