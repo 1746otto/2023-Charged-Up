@@ -62,6 +62,25 @@ public class SwerveModule {
         }
     }
 
+    private void slewLimiter(double slewlimit, double slewvalue) {
+        double output = 0.0;
+    }
+
+    private double feed(double limit, double value, double output) {
+        double error = value - output;
+        if(error > limit){
+            error = limit;
+        }else if (error < (limit * -1)){
+            error = limit * -1;
+        }
+        output += error;
+        return output;
+    }
+
+    private void resetSlew(double output) {
+        output = 0.0;
+    }
+
     private void setAngle(SwerveModuleState desiredState){
         Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01)) ? lastAngle : desiredState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
         
