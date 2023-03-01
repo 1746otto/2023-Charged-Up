@@ -53,7 +53,8 @@ public class SwerveModule {
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
         if(isOpenLoop){
-            double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
+            double slewOutput = slewLimiter(Constants.Swerve.slewLimit, getState().speedMetersPerSecond, desiredState.speedMetersPerSecond);
+            double percentOutput = slewOutput / Constants.Swerve.maxSpeed;
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
         }
         else {
@@ -62,11 +63,8 @@ public class SwerveModule {
         }
     }
 
-    private void slewLimiter(double slewlimit, double slewvalue) {
-        double output = 0.0;
-    }
-
-    private double feed(double limit, double value, double output) {
+    /*This has to do with making sure that the robot doesn't accelerate so fast it tips over.*/
+    private double slewLimiter(double limit, double value, double output) {
         double error = value - output;
         if(error > limit){
             error = limit;
