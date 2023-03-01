@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.commands.IntakeExtendCommand;
-import frc.robot.commands.IntakeRetractCommand;
+// import frc.robot.commands.IntakeExtendCommand;
+// import frc.robot.commands.IntakeRetractCommand;
 import frc.robot.commands.IntakeRollCommand;
-import frc.robot.subsystems.IntakeExtendSubsystem;
+// import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -69,6 +69,8 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+    private final IntakeRollerSubsystem m_IntakeRollerSubsystem = new IntakeRollerSubsystem();
+
 
     
 
@@ -138,6 +140,7 @@ public class RobotContainer {
         xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
         xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
         xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+        xBoxLBumper.toggleOnTrue(new IntakeRollCommand(m_IntakeRollerSubsystem));
     }
 
  
