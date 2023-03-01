@@ -7,23 +7,22 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANAnalog.AnalogMode;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAnalogSensor;
-import com.revrobotics.CANAnalog;
+import com.revrobotics.SparkMaxLimitSwitch;
 
 import frc.robot.Constants.ElevatorConstants;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Timer;
 
 public class ElevatorSubsystem extends SubsystemBase{
     private static final Mode AnalogMode = null;
     private CANSparkMax elevatorMotor;
     private SparkMaxPIDController pidController;
     private AnalogInput beamBreak;
-    private SparkMaxAnalogSensor limitSwitch;
+    private SparkMaxLimitSwitch limitSwitch;
     private double error;
     private double prevError;
     private double motorSpeed;
@@ -38,12 +37,13 @@ public class ElevatorSubsystem extends SubsystemBase{
        // beamBreak = new AnalogInput(ElevatorConstants.kElevatorAnalogInputChannel);
         // elevatorMotor.invert();
         elevatorMotor.getEncoder().setPosition(0);
-        limitSwitch = elevatorMotor.getAnalog(AnalogMode.kRelative);
+        limitSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyClosed);
         pidController = elevatorMotor.getPIDController();
         pidController.setP(kP, 0);
         // pidController.setD(kD, 0);
         // pidController.setFF(.005, 0);
         pidController.setOutputRange(-1, 1);
+        pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
     }
   
     public void stopElevator(){
@@ -54,7 +54,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public void runToRequest(int reqPosition){
-        error = Math.abs(reqPosition - currState);
+        // error = Math.abs(reqPosition - currState);
 
         // motorSpeed = error * kP;
         // motorSpeed = (error - prevError) * kD + (kP * error);
@@ -72,7 +72,6 @@ public class ElevatorSubsystem extends SubsystemBase{
         // elevatorMotor.set(motorSpeed);
 
         // prevError = error;
-
         pidController.setReference(reqPosition, ControlType.kPosition);
     }
 
@@ -80,7 +79,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     public void periodic() {
         //beamBreakLastState = ((Math.floor(beamBreak.getVoltage()) == 0) && (motorSpeed < 0));
         currState = elevatorMotor.getEncoder().getPosition();
-        // System.out.println("Limit Switch:);
-        System.out.println("Current State: " + currState);
+        System.out.println("Limit Switch: " + limitSwitch.isPressed());
+        //System.out.println("Current State: " + currState);
     }
 }
