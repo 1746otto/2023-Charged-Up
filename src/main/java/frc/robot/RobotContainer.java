@@ -69,7 +69,7 @@ public class RobotContainer {
     private final Swerve s_Swerve = new Swerve();
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
-    private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+    public final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
 
     

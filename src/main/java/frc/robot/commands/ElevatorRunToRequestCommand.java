@@ -23,11 +23,12 @@ public class ElevatorRunToRequestCommand extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         m_elevator.stopElevator();
+        m_elevator.setPositionTo0();
     }
 
-    // // Returns true when the command should end.
+    // Returns true when the command should end.
     // @Override
     // public boolean isFinished() {
-    //     return m_elevator.beamBreakBroken();
+    //     //return m_elevator.beamBreakBroken();
     // }
 }
