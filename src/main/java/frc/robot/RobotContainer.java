@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.commands.IntakeExtendCommand;
-import frc.robot.commands.IntakeRetractCommand;
+// import frc.robot.commands.IntakeExtendCommand;
+// import frc.robot.commands.IntakeRetractCommand;
 import frc.robot.commands.IntakeRollCommand;
-import frc.robot.subsystems.IntakeExtendSubsystem;
+// import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -69,6 +69,9 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+    private final IntakeRollerSubsystem m_IntakeRollerSubsystem = new IntakeRollerSubsystem();
+    private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
+
 
     
 
@@ -130,6 +133,19 @@ public class RobotContainer {
   
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        JoystickButton xBoxYButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
+        JoystickButton xBoxButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
+        JoystickButton xBoxAButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
+        JoystickButton xboxXButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
+        JoystickButton xBoxLBumperButton =
+            new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+        JoystickButton xBoxRBumperButton =
+            new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+    
+            xBoxLBumper.toggleOnTrue(new ClamperCommand(m_ClamperSubsystem));
+            
+    
+    
         JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
         JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
         JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
@@ -138,6 +154,7 @@ public class RobotContainer {
         xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
         xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
         xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+        xBoxLBumper.toggleOnTrue(new IntakeRollCommand(m_IntakeRollerSubsystem));
     }
 
  
