@@ -41,8 +41,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private final XboxController m_controller = new XboxController(ControllerConstants.kport);
-    private final XboxController m_controller2 = new XboxController(ControllerConstants.kport2);
+   private final XboxController m_controller = new XboxController(ControllerConstants.kport);
+   private final XboxController m_controller2 = new XboxController(ControllerConstants.kport2);
   
   
     /* Controllers */
@@ -59,18 +59,18 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kStart.value);
-    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     
     private final JoystickButton faceUp = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton faceDown = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton faceRight = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton faceLeft = new JoystickButton(driver, XboxController.Button.kX.value);
 
+   
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+   // private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final IntakeRollerSubsystem m_IntakeRollerSubsystem = new IntakeRollerSubsystem();
-    private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
+    //private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
 
 
     
@@ -133,16 +133,9 @@ public class RobotContainer {
   
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        JoystickButton xBoxYButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
-        JoystickButton xBoxButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
-        JoystickButton xBoxAButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
-        JoystickButton xboxXButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
-        JoystickButton xBoxLBumperButton =
-            new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
-        JoystickButton xBoxRBumperButton =
-            new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+        
     
-            xBoxLBumper.toggleOnTrue(new ClamperCommand(m_ClamperSubsystem));
+            //xBoxLBumper.toggleOnTrue(new ClamperCommand(m_ClamperSubsystem));
             
     
     
@@ -151,9 +144,9 @@ public class RobotContainer {
         JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
        
     
-        xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
+    /*   xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
         xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
-        xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+        xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem)); */
         xBoxLBumper.toggleOnTrue(new IntakeRollCommand(m_IntakeRollerSubsystem));
     }
 
