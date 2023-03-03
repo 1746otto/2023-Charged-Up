@@ -151,8 +151,8 @@ public final class Constants {
       public static final int kIndexerMotor = 31;
       public static final int kIndexerMotor2 = 32;
       public static final int kIndexerMotorT = 33;
-    public static int speed = 2;
-    public static int reverseSpeed = -2;
+    public static double speed = .4;
+    public static double reverseSpeed = -.4;
     public static final int kChannel = 2;
     public static final int kExtendSolenoidChannel = 12;
     public static final int kRetractSolenoidChannel = 13;
