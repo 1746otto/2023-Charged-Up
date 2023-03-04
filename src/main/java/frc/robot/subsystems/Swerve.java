@@ -23,13 +23,15 @@ public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
-    private SlewRateLimiter SlewRateLimiter;
+    private SlewRateLimiter xSlewRateLimiter;
+    private SlewRateLimiter ySlewRateLimiter;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID,(Constants.Swerve.CANBus));
         gyro.configFactoryDefault();
         zeroGyro();
-        SlewRateLimiter = new SlewRateLimiter(1);
+        xSlewRateLimiter = new SlewRateLimiter(1);
+        ySlewRateLimiter = new SlewRateLimiter(1);
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -51,14 +53,14 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    SlewRateLimiter.calculate(translation.getX()), 
-                                    SlewRateLimiter.calculate(translation.getY()), 
+                                    xSlewRateLimiter.calculate(translation.getX()), 
+                                    ySlewRateLimiter.calculate(translation.getY()), 
                                     rotation, 
                                     getYaw()
                                 )
                                 : new ChassisSpeeds(
-                                    SlewRateLimiter.calculate(translation.getX()), 
-                                    SlewRateLimiter.calculate(translation.getY()), 
+                                    (xSlewRateLimiter.calculate(translation.getX())), 
+                                    (ySlewRateLimiter.calculate(translation.getY())), 
                                     rotation)
                                 );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
