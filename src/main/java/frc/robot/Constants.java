@@ -61,8 +61,9 @@ public final class Constants {
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double openLoopRamp = 0.25;
-        public static final double closedLoopRamp = 0.0;
+        public static final double openLoopRamp = 0.75;
+        public static final double closedLoopRamp = 1.5;
+        public static final double openLoopRampAngle = 0.15;
 
         /* Angle Motor PID Values */
         public static final double angleKP = chosenModule.angleKP;
@@ -78,9 +79,9 @@ public final class Constants {
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-        public static final double driveKS = (0.1896 / 12.0); //TODO: This must be tuned to specific robot
-        public static final double driveKV = (1.7999 / 12.0);
-        public static final double driveKA = (0.19507 / 12.0);
+        public static final double driveKS = (0); //TODO: This must be tuned to specific robot
+        public static final double driveKV = (0);
+        public static final double driveKA = (0);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
@@ -90,7 +91,7 @@ public final class Constants {
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+        public static final NeutralMode driveNeutralMode = NeutralMode.Coast;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 1 */
@@ -128,7 +129,7 @@ public final class Constants {
             public static final int driveMotorID = 21;
             public static final int angleMotorID = 22;
             public static final int canCoderID = 20;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(72.158203+180);//158.378906
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(242.490234);//158.378906
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }

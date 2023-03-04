@@ -110,11 +110,11 @@ public class TeleopSwerve extends CommandBase {
         }
         /* Drive */
 
-        Rotation2d angle = new Translation2d(translationVal,strafeVal).getAngle();
+      
        // double val2 = translationSlew.calculate(s_Swerve.getMagnitude(new Translation2d(translationVal, strafeVal)));
         
         s_Swerve.drive(
-            new Translation2d(translationSlew.calculate(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)), angle), 
+            new Translation2d(translationVal,strafeVal).times(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
             true
