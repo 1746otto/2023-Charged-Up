@@ -15,6 +15,6 @@ public class PlungerCommand extends CommandBase{
     @Override
     public void initialize() {
         m_PlungerSubsystem.togglePlunger();
-        System.out.println(m_PlungerSubsystem.getEngaged());
+        System.out.println(m_PlungerSubsystem.isEngaged());
     }
 }

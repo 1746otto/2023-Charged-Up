@@ -14,6 +14,6 @@ public class ClamperCommand extends CommandBase{
     @Override
     public void initialize() {
         m_ClamperSubsystem.toggleClamper();
-        System.out.println(m_ClamperSubsystem.getEngaged());
+        System.out.println(m_ClamperSubsystem.isEngaged());
     }
 }
