@@ -22,10 +22,8 @@ public class Indexersubsystem extends SubsystemBase {
     CANSparkMax MotorTread;
     CANSparkMax Motor1;
     CANSparkMax Motor2;
-   /*  private final Solenoid extend;
-    private final Solenoid disengage;
     private final Solenoid pistons;
-    private final AnalogInput beambreak;*/
+    private final AnalogInput beambreak;
 
     private boolean beambreakLastState = false;
 
@@ -46,18 +44,21 @@ public class Indexersubsystem extends SubsystemBase {
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor2, MotorType.kBrushless);
         Motor2.setInverted(true);
-     /*    pistons =
+         pistons =
       new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
-    extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        IndexerConstants.kExtendSolenoidChannel);
-    disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        IndexerConstants.kRetractSolenoidChannel);
-        beambreak = new AnalogInput(IndexerConstants.kbeambreak);
-*/
+        beambreak = new AnalogInput(IndexerConstants.kbeambreak) ;
+
 
     }
+   public boolean isEngaged(){
+    return pistons.get();
+   }
+   public void toggleFlap(){
+    pistons.toggle();
+   }
 
- /* public void DisengagePistons() {
+
+ /* 
     public int[] getColorRGB(){
       int red = m_colorSensor.getRed();
       int green = m_colorSensor.getGreen();
@@ -90,13 +91,8 @@ public class Indexersubsystem extends SubsystemBase {
       return 0;
     }
 
-  public void DisengagePistons() {
-    disengage.set(true);
-  }
 
-  public void engagePistons() {
-    disengage.set(false);
-  }
+
 */
 
 
@@ -107,7 +103,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.set(IndexerConstants.speed);
     }
     public void runMotorTread() {
-        MotorTread.set(IndexerConstants.speed);
+        MotorTread.set(IndexerConstants.Tspeed);
     }
 
     public void runAllMotors() {
@@ -122,7 +118,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.set(IndexerConstants.reverseSpeed);
     }
     public void runMotorTreadRev() {
-        MotorTread.set(IndexerConstants.reverseSpeed);
+        MotorTread.set(IndexerConstants.RevTspeed);
     }
     
     public void runAllMotorsRev() {
@@ -138,7 +134,7 @@ public class Indexersubsystem extends SubsystemBase {
     }
     public void RunLowGoal(){
         runAllMotors();
-       // DisengagePistons();
+       toggleFlap();
 
 
 
@@ -151,7 +147,7 @@ public class Indexersubsystem extends SubsystemBase {
     }
     public void turnOffShooter() {
         runZeroPower();
-       // engagePistons();
+       toggleFlap();
 
     }
    /*  public boolean beambreakBroken() {
