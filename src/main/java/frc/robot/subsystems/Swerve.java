@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -23,15 +24,12 @@ public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
-    private SlewRateLimiter xSlewRateLimiter;
-    private SlewRateLimiter ySlewRateLimiter;
+
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID,(Constants.Swerve.CANBus));
         gyro.configFactoryDefault();
         zeroGyro();
-        xSlewRateLimiter = new SlewRateLimiter(1);
-        ySlewRateLimiter = new SlewRateLimiter(1);
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -48,19 +46,22 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
     }
+    public double getMagnitude(Translation2d translation){
+        return Math.sqrt(translation.getX()*translation.getX() + translation.getY()*translation.getY());
+    }
     // fieldRelative switches the speeds from fieldRelative to robotRelative and vice versa
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    xSlewRateLimiter.calculate(translation.getX()), 
-                                    ySlewRateLimiter.calculate(translation.getY()), 
+                                    translation.getX(), 
+                                    translation.getY(), 
                                     rotation, 
                                     getYaw()
                                 )
                                 : new ChassisSpeeds(
-                                    (xSlewRateLimiter.calculate(translation.getX())), 
-                                    (ySlewRateLimiter.calculate(translation.getY())), 
+                                    (translation.getX()), 
+                                    (translation.getY()), 
                                     rotation)
                                 );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);

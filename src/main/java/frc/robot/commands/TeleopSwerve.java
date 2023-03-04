@@ -5,8 +5,9 @@ import frc.robot.subsystems.Swerve;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -21,6 +22,7 @@ public class TeleopSwerve extends CommandBase {
     private BooleanSupplier faceRightSup;
     private BooleanSupplier faceLeftSup;
     private int rotationAngle; 
+    private SlewRateLimiter translationSlew;
 
     public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup, BooleanSupplier faceUpSup, BooleanSupplier faceDownSup, BooleanSupplier faceRightSup, BooleanSupplier faceLeftSup) {
         this.s_Swerve = s_Swerve;
@@ -35,6 +37,7 @@ public class TeleopSwerve extends CommandBase {
         this.faceLeftSup = faceLeftSup;
         this.faceRightSup = faceRightSup;
         rotationAngle = -600;
+        translationSlew = new SlewRateLimiter(1);
 
     }
 
@@ -44,6 +47,7 @@ public class TeleopSwerve extends CommandBase {
         }
         return true;
     }
+
 
     @Override
     public void execute() {
@@ -105,8 +109,12 @@ public class TeleopSwerve extends CommandBase {
             rotationVal = 0;
         }
         /* Drive */
+
+        Rotation2d angle = new Translation2d(translationVal,strafeVal).getAngle();
+       // double val2 = translationSlew.calculate(s_Swerve.getMagnitude(new Translation2d(translationVal, strafeVal)));
+        
         s_Swerve.drive(
-            new Translation2d(translationVal,strafeVal).times(Math.sqrt(translationVal*translationVal + strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed), 
+            new Translation2d(translationSlew.calculate(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)), angle), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
             true
