@@ -10,36 +10,21 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ClamperConstants;
 import frc.robot.Constants.PlungerConstants;
 import frc.robot.Constants.RobotConstants;
 
-public class Plungersubsystem extends SubsystemBase {
-    private final Solenoid pistons;
-    private final Solenoid extend;
-    private final Solenoid disengage;
-    public Plungersubsystem() {
-        pistons =
-        new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, PlungerConstants.kChannel);
-    extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        PlungerConstants.kExtendSolenoidChannel);
-    disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        PlungerConstants.kRetractSolenoidChannel);
-  }
+public class PlungerSubsystem extends SubsystemBase {
+    private final Solenoid piston;
 
-    
-public boolean getEngaged() {
-    return pistons.get() == ClamperConstants.kPlacerEngaged;
-}
-public void extendPlacerDown() {
-    extend.set(true);
-}
+    public PlungerSubsystem() {
+        piston = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, PlungerConstants.kPlungerChannel);
+    }
+ 
+    public boolean getEngaged() {
+        return (piston.get() == PlungerConstants.kPlungerEngaged);
+    }
 
-public void DisengagePlacer() {
-    disengage.set(false);
-}
-
-public boolean isAtSide() {
-    return false;
-}
+    public void togglePlunger() {
+        piston.set(true);
+    }
 }

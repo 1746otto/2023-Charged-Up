@@ -78,9 +78,9 @@ public class TeleopSwerve extends CommandBase {
 
         if(rotationAngle >= 0) {
             double clockwiseDist =  MathUtil.inputModulus(currentAngle - rotationAngle, 0, 360);
-            System.out.println("Clock Dist: " + clockwiseDist);
+            //System.out.println("Clock Dist: " + clockwiseDist);
             double counterClockwiseDist = 360 - clockwiseDist;//360 - MathUtil.inputModulus(currentAngle, 0, 360);
-            System.out.println("CounterClock Dist: " + counterClockwiseDist);
+            //System.out.println("CounterClock Dist: " + counterClockwiseDist);
 
             boolean moveClockwise = !(clockwiseDist <= counterClockwiseDist);
 

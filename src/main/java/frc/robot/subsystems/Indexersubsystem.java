@@ -17,8 +17,6 @@ public class Indexersubsystem extends SubsystemBase {
     CANSparkMax MotorTread;
     CANSparkMax Motor1;
     CANSparkMax Motor2;
-    private final Solenoid extend;
-    private final Solenoid disengage;
     private final Solenoid pistons;
     private final AnalogInput beambreak;
 
@@ -36,21 +34,14 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2.setInverted(true);
         pistons =new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
-        extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        IndexerConstants.kExtendSolenoidChannel);
-        disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        IndexerConstants.kRetractSolenoidChannel);
+        
         beambreak = new AnalogInput(IndexerConstants.kbeambreak);
 
 
     }
 
-    public void DisengagePistons() {
-      disengage.set(true);
-    }
-
-    public void engagePistons() {
-      disengage.set(false);
+    public void toggle() {
+      pistons.set(true);
     }
 
 
@@ -93,7 +84,7 @@ public class Indexersubsystem extends SubsystemBase {
     }
     public void RunLowGoal(){
         runAllMotors();
-        DisengagePistons();
+        toggle();
 
 
 
@@ -106,7 +97,7 @@ public class Indexersubsystem extends SubsystemBase {
     }
     public void turnOffShooter() {
         runZeroPower();
-        engagePistons();
+        toggle();
 
     }
     public boolean beambreakBroken() {

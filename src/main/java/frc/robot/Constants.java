@@ -176,29 +176,22 @@ public final class Constants {
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
-      public static class PlungerConstants {
-        public static final int kExtendSolenoidChannel = 12;
-        public static final int kRetractSolenoidChannel = 13;
-        public static final int kChannel = 0;
-        public static final boolean kPlacerEngaged = false;
-      }
 
     public static class IndexerConstants{
       public static final int kIndexerMotor = 1;
-    public static int speed = 2;
-    public static int reverseSpeed = -2;
-    public static final int kChannel = 2;
-    public static final int kExtendSolenoidChannel = 12;
-    public static final int kRetractSolenoidChannel = 13;
-   public static final int kbeambreak = 3;
-  }
-  public static class ClamperConstants {
-    public static final int kExtendSolenoidChannel = 12;
-    public static final int kRetractSolenoidChannel = 13;
-    public static final int kChannel = 0;
-    public static final boolean kPlacerEngaged = false;
-  }
-    
+      public static int speed = 2;
+      public static int reverseSpeed = -2;
+      public static final int kChannel = 8;
+      public static final int kExtendSolenoidChannel = 12;
+      public static final int kRetractSolenoidChannel = 13;
+      public static final int kbeambreak = 3;
+    }
+    public static class PlungerConstants {
+      public static final int kPlungerChannel = 8;
+      public static final boolean kPlungerEngaged = true;
+    }
+    public static class ClamperConstants {
+      public static final int kClamperChannel = 9;
+      public static final boolean kClamperEngaged = true;
+    }
 }
-  
-
