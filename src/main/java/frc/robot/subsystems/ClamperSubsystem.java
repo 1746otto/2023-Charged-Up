@@ -17,12 +17,12 @@ public class ClamperSubsystem extends SubsystemBase {
     private final Solenoid piston;
 
     public ClamperSubsystem() {
-        piston = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, ClamperConstants.kClamperChannel);
+        piston = new Solenoid(ClamperConstants.kModID, PneumaticsModuleType.REVPH, ClamperConstants.kClamperChannel);
     }
 
     
-    public boolean getEngaged() {
-        return (piston.get() == ClamperConstants.kClamperEngaged);
+    public boolean isEngaged() {
+        return piston.get();
     }
 
     public void toggleClamper() {

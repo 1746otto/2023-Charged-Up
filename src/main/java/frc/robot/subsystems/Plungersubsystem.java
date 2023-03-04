@@ -17,11 +17,11 @@ public class PlungerSubsystem extends SubsystemBase {
     private final Solenoid piston;
 
     public PlungerSubsystem() {
-        piston = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, PlungerConstants.kPlungerChannel);
+        piston = new Solenoid(PlungerConstants.kModID, PneumaticsModuleType.REVPH, PlungerConstants.kPlungerChannel);
     }
  
-    public boolean getEngaged() {
-        return (piston.get() == PlungerConstants.kPlungerEngaged);
+    public boolean isEngaged() {
+        return piston.get();
     }
 
     public void togglePlunger() {
