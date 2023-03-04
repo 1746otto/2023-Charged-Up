@@ -14,31 +14,18 @@ import frc.robot.Constants.ClamperConstants;
 import frc.robot.Constants.RobotConstants;
 
 public class ClamperSubsystem extends SubsystemBase {
-    private final Solenoid pistons;
-    private final Solenoid extend;
-    private final Solenoid disengage;
+    private final Solenoid piston;
+
     public ClamperSubsystem() {
-        pistons =
-        new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, ClamperConstants.kChannel);
-    extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        ClamperConstants.kExtendSolenoidChannel);
-    disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        ClamperConstants.kRetractSolenoidChannel);
-  }
+        piston = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, ClamperConstants.kClamperChannel);
+    }
 
     
-public boolean getEngaged() {
-    return pistons.get() == ClamperConstants.kPlacerEngaged;
-}
-public void extendPlacerIn() {
-    extend.set(true);
-}
+    public boolean getEngaged() {
+        return (piston.get() == ClamperConstants.kClamperEngaged);
+    }
 
-public void DisengagePlacer() {
-    disengage.set(false);
-}
-
-public boolean isAtSide() {
-    return false;
-}
+    public void toggleClamper() {
+        piston.toggle();
+    }
 }
