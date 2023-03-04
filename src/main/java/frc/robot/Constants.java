@@ -33,8 +33,7 @@ public final class Constants {
 
   public static class IntakeExtendConstants {
     public static final int CANID1 = 23;
-    public static final int CANID2 = 24;
-    public static final double kFullPower = 0.2;
+    public static final double kFullPower = 0.1;
     public static final int kLimitSwitch1 = 1;
     public static final int kLimitSwitch2 = 1;
     public static final double kZeroPower = 0.0;

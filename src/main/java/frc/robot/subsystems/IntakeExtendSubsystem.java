@@ -23,7 +23,7 @@ public class IntakeExtendSubsystem extends SubsystemBase {
     masterMotor = new CANSparkMax(IntakeExtendConstants.CANID1, MotorType.kBrushless);
     // limitSwitch1 = new DigitalInput(IntakeExtendConstants.kLimitSwitch1);
     // limitSwitch2 = new DigitalInput(IntakeExtendConstants.kLimitSwitch2);
-
+    masterMotor.setInverted(true);
 
   }
 

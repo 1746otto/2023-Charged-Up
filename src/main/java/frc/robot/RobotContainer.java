@@ -44,7 +44,7 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+    //private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final IntakeExtendSubsystem m_intakeExtendsubsystem = new IntakeExtendSubsystem();
 
 
@@ -94,7 +94,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        JoystickButton xBoxY2 = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+        JoystickButton xBoxLBumper = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
         JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
         JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
         JoystickButton xBoxRightbumper = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
@@ -102,8 +102,8 @@ public class RobotContainer {
        
     
        // xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
-        xBoxY2.toggleOnTrue(new IntakeRetractCommand(m_intakeExtendsubsystem));
-        xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+        xBoxLBumper.toggleOnTrue(new IntakeRetractCommand(m_intakeExtendsubsystem));
+       // xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
         xBoxRightbumper.toggleOnTrue(new IntakeExtendCommand(m_intakeExtendsubsystem));
     }
 
