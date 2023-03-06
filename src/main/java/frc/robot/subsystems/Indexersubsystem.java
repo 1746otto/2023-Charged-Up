@@ -24,10 +24,11 @@ public class Indexersubsystem extends SubsystemBase {
     CANSparkMax Motor2;
    /*  private final Solenoid extend;
     private final Solenoid disengage;
-    private final Solenoid pistons;
-    private final AnalogInput beambreak;*/
+    private final Solenoid pistons; */
+    private final AnalogInput beambreak;
 
     private boolean beambreakLastState = false;
+    // private float beamBreakIntVolt;
 
 
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(I2C.Port.kMXP);
@@ -51,9 +52,9 @@ public class Indexersubsystem extends SubsystemBase {
     extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
         IndexerConstants.kExtendSolenoidChannel);
     disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        IndexerConstants.kRetractSolenoidChannel);
+        IndexerConstants.kRetractSolenoidChannel);*/
         beambreak = new AnalogInput(IndexerConstants.kbeambreak);
-*/
+
 
     }
 
@@ -154,22 +155,26 @@ public class Indexersubsystem extends SubsystemBase {
        // engagePistons();
 
     }
-   /*  public boolean beambreakBroken() {
+  public boolean beambreakBroken() {
       return beambreakLastState;
     }
-    public void autoIndexer() {
-      if (beambreakBroken()) {
-        runZeroPower();
-      } else {
-        runAllMotors();
+  public void autoIndexer() {
+    if(beambreakBroken()) {
+      runZeroPower();
+    }
+    else{
+      runAllMotors();
       }
     }
-    */
 
+  
+    @Override
+    public void periodic(){
+      System.out.println(beambreak.getVoltage());
+      beambreakLastState = (Math.floor(beambreak.getVoltage()) == 0);
+      
 
-
-
-
+    }
 }
   
 

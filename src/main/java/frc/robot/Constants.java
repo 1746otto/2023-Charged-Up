@@ -156,7 +156,7 @@ public final class Constants {
     public static final int kChannel = 2;
     public static final int kExtendSolenoidChannel = 12;
     public static final int kRetractSolenoidChannel = 13;
-   public static final int kbeambreak = 3;
+   public static final int kbeambreak = 1;
     }
     public static class ControllerConstants {
       public static final int kport = 0;
