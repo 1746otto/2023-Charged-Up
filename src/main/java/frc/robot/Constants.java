@@ -211,8 +211,4 @@ public final class Constants {
     // TODO: change channel num to proper num
     public static final int kElevatorAnalogInputChannel = 0;
   }
-  public static class FlapConstants{
-    // TODO: change flap channel num to proper num
-    public static final int kFlapChannelID = 0;
-  }
 }
