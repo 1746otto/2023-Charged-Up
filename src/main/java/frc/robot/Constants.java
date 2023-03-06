@@ -208,5 +208,11 @@ public final class Constants {
     public static final int kMidPosition = 48;
     public static final int kHighPosition = 55;
     public static final double kElevatorSpeed = 1.0;
+    // TODO: change channel num to proper num
+    public static final int kElevatorAnalogInputChannel = 0;
+  }
+  public static class FlapConstants{
+    // TODO: change flap channel num to proper num
+    public static final int kFlapChannelID = 0;
   }
 }
