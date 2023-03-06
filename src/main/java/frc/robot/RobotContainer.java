@@ -137,7 +137,8 @@ public class RobotContainer {
     
         xBoxLBumper.onTrue(new ClamperCommand(m_ClamperSubsystem));
         xBoxRBumper.onTrue(new PlungerCommand(m_PlungerSubsystem));
-        // xBoxLBumper.onTrue(new SequentialCommandGroup(new PlungerCommand(m_PlungerSubsystem), new ClamperCommand(m_ClamperSubsystem)));
+        // xBoxRBumper.toggleOnTrue(new SequentialCommandGroup(new PlungerCommand(m_PlungerSubsystem), new ClamperCommand(m_ClamperSubsystem)),
+        //  new SequentialCommandGroup(new ClamperCommand(m_ClamperSubsystem), new PlungerCommand(m_PlungerSubsystem)));
 
             
     
