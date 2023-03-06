@@ -42,6 +42,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         // pidController.setD(kD, 0);
         // pidController.setFF(.005, 0);
         pidController.setOutputRange(-1, 1);
+        pidController.setSmartMotionMaxVelocity(speedConstant, 0);
         pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
     }
   
@@ -80,7 +81,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         // elevatorMotor.set(motorSpeed);
 
         // prevError = error;
-        pidController.setReference(reqPosition, ControlType.kPosition);
+        pidController.setReference(reqPosition, ControlType.kSmartMotion);
     }
 
     @Override

@@ -207,6 +207,6 @@ public final class Constants {
     public static final int kOriginPosition = 0;
     public static final int kMidPosition = 48;
     public static final int kHighPosition = 55;
-    public static final double kElevatorSpeed = 0.2;
+    public static final double kElevatorSpeed = 1.0;
   }
 }
