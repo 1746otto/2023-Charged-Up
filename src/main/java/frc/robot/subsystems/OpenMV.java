@@ -56,7 +56,7 @@ public class OpenMV extends SubsystemBase {
     else if(intOpenMVValue < 0){
       intOpenMVValue = 0;
     }
-    System.out.println(parseRotation(intOpenMVValue));
+    //System.out.println(parseRotation(intOpenMVValue));
     // This method will be called once per scheduler run
   }
 
