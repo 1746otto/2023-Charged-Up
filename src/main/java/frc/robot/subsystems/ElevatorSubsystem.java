@@ -51,6 +51,9 @@ public class ElevatorSubsystem extends SubsystemBase{
     public boolean beamBreakBroken(){
         return (beamBreakLastState && elevatorMotor.get() < 0);
     }
+    public boolean limitSwitchActivated(){
+        return limitSwitch.isPressed();
+    }
     public void elevatorRunDown(){
         elevatorMotor.set(-0.5);
     }
