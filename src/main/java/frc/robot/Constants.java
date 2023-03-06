@@ -187,11 +187,11 @@ public final class Constants {
       public static final int kbeambreak = 3;
     }
     public static class PlungerConstants {
-      public static final int kModID = 3;
-      public static final int kPlungerChannel = 8;
+      public static final int kModID = 2;
+      public static final int kPlungerChannel = 9;
     }
     public static class ClamperConstants {
       public static final int kModID = 2;
-      public static final int kClamperChannel = 9;
+      public static final int kClamperChannel = 10;
     }
 }
