@@ -34,7 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     
     public ElevatorSubsystem(){
         elevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotor1ID, MotorType.kBrushless);
-       // beamBreak = new AnalogInput(ElevatorConstants.kElevatorAnalogInputChannel);
+        beamBreak = new AnalogInput(ElevatorConstants.kElevatorAnalogInputChannel);
         // elevatorMotor.invert();
         limitSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
         pidController = elevatorMotor.getPIDController();
@@ -50,7 +50,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         elevatorMotor.stopMotor();
     }
     public boolean beamBreakBroken(){
-        return (beamBreakLastState && elevatorMotor.get() < 0);
+        return beamBreakLastState;
     }
     public boolean limitSwitchActivated(){
         return limitSwitch.isPressed();
@@ -86,7 +86,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        beamBreakLastState = ((Math.round(beamBreak.getVoltage()) == 0) && (motorSpeed < 0));
+        beamBreakLastState = ((Math.round(beamBreak.getVoltage()) == 0) && (elevatorMotor.get() < 0));
         currState = elevatorMotor.getEncoder().getPosition();
         //System.out.println("Current State: " + currState);
     }
