@@ -19,13 +19,16 @@ import com.revrobotics.ColorSensorV3;
 
 public class Indexersubsystem extends SubsystemBase {
     
-    CANSparkMax MotorTread;
+    //CANSparkMax MotorTread;
     CANSparkMax Motor1;
     CANSparkMax Motor2;
-    private final Solenoid pistons;
+    private final Solenoid extend;
+    private final Solenoid disengage;
+    private final Solenoid pistons; 
     private final AnalogInput beambreak;
 
     private boolean beambreakLastState = false;
+    // private float beamBreakIntVolt;
 
 
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(I2C.Port.kMXP);
@@ -40,13 +43,17 @@ public class Indexersubsystem extends SubsystemBase {
 
     public Indexersubsystem() {
 
-        MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotorT, MotorType.kBrushless);
+        //MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotorT, MotorType.kBrushless);
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor2, MotorType.kBrushless);
         Motor2.setInverted(true);
          pistons =
       new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
-        beambreak = new AnalogInput(IndexerConstants.kbeambreak) ;
+    extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
+        IndexerConstants.kExtendSolenoidChannel);
+    disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
+        IndexerConstants.kRetractSolenoidChannel);
+        beambreak = new AnalogInput(IndexerConstants.kbeambreak);
 
 
     }
@@ -103,7 +110,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.set(IndexerConstants.speed);
     }
     public void runMotorTread() {
-        MotorTread.set(IndexerConstants.Tspeed);
+       //MotorTread.set(IndexerConstants.Tspeed);
     }
 
     public void runAllMotors() {
@@ -118,7 +125,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.set(IndexerConstants.reverseSpeed);
     }
     public void runMotorTreadRev() {
-        MotorTread.set(IndexerConstants.RevTspeed);
+        //MotorTread.set(IndexerConstants.RevTspeed);
     }
     
     public void runAllMotorsRev() {
@@ -128,7 +135,7 @@ public class Indexersubsystem extends SubsystemBase {
       }
       public void runZeroPower() {
 
-        MotorTread.stopMotor();
+        //MotorTread.stopMotor();
         Motor1.stopMotor();
         Motor2.stopMotor();
     }
@@ -150,22 +157,26 @@ public class Indexersubsystem extends SubsystemBase {
        toggleFlap();
 
     }
-   /*  public boolean beambreakBroken() {
+  public boolean beambreakBroken() {
       return beambreakLastState;
     }
-    public void autoIndexer() {
-      if (beambreakBroken()) {
-        runZeroPower();
-      } else {
-        runAllMotors();
+  public void autoIndexer() {
+    if(beambreakBroken()) {
+      runZeroPower();
+    }
+    else{
+      runAllMotors();
       }
     }
-    */
 
+  
+    @Override
+    public void periodic(){
+      System.out.println(beambreak.getVoltage());
+      beambreakLastState = (Math.floor(beambreak.getVoltage()) == 0);
+      
 
-
-
-
+    }
 }
   
 
