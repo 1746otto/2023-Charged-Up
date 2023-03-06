@@ -28,6 +28,7 @@ public class VisionSubsystem extends SubsystemBase {
   private int tagID;
   private double[] botPose; //XYZRPY
   private int alliance;
+  private String jsonDump;
 
   public static enum pipelineStates{APRILTAG, RRTAPE, ERROR};
 
@@ -73,6 +74,8 @@ public class VisionSubsystem extends SubsystemBase {
           .getDouble(0.0);
       botPose = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("botpose_wpiblue")
           .getDoubleArray(new double[6]);
+      jsonDump = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("json")
+          .getString("i don see nuthin");
 
     } catch (Exception e) {
       System.out.println(e.getMessage());
@@ -129,6 +132,22 @@ public class VisionSubsystem extends SubsystemBase {
 
   public int getTagID() {
     return tagID;
+  }
+
+  public String getJSON() {
+    return jsonDump;
+  }
+
+  public int getNumTags() {
+    if(!isTargetValid())
+      return 0;
+    String json = getJSON();
+    int count = 0;
+    int place = 0;
+    while ((place = json.indexOf("fam", place + 1)) == -1) {
+      count++;
+    }
+    return count;
   }
 
   public Pose2d getPose2d() {
