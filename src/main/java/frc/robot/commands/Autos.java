@@ -17,6 +17,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -69,47 +70,25 @@ public final class Autos {
         //         m_swerve
         //     )
         // ;
-        
-        PPSwerveControllerCommand exampleTrajectoryCommandPart1 = 
-            new PPSwerveControllerCommand(
-                pathGroup.get(0), 
-                m_swerve::getPose, 
-                Constants.Swerve.swerveKinematics, 
-                new PIDController(0, 0, 0), 
-                new PIDController(0, 0, 0), 
-                new PIDController(0, 0, 0), 
-                m_swerve::setModuleStates, 
-                true, 
-                m_swerve
-            )
-        ;
-        PPSwerveControllerCommand exampleTrajectoryCommandPart2 = 
-            new PPSwerveControllerCommand(
-                pathGroup.get(1), 
-                m_swerve::getPose, 
-                Constants.Swerve.swerveKinematics, 
-                new PIDController(0, 0, 0), 
-                new PIDController(0, 0, 0), 
-                new PIDController(0, 0, 0), 
-                m_swerve::setModuleStates, 
-                true, 
-                m_swerve
-            )
-        ;
 
-        PPSwerveControllerCommand exampleTrajectoryCommandPart3 = 
-            new PPSwerveControllerCommand(
-                pathGroup.get(2), 
-                m_swerve::getPose, 
-                Constants.Swerve.swerveKinematics, 
-                new PIDController(0, 0, 0), 
-                new PIDController(0, 0, 0), 
-                new PIDController(0, 0, 0), 
-                m_swerve::setModuleStates, 
-                true, 
-                m_swerve
-            )
-        ;
+        //We then make a list of controller commands that can be accessed through the .get(int i) method.
+        List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+        
+        for (PathPlannerTrajectory traj: pathGroup){
+            controllerGroup.add(
+                new PPSwerveControllerCommand(
+                    traj, 
+                    m_swerve::getPose, 
+                    Constants.Swerve.swerveKinematics, 
+                    new PIDController(0, 0, 0), 
+                    new PIDController(0, 0, 0), 
+                    new PIDController(0, 0, 0), 
+                    m_swerve::setModuleStates, 
+                    true, 
+                    m_swerve
+                )
+            );
+        }
 
         //Now we create an event map that will hold the name of the marker and the corresponding event.
         HashMap<String, Command> eventMap = new HashMap<>();
@@ -123,9 +102,9 @@ public final class Autos {
         //Make the auton command
         SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
             //goToStartCommand,
-            exampleTrajectoryCommandPart1,
-            new FollowPathWithEvents(exampleTrajectoryCommandPart2, pathGroup.get(1).getMarkers(), eventMap),
-            exampleTrajectoryCommandPart3
+            controllerGroup.get(0),
+            new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+            controllerGroup.get(2)
         );
         //Add the requirments for the command
         autonCommmand.addRequirements(m_swerve);
