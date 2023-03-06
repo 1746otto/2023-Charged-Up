@@ -22,7 +22,8 @@ public class IntakeExtendSubsystem extends SubsystemBase {
   public IntakeExtendSubsystem() {
     masterMotor = new CANSparkMax(IntakeExtendConstants.CANID1, MotorType.kBrushless);
     limitSwitch1 = masterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    limitSwitch2 = masterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    limitSwitch2 = masterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    masterMotor.setInverted(true);
   }
 
   public void extend() {
@@ -35,6 +36,7 @@ public class IntakeExtendSubsystem extends SubsystemBase {
   
   public void stopRunning() {
     masterMotor.set(IntakeExtendConstants.kZeroPower);
+  
   }
 
    public boolean isExtended() {
@@ -72,6 +74,8 @@ public class IntakeExtendSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println("limit switch 1: " + limitSwitch1.isPressed());
+    System.out.println("limiy switch 2: " + limitSwitch2.isPressed());
     // This method will be called once per scheduler run
   }
 
