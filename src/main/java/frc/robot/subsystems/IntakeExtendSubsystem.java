@@ -5,9 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeExtendConstants;
@@ -15,16 +15,14 @@ import frc.robot.Constants.IntakeExtendConstants;
 public class IntakeExtendSubsystem extends SubsystemBase {
 /** Creates a new ExampleSubsystem. */
   CANSparkMax masterMotor;
-  DigitalInput limitSwitch1;
-  DigitalInput limitSwitch2;
+  SparkMaxLimitSwitch limitSwitch1;
+  SparkMaxLimitSwitch limitSwitch2;
 
 
   public IntakeExtendSubsystem() {
     masterMotor = new CANSparkMax(IntakeExtendConstants.CANID1, MotorType.kBrushless);
-    // limitSwitch1 = new DigitalInput(IntakeExtendConstants.kLimitSwitch1);
-    // limitSwitch2 = new DigitalInput(IntakeExtendConstants.kLimitSwitch2);
-
-
+    limitSwitch1 = masterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    limitSwitch2 = masterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
   }
 
   public void extend() {
@@ -39,13 +37,13 @@ public class IntakeExtendSubsystem extends SubsystemBase {
     masterMotor.set(IntakeExtendConstants.kZeroPower);
   }
 
-//   public boolean isExtended() {
-//     return limitSwitch1.get();
-//   }
+   public boolean isExtended() {
+    return limitSwitch1.isPressed();
+   }
 
-//   public boolean isRetracted() {
-//     return limitSwitch2.get();
-//   }
+  public boolean isRetracted() {
+    return limitSwitch2.isPressed();
+  }
 
   /**
    * Example command factory method.
