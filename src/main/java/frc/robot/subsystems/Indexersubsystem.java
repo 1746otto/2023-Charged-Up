@@ -172,9 +172,9 @@ public class Indexersubsystem extends SubsystemBase {
   
     @Override
     public void periodic(){
-      System.out.println(beambreak.getVoltage());
-      beambreakLastState = (Math.floor(beambreak.getVoltage()) == 0);
-      
+
+      beambreakLastState = (Math.round(beambreak.getVoltage()) == 0);
+      System.out.println(beambreakLastState);
 
     }
 }

@@ -34,7 +34,7 @@ public class IndexerCommand extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return m_subsystem.beambreakBroken();
+    return !m_subsystem.beambreakBroken();
   } 
 
 
