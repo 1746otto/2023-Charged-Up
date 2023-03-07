@@ -14,6 +14,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
 import edu.wpi.first.wpilibj.util.Color;
 import com.revrobotics.ColorSensorV3;
+import frc.robot.subsystems.Flapsubsystem;
 
 
 
@@ -22,9 +23,6 @@ public class Indexersubsystem extends SubsystemBase {
     //CANSparkMax MotorTread;
     CANSparkMax Motor1;
     CANSparkMax Motor2;
-    private final Solenoid extend;
-    private final Solenoid disengage;
-    private final Solenoid pistons; 
     private final AnalogInput beambreak;
 
     private boolean beambreakLastState = false;
@@ -47,22 +45,12 @@ public class Indexersubsystem extends SubsystemBase {
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor2, MotorType.kBrushless);
         Motor2.setInverted(true);
-         pistons =
-      new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
-    extend = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        IndexerConstants.kExtendSolenoidChannel);
-    disengage = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH,
-        IndexerConstants.kRetractSolenoidChannel);
         beambreak = new AnalogInput(IndexerConstants.kbeambreak);
 
 
     }
-   public boolean isEngaged(){
-    return pistons.get();
-   }
-   public void toggleFlap(){
-    pistons.toggle();
-   }
+  
+  
 
 
  /* 
@@ -141,7 +129,6 @@ public class Indexersubsystem extends SubsystemBase {
     }
     public void RunLowGoal(){
         runAllMotors();
-       toggleFlap();
 
 
 
@@ -154,7 +141,6 @@ public class Indexersubsystem extends SubsystemBase {
     }
     public void turnOffShooter() {
         runZeroPower();
-       toggleFlap();
 
     }
   public boolean beambreakBroken() {
