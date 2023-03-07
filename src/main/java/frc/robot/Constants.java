@@ -153,7 +153,7 @@ public final class Constants {
       public static final int kIndexerMotorT = 31;
     public static double speed = .4;
     public static double reverseSpeed = -.4;
-    public static double Tspeed = .1;
+    public static double Tspeed = .5;
     public static double RevTspeed = -.1;
     public static final int kChannel = 8;
     public static final int kExtendSolenoidChannel = 12;

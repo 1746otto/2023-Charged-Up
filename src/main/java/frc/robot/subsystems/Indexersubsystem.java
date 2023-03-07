@@ -20,7 +20,7 @@ import frc.robot.subsystems.Flapsubsystem;
 
 public class Indexersubsystem extends SubsystemBase {
     
-    //CANSparkMax MotorTread;
+    CANSparkMax MotorTread;
     CANSparkMax Motor1;
     CANSparkMax Motor2;
     private final AnalogInput beambreak;
@@ -41,7 +41,7 @@ public class Indexersubsystem extends SubsystemBase {
 
     public Indexersubsystem() {
 
-        //MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotorT, MotorType.kBrushless);
+        MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotorT, MotorType.kBrushless);
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor2, MotorType.kBrushless);
         Motor2.setInverted(true);
@@ -98,7 +98,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.set(IndexerConstants.speed);
     }
     public void runMotorTread() {
-       //MotorTread.set(IndexerConstants.Tspeed);
+       MotorTread.set(IndexerConstants.Tspeed);
     }
 
     public void runAllMotors() {
@@ -123,7 +123,7 @@ public class Indexersubsystem extends SubsystemBase {
       }
       public void runZeroPower() {
 
-        //MotorTread.stopMotor();
+        MotorTread.stopMotor();
         Motor1.stopMotor();
         Motor2.stopMotor();
     }
