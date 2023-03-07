@@ -8,6 +8,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimeLightHelpers;
+import frc.robot.LimeLightHelpers.LimelightResults;
+import frc.robot.LimeLightHelpers.Results;
 import frc.robot.subsystems.VisionSubsystem.pipelineStates;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -16,19 +19,14 @@ public class VisionSubsystem extends SubsystemBase {
   private boolean validTarget;
   private double xOffset;
   private double yOffset;
-  private double targetArea;
-  private double skew;
   private double pipeLatency;
-  private double tshort;
-  private double tlong;
-  private double thor;
-  private double tvert;
+  private double captureLatency;
   private double getpipe;
-  private double camtran;
   private int tagID;
   private double[] botPose; //XYZRPY
   private int alliance;
-  private String jsonDump;
+  private LimelightResults llResults;
+  private final String limeLightName = "limelight-otto";
 
   public static enum pipelineStates{APRILTAG, RRTAPE, ERROR};
 
@@ -46,37 +44,17 @@ public class VisionSubsystem extends SubsystemBase {
 
   public void fetchvision() {
     try {
-      validTarget = (NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tv")
-          .getDouble(0.0) == 1) ? true : false;
-      xOffset = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tx")
+      llResults = LimeLightHelpers.getLatestResults(limeLightName);
+      validTarget = llResults.targetingResults.valid;
+      xOffset = NetworkTableInstance.getDefault().getTable(limeLightName).getEntry("tx")
           .getDouble(0.0);
-      yOffset = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("ty")
+      yOffset = NetworkTableInstance.getDefault().getTable(limeLightName).getEntry("ty")
           .getDouble(0.0);
-      targetArea = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("ta")
+      pipeLatency = llResults.targetingResults.latency_pipeline;
+      captureLatency = llResults.targetingResults.latency_capture;
+      getpipe = llResults.targetingResults.pipelineID;
+      tagID = (int)NetworkTableInstance.getDefault().getTable(limeLightName).getEntry("tid")
           .getDouble(0.0);
-      skew = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("ts")
-          .getDouble(0.0);
-      pipeLatency = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tl")
-          .getDouble(0.0);
-      tshort = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tshort")
-          .getDouble(0.0);
-      tlong = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tlong")
-          .getDouble(0.0);
-      thor = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("thor")
-          .getDouble(0.0);
-      tvert = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tvert")
-          .getDouble(0.0);
-      getpipe = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("getpipe")
-          .getDouble(0.0);
-      camtran = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("camtran")
-          .getDouble(0.0);
-      tagID = (int)NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("tid")
-          .getDouble(0.0);
-      botPose = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("botpose_wpiblue")
-          .getDoubleArray(new double[6]);
-      jsonDump = NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("json")
-          .getString("i don see nuthin");
-
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
@@ -94,68 +72,32 @@ public class VisionSubsystem extends SubsystemBase {
     return yOffset;
   }
 
-  public double getTargetArea() {
-    return targetArea;
-  }
-
-  public double getSkew() {
-    return skew;
-  }
-
   public double getPipeLatency() {
     return pipeLatency;
   }
 
-  public double getTShort() {
-    return tshort;
-  }
-
-  public double getTLong() {
-    return tlong;
-  }
-
-  public double getThor() {
-    return thor;
-  }
-
-  public double getTvert() {
-    return tvert;
+  public double getCaptureLatency() {
+    return captureLatency;
   }
 
   public double getGetPipe() {
     return getpipe;
   }
 
-  public double getCamTran() {
-    return camtran;
-  }
-
   public int getTagID() {
     return tagID;
   }
 
-  public String getJSON() {
-    return jsonDump;
-  }
-
   public int getNumTags() {
-    if(!isTargetValid())
-      return 0;
-    String json = getJSON();
-    int count = 0;
-    int place = 0;
-    while ((place = json.indexOf("fam", place + 1)) == -1) {
-      count++;
-    }
-    return count;
+    return llResults.targetingResults.targets_Fiducials.length;
   }
 
   public Pose2d getPose2d() {
-    return new Pose2d(new Translation2d(botPose[0], botPose[1]), Rotation2d.fromDegrees(botPose[5]));
+    return llResults.targetingResults.getBotPose2d_wpiBlue();
   }
 
   public pipelineStates getPipline() {
-    switch((int)NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("getpipe").getInteger(0)) {
+    switch((int)getpipe) {
       case 0:
         return pipelineStates.APRILTAG;
       case 1:
@@ -168,33 +110,27 @@ public class VisionSubsystem extends SubsystemBase {
   public void setToAprilTag(pipelineStates state) {
     // switch(state) {
     //   case APRILTAG:
-    //     NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("pipeline").setNumber(0);
+    //     NetworkTableInstance.getDefault().getTable(limeLightName).getEntry("pipeline").setNumber(0);
     //   case RRTAPE:
-    //   NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("pipeline").setNumber(1);
+    //   NetworkTableInstance.getDefault().getTable(limeLightName).getEntry("pipeline").setNumber(1);
     //   default:
-    //     return;
+    //     return;    
     // }
-    NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("pipeline").setNumber(0);
+    
+    NetworkTableInstance.getDefault().getTable(limeLightName).getEntry("pipeline").setNumber(0);
   }
   public void setToRRTape(pipelineStates state) {
-    NetworkTableInstance.getDefault().getTable("limelight-otto").getEntry("pipeline").setNumber(1);
+    NetworkTableInstance.getDefault().getTable(limeLightName).getEntry("pipeline").setNumber(1);
   }
 
   @Override
   public void periodic() {
-      if (alliance == 0) {
-        if (DriverStation.getAlliance().equals(Alliance.Blue)) {
-          alliance = -1;
-        }
-        else if (DriverStation.getAlliance().equals(Alliance.Red)) {
-          alliance = 1;
-        }
-        else {
-          alliance = 0;
-        }
+      try {
+      System.out.println(getNumTags());
+      } catch (Exception e) {
+
       }
       fetchvision();
-      //System.out.println(getXOffset());
   }
 }
 
