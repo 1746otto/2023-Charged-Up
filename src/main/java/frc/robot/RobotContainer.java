@@ -135,11 +135,10 @@ public class RobotContainer {
         JoystickButton xBoxLBumperButton = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
         JoystickButton xBoxRBumperButton = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
     
-        // xBoxLBumper.onTrue(new ClamperCommand(m_ClamperSubsystem));
-        // xBoxRBumper.onTrue(new PlungerCommand(m_PlungerSubsystem));
-        xBoxRBumper.toggleOnTrue(new SequentialCommandGroup(new PlungerCommand(m_PlungerSubsystem), new ClamperCommand(m_ClamperSubsystem)));
-        xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new ClamperCommand(m_ClamperSubsystem), new PlungerCommand(m_PlungerSubsystem)));
-
+        xBoxLBumper.onTrue(new ClamperCommand(m_ClamperSubsystem));
+        xBoxRBumper.onTrue(new PlungerCommand(m_PlungerSubsystem));
+        // xBoxRBumper.toggleOnTrue(new SequentialCommandGroup(new PlungerCommand(m_PlungerSubsystem), new ClamperCommand(m_ClamperSubsystem)));
+        // xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new ClamperCommand(m_ClamperSubsystem), new PlungerCommand(m_PlungerSubsystem)));
             
     
         JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
