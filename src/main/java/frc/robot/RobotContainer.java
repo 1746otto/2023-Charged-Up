@@ -44,10 +44,8 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    //private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
-    private final IntakeExtendSubsystem m_intakeExtendsubsystem = new IntakeExtendSubsystem();
-
-
+    private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+    private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
 
     
 
@@ -72,10 +70,10 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(strafeAxis), 
                 () -> -driver.getRawAxis(rotationAxis), 
                 () -> false,   //robotCentric.getAsBoolean()
-                () -> faceUp.getAsBoolean(),
-                () -> faceDown.getAsBoolean(),
-                () -> faceRight.getAsBoolean(),
-                () -> faceLeft.getAsBoolean()
+                () -> false,
+                () -> false,
+                () -> false,
+                () -> false
                 
             )
                 
@@ -96,13 +94,13 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         JoystickButton xBoxLBumper = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
         JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
-        JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
-        JoystickButton xBoxRightbumper = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
-
+        JoystickButton xBoxA2 = new JoystickButton(m_controller, XboxController.Button.kA.value);
+        JoystickButton xBoxRBumper = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
        
     
-        xBoxLBumper.toggleOnTrue(new IntakeRetractCommand(m_intakeExtendsubsystem));
-        xBoxRightbumper.toggleOnTrue(new IntakeExtendCommand(m_intakeExtendsubsystem));
+        xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem, m_Flapsubsystem));
+        xBoxLBumper.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
+        xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
     }
 
     /**

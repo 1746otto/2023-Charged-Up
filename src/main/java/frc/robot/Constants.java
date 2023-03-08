@@ -184,21 +184,46 @@ public final class Constants {
       }
 
     public static class IndexerConstants{
-      public static final int kIndexerMotor = 1;
-    public static int speed = 2;
-    public static int reverseSpeed = -2;
-    public static final int kChannel = 2;
+      public static final int kIndexerMotor = 33;
+      public static final int kIndexerMotor2 = 32;
+      public static final int kIndexerMotorT = 31;
+    public static double speed = .4;
+    public static double reverseSpeed = -.4;
+    public static double Tspeed = .5;
+    public static double RevTspeed = -.1;
+    public static final int kChannel = 8;
     public static final int kExtendSolenoidChannel = 12;
     public static final int kRetractSolenoidChannel = 13;
-   public static final int kbeambreak = 3;
-  }
+   public static final int kbeambreak = 1;
+    }
+
+    public static class FlapConstants{
+        public static final int kIndexerMotor = 33;
+        public static final int kIndexerMotor2 = 32;
+        public static final int kIndexerMotorT = 31;
+      public static double speed = .4;
+      public static double reverseSpeed = -.4;
+      public static double Tspeed = .1;
+      public static double RevTspeed = -.1;
+      public static final int kChannel = 8;
+      public static final int kExtendSolenoidChannel = 12;
+      public static final int kRetractSolenoidChannel = 13;
+      }
+
+  
+    public static final int kbeambreak = 3;
+
   public static class ClamperConstants {
     public static final int kExtendSolenoidChannel = 12;
     public static final int kRetractSolenoidChannel = 13;
     public static final int kChannel = 0;
     public static final boolean kPlacerEngaged = false;
   }
-    
+
 }
+  
+    
+
+
   
 
