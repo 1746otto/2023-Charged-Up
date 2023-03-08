@@ -26,17 +26,17 @@ public final class Constants {
     public static final int kREVPH = 2;
   }
   public static class IntakeRollerConstants {
-    public static final int CANID1= 10;
-    public static final int CANID2= 11;
-    public static final double kFullPower = 0.4;
+    public static final int CANID1= 21;
+    public static final int CANID2= 22;
+    public static final double kFullPower = 0.8;
   }
 
   public static class IntakeExtendConstants {
-    public static final int CANID1 = 10;
-    public static final int CANID2 = 11;
-    public static final double kFullPower = 0.4;
-    public static final int kLimitSwitch1 = 1;
-    public static final int kLimitSwitch2 = 1;
+    public static final int CANID1 = 23;
+    public static final int CANID2 = 23;
+    public static final double kFullPower = 0.2;
+    public static final int kLimitSwitch1 = 23;
+    public static final int kLimitSwitch2 = 24;
     public static final double kZeroPower = 0.0;
   }
 

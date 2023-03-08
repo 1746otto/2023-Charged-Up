@@ -10,8 +10,7 @@ public class PlungerCommand extends CommandBase{
         m_PlungerSubsystem = subsystem;
         addRequirements(subsystem);
     }
-    private void addRequirements(ClamperSubsystem subsystem) {
-    }
+    
     @Override
     public void initialize() {
         m_PlungerSubsystem.extendPlacerDown();
