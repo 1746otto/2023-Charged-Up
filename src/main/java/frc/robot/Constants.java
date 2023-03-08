@@ -11,6 +11,35 @@ import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
+  public static class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
+  }
+  public static class ControllerConstants{
+    public static final int kport = 0;
+    public static final int kport2 = 1;
+    public static final double kdeadzone = .125;
+    public static final double kDriveControl = 2.0;
+
+  }
+ 
+  public static class RobotConstants{
+    public static final int kREVPH = 2;
+  }
+  public static class IntakeRollerConstants {
+    public static final int CANID1= 21;
+    public static final int CANID2= 22;
+    public static final double kFullPower = 0.8;
+  }
+
+  public static class IntakeExtendConstants {
+    public static final int CANID1 = 23;
+    public static final int CANID2 = 23;
+    public static final double kFullPower = 0.2;
+    public static final int kLimitSwitch1 = 23;
+    public static final int kLimitSwitch2 = 24;
+    public static final double kZeroPower = 0.0;
+  }
+
     public static final double stickDeadband = 0.1;
 
     public static final class Swerve {
@@ -76,9 +105,9 @@ public final class Constants {
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-        public static final double driveKS = (0.32 / 12); //TODO: This must be tuned to specific robot
-        public static final double driveKV = (1.51 / 12);
-        public static final double driveKA = (0.27 / 12);
+        public static final double driveKS = (0.1896 / 12.0); //TODO: This must be tuned to specific robot
+        public static final double driveKV = (1.7999 / 12.0);
+        public static final double driveKA = (0.19507 / 12.0);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
@@ -147,6 +176,13 @@ public final class Constants {
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
+      public static class PlungerConstants {
+        public static final int kExtendSolenoidChannel = 12;
+        public static final int kRetractSolenoidChannel = 13;
+        public static final int kChannel = 0;
+        public static final boolean kPlacerEngaged = false;
+      }
+
     public static class IndexerConstants{
       public static final int kIndexerMotor = 33;
       public static final int kIndexerMotor2 = 32;
@@ -160,12 +196,7 @@ public final class Constants {
     public static final int kRetractSolenoidChannel = 13;
    public static final int kbeambreak = 1;
     }
-    public static class ControllerConstants {
-      public static final int kport = 0;
-      public static final int kport2 = 1;
-      public static final double kdeadZone = .125;
-      public static final double kDriveControl = 2.0;
-    }
+
     public static class FlapConstants{
         public static final int kIndexerMotor = 33;
         public static final int kIndexerMotor2 = 32;
@@ -177,12 +208,22 @@ public final class Constants {
       public static final int kChannel = 8;
       public static final int kExtendSolenoidChannel = 12;
       public static final int kRetractSolenoidChannel = 13;
-     public static final int kbeambreak = 1;
       }
-    
-    public static class RobotConstants {
-      public static final int kREVPH = 2;
-    }
+
   
-  
+    public static final int kbeambreak = 3;
+
+  public static class ClamperConstants {
+    public static final int kExtendSolenoidChannel = 12;
+    public static final int kRetractSolenoidChannel = 13;
+    public static final int kChannel = 0;
+    public static final boolean kPlacerEngaged = false;
+  }
+
 }
+  
+    
+
+
+  
+

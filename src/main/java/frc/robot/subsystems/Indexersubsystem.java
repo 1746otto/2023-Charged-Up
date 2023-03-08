@@ -59,6 +59,12 @@ public class Indexersubsystem extends SubsystemBase {
       int green = m_colorSensor.getGreen();
       int blue = m_colorSensor.getBlue();
       return new int[] {red,green,blue};
+    public void DisengagePistons() {
+      disengage.set(true);
+    }
+
+    public void engagePistons() {
+      disengage.set(false);
     }
 
     public Color getColorMatched(){
