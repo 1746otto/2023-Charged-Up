@@ -2,11 +2,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClamperSubsystem;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 public class ClamperCloseCommand extends CommandBase{
     private final ClamperSubsystem m_ClamperSubsystem;
 
-    public ClamperCloseCommand(ClamperSubsystem subsystem) {
+    public ClamperCloseCommand(ClamperSubsystem subsystem, DoubleSupplier elevatorEncoderValues, BooleanSupplier indexBeamBreakBroken) {
         m_ClamperSubsystem = subsystem;
         addRequirements(subsystem);
     }

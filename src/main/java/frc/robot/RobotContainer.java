@@ -69,6 +69,7 @@ public class RobotContainer {
     // private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
     private final PlungerSubsystem m_PlungerSubsystem = new PlungerSubsystem();
+    private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
     
 
@@ -138,7 +139,7 @@ public class RobotContainer {
         xBoxLBumper.toggleOnTrue(new ClamperCloseCommand(m_ClamperSubsystem));
         xBoxLBumper.toggleOnFalse(new ClamperOpenCommand(m_ClamperSubsystem));
 
-        xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem));
+        xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem, () -> m_ElevatorSubsystem.getElevatorEncoderValues()));
         xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
         // xBoxRBumper.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
         // xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerExtendCommand(m_PlungerSubsystem), new ClamperCloseCommand(m_ClamperSubsystem)));
