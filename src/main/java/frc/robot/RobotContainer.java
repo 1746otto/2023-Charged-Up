@@ -88,6 +88,10 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
      
+        m_chooser.setDefaultOption("Auton1", "Auton1");
+        //m_chooser.addOption("Auton2", getAutonomousCommand());
+        m_chooser.addOption("Auton2", "Auton2");
+        SmartDashboard.putData(m_chooser);
     
        // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
         s_Swerve.setDefaultCommand(
@@ -177,10 +181,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
        // return new Auton(s_Swerve, allianceColor);
-        m_chooser.setDefaultOption("Auton1", "Auton1");
-        //m_chooser.addOption("Auton2", getAutonomousCommand());
-        m_chooser.addOption("Auton2", "Auton2");
-        SmartDashboard.putData(m_chooser);
         return new Auton(s_Swerve, allianceColor);
     }
 
