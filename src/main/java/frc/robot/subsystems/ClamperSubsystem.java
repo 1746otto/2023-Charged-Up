@@ -24,8 +24,10 @@ public class ClamperSubsystem extends SubsystemBase {
     public boolean isEngaged() {
         return piston.get();
     }
-
-    public void toggleClamper() {
-        piston.toggle();
+    public void closeClamper(){
+        piston.set(true);
+    }
+    public void openClamper(){
+        piston.set(false);
     }
 }

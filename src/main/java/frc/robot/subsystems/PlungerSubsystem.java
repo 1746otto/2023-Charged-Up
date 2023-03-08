@@ -23,8 +23,10 @@ public class PlungerSubsystem extends SubsystemBase {
     public boolean isEngaged() {
         return piston.get();
     }
-
-    public void togglePlunger() {
+    public void extendPlunger(){
         piston.set(true);
+    }
+    public void retractPlunger(){
+        piston.set(false);
     }
 }
