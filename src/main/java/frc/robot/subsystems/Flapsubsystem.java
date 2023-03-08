@@ -39,8 +39,12 @@ public class Flapsubsystem extends SubsystemBase {
    public boolean isEngaged(){
     return pistons.get();
    }
-   public void toggleFlap(){
-    pistons.toggle();
+   public void closeFlap(){
+    pistons.set(true);
+   }
+
+   public void openFlap(){
+     pistons.set(false);
    }
 
 
