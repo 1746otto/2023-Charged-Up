@@ -45,6 +45,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+    private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
 
     
 
@@ -97,7 +98,7 @@ public class RobotContainer {
         JoystickButton xBoxLBumper = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
        
     
-       // xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
+        xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem, m_Flapsubsystem));
         xBoxLBumper.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
         xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
     }
