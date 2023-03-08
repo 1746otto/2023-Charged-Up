@@ -40,6 +40,7 @@ public class IntakeExtendCommand extends CommandBase {
     m_subsystem.stopRunning();
   }
 
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {

@@ -19,12 +19,15 @@ public class IntakeRollerSubsystem extends SubsystemBase {
   public IntakeRollerSubsystem() {
     masterMotor = new CANSparkMax(IntakeRollerConstants.CANID1, MotorType.kBrushless);
     slaveMotor = new CANSparkMax(IntakeRollerConstants.CANID2, MotorType.kBrushless);
-    slaveMotor.follow(masterMotor);
-    slaveMotor.setInverted(true);
+    
+    slaveMotor.follow(masterMotor,true);
+    
+
   }
 
   public void runFullPower() {
     masterMotor.set(IntakeRollerConstants.kFullPower);
+    
   }
 
   public void runCustomPower(double input) {
