@@ -1,19 +1,41 @@
 package frc.robot;
 
+
+import frc.robot.commands.Autos;
+import frc.robot.commands.ClamperCommand;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.IndexerReverseCommand;
+import frc.robot.commands.ResetVisionCommand;
+import frc.robot.commands.ScoringAlignCommand;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.lang.Math;
-
-import frc.robot.Autos.Auton;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-
+import frc.robot.Constants.RobotConstants;
+import frc.robot.commands.IntakeExtendCommand;
+import frc.robot.commands.IntakeRetractCommand;
+import frc.robot.commands.IntakeRollCommand;
+import frc.robot.commands.LowGoalCommand;
+import frc.robot.subsystems.ClamperSubsystem;
+import frc.robot.subsystems.Flapsubsystem;
+import frc.robot.subsystems.Indexersubsystem;
+import frc.robot.subsystems.IntakeExtendSubsystem;
+import frc.robot.subsystems.IntakeRollerSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import java.lang.Math;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -44,6 +66,11 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+
+
+    /*Commands */
+    private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
+    private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
 
@@ -110,7 +137,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new Auton(s_Swerve);
+        return autos.exampleAuto();
     }
 }
 

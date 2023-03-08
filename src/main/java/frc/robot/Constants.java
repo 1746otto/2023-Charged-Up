@@ -11,6 +11,10 @@ import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
+  public static class VisionConstants {
+    public static final double kStrafeSignal = 0.3;
+    public static final int kFilterPasses = 16;
+  }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -105,7 +109,7 @@ public final class Constants {
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-        public static final double driveKS = (0.1896 / 12.0); //TODO: This must be tuned to specific robot
+        public static final double driveKS = (0.18986 / 12.0); //TODO: This must be tuned cuz its bad
         public static final double driveKV = (1.7999 / 12.0);
         public static final double driveKA = (0.19507 / 12.0);
 
@@ -163,7 +167,7 @@ public final class Constants {
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 2;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
     
