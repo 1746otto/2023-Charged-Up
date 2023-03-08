@@ -181,7 +181,7 @@ public final class Constants {
       }
     
     public static class RobotConstants {
-      public static final int kREVPH = 3;
+      public static final int kREVPH = 2;
     }
   
   

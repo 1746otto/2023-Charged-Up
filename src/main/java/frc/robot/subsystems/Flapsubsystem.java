@@ -40,11 +40,11 @@ public class Flapsubsystem extends SubsystemBase {
     return pistons.get();
    }
    public void closeFlap(){
-    pistons.set(true);
+    pistons.set(false);
    }
 
    public void openFlap(){
-     pistons.set(false);
+     pistons.set(true);
    }
 
 

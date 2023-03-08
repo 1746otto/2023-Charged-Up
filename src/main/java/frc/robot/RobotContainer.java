@@ -70,10 +70,10 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(strafeAxis), 
                 () -> -driver.getRawAxis(rotationAxis), 
                 () -> false,   //robotCentric.getAsBoolean()
-                () -> faceUp.getAsBoolean(),
-                () -> faceDown.getAsBoolean(),
-                () -> faceRight.getAsBoolean(),
-                () -> faceLeft.getAsBoolean()
+                () -> false,
+                () -> false,
+                () -> false,
+                () -> false
                 
             )
                 
@@ -94,7 +94,7 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
         JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
-        JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
+        JoystickButton xBoxA2 = new JoystickButton(m_controller, XboxController.Button.kA.value);
         JoystickButton xBoxLBumper = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
        
     
