@@ -101,9 +101,7 @@ public class RobotContainer {
 
        
     
-       // xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
         xBoxLBumper.toggleOnTrue(new IntakeRetractCommand(m_intakeExtendsubsystem));
-       // xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
         xBoxRightbumper.toggleOnTrue(new IntakeExtendCommand(m_intakeExtendsubsystem));
     }
 
