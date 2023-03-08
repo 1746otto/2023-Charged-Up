@@ -9,6 +9,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TeleopSwerve extends CommandBase {    
@@ -21,8 +22,8 @@ public class TeleopSwerve extends CommandBase {
     private BooleanSupplier faceDownSup;
     private BooleanSupplier faceRightSup;
     private BooleanSupplier faceLeftSup;
-    private int rotationAngle; 
-    private SlewRateLimiter translationSlew;
+    private int rotationAngle;
+    Timer slewTimer;
 
     public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup, BooleanSupplier faceUpSup, BooleanSupplier faceDownSup, BooleanSupplier faceRightSup, BooleanSupplier faceLeftSup) {
         this.s_Swerve = s_Swerve;
@@ -37,7 +38,6 @@ public class TeleopSwerve extends CommandBase {
         this.faceLeftSup = faceLeftSup;
         this.faceRightSup = faceRightSup;
         rotationAngle = -600;
-        translationSlew = new SlewRateLimiter(1);
 
     }
 
@@ -48,7 +48,10 @@ public class TeleopSwerve extends CommandBase {
         return true;
     }
 
-
+    @Override
+    public void initialize() {
+        slewTimer.start();
+    }
     @Override
     public void execute() {
         // Turning Buttons
@@ -72,7 +75,7 @@ public class TeleopSwerve extends CommandBase {
         //translationVal = Math.copySign(translationVal*strafeVal, strafeSup.getAsDouble());
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
         double slowZone = 25.0;// Get current facing of robot and determine which direction is the fastest to target
-
+        Translation2d driveVector = new Translation2d(translationVal, strafeVal).times(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed);
         double currentAngle = MathUtil.inputModulus(s_Swerve.getYaw().getDegrees(), 0, 360);
         System.out.println("Current Angle: " + currentAngle);
 
@@ -108,13 +111,26 @@ public class TeleopSwerve extends CommandBase {
         if (currentAngle == rotationAngle || (currentAngle > rotationAngle - targetMinusNum && currentAngle < rotationAngle + targetMinusNum) || ((rotationAngle == 0) && (currentAngle > 360 - targetMinusNum || currentAngle < rotationAngle + targetMinusNum))){
             rotationVal = 0;
         }
-        /* Drive */
-
-      
-       // double val2 = translationSlew.calculate(s_Swerve.getMagnitude(new Translation2d(translationVal, strafeVal)));
         
+        
+        // Slew limiting stuff
+        Translation2d velocityVector = new Translation2d(
+            Constants.Swerve.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vxMetersPerSecond, 
+            Constants.Swerve.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vyMetersPerSecond
+        );
+        velocityVector.rotateBy(new Rotation2d(s_Swerve.gyro.getYaw()));
+        
+        double changeAngle = Math.atan2(driveVector.getY() - velocityVector.getY(), driveVector.getX() - velocityVector.getX());
+        double magChange = Math.sqrt((driveVector.getX() - velocityVector.getX())*(driveVector.getX() - velocityVector.getX()) + (driveVector.getY() - velocityVector.getY())*(driveVector.getY() - velocityVector.getY()));
+
+        if (magChange > Constants.Swerve.slewLimit * slewTimer.get())
+            magChange = Constants.Swerve.slewLimit;
+        slewTimer.reset();
+        driveVector.plus(new Translation2d(velocityVector.getX() + magChange*Math.cos(changeAngle), velocityVector.getY() + magChange*Math.sin(changeAngle)));
+
+        /* Drive */        
         s_Swerve.drive(
-            new Translation2d(translationVal,strafeVal).times(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed), 
+            driveVector, 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
             true

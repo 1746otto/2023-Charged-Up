@@ -27,7 +27,7 @@ public final class Constants {
         public static final double trackWidth = Units.inchesToMeters(18.75); //TODO: This must be tuned to specific robot
         public static final double wheelBase = Units.inchesToMeters(18.75); //TODO: This must be tuned to specific robot
         public static final double wheelCircumference = chosenModule.wheelCircumference;
-        public static final double slewLimit = .1;
+        public static final double slewLimit = 1.0; // Max acceleration meters per second squared.
 
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
