@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    m_robotContainer.disableCompressor();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    m_robotContainer.disableCompressor();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -92,7 +93,9 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
+
     CommandScheduler.getInstance().cancelAll();
+    m_robotContainer.enableCompressor();
   }
 
   /** This function is called periodically during test mode. */

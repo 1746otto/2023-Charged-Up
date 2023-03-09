@@ -74,13 +74,14 @@ public class RobotContainer {
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
     private final IntakeExtendSubsystem m_IntakeExtendSubsystem = new IntakeExtendSubsystem();
+    private final Compressor m_compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
     
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-     
+        disableCompressor();
     
        // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
         s_Swerve.setDefaultCommand(
@@ -135,6 +136,14 @@ public class RobotContainer {
         xBoxY2.toggleOnTrue(new IntakeRetractCommand(m_IntakeExtendSubsystem));
 
 
+    }
+
+    public void enableCompressor() {
+        m_compressor.enableDigital();
+    }
+
+    public void disableCompressor() {
+        m_compressor.disable();
     }
 
     /**
