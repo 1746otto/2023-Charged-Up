@@ -38,6 +38,7 @@ public class TeleopSwerve extends CommandBase {
         this.faceLeftSup = faceLeftSup;
         this.faceRightSup = faceRightSup;
         rotationAngle = -600;
+        slewTimer = new Timer();
 
     }
 
@@ -122,18 +123,18 @@ public class TeleopSwerve extends CommandBase {
         
         double changeAngle = Math.atan2(driveVector.getY() - velocityVector.getY(), driveVector.getX() - velocityVector.getX());
         double magChange = Math.sqrt((driveVector.getX() - velocityVector.getX())*(driveVector.getX() - velocityVector.getX()) + (driveVector.getY() - velocityVector.getY())*(driveVector.getY() - velocityVector.getY()));
-
-        if (magChange > Constants.Swerve.slewLimit * slewTimer.get())
+        System.out.println(changeAngle);
+        if (magChange > Constants.Swerve.slewLimit*slewTimer.get())
             magChange = Constants.Swerve.slewLimit;
         slewTimer.reset();
-        driveVector.plus(new Translation2d(velocityVector.getX() + magChange*Math.cos(changeAngle), velocityVector.getY() + magChange*Math.sin(changeAngle)));
-
+        driveVector = new Translation2d(velocityVector.getX() + magChange*Math.cos(changeAngle), velocityVector.getY() + magChange*Math.sin(changeAngle));
+        System.out.println(driveVector);
         /* Drive */        
         s_Swerve.drive(
             driveVector, 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
-            true
+            false
         );
     }
 } 
