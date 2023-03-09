@@ -9,7 +9,7 @@ import java.util.function.DoubleSupplier;
 public class PlungerExtendCommand extends CommandBase{
     private final PlungerSubsystem m_Plungersubsystem;
 
-    public PlungerExtendCommand(PlungerSubsystem subsystem, DoubleSupplier elevatorEncoder) {
+    public PlungerExtendCommand(PlungerSubsystem subsystem) {
         m_Plungersubsystem = subsystem;
         addRequirements(subsystem);
     }
@@ -18,5 +18,9 @@ public class PlungerExtendCommand extends CommandBase{
     public void initialize() {
         m_Plungersubsystem.extendPlunger();
         System.out.println("Plunger Extended: " + m_Plungersubsystem.isEngaged());
+    }
+    @Override
+    public void end(boolean interrupted){
+        m_Plungersubsystem.retractPlunger();
     }
 }

@@ -70,6 +70,7 @@ public class RobotContainer {
     private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
     private final PlungerSubsystem m_PlungerSubsystem = new PlungerSubsystem();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+    private final Compressor m_Compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
     
 
@@ -80,6 +81,7 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        disableCompressor();
      
     
        // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
@@ -129,18 +131,14 @@ public class RobotContainer {
   
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        JoystickButton xBoxYButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
-        JoystickButton xBoxButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
-        JoystickButton xBoxAButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
-        JoystickButton xboxXButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
-        JoystickButton xBoxLBumperButton = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
-        JoystickButton xBoxRBumperButton = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+       
     
-        xBoxLBumper.toggleOnTrue(new ClamperCloseCommand(m_ClamperSubsystem));
-        xBoxLBumper.toggleOnFalse(new ClamperOpenCommand(m_ClamperSubsystem));
+        xBoxLBumper.toggleOnTrue(new ClamperOpenCommand(m_ClamperSubsystem));
+        xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem));
+       
 
-        xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem, () -> m_ElevatorSubsystem.getElevatorEncoderValues()));
-        xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
+       // xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem, () -> m_ElevatorSubsystem.getElevatorEncoderValues()));
+        //xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
         // xBoxRBumper.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
         // xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerExtendCommand(m_PlungerSubsystem), new ClamperCloseCommand(m_ClamperSubsystem)));
             
@@ -153,6 +151,12 @@ public class RobotContainer {
         // xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
         // xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
         // xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+    }
+    public void enableCompressor(){
+        m_Compressor.enableDigital();
+    }
+    public void disableCompressor(){
+        m_Compressor.disable();
     }
 
  

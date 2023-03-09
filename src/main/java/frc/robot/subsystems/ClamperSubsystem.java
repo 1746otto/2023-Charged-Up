@@ -21,9 +21,9 @@ public class ClamperSubsystem extends SubsystemBase {
         return piston.get();
     }
     public void closeClamper(){
-        piston.set(true);
+        piston.set(false);
     }
     public void openClamper(){
-        piston.set(false);
+        piston.set(true);
     }
 }

@@ -8,7 +8,7 @@ import java.util.function.DoubleSupplier;
 public class ClamperCloseCommand extends CommandBase{
     private final ClamperSubsystem m_ClamperSubsystem;
 
-    public ClamperCloseCommand(ClamperSubsystem subsystem, DoubleSupplier elevatorEncoderValues, BooleanSupplier indexBeamBreakBroken) {
+    public ClamperCloseCommand(ClamperSubsystem subsystem) {
         m_ClamperSubsystem = subsystem;
         addRequirements(subsystem);
     }

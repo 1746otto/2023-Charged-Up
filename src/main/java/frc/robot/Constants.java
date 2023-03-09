@@ -192,7 +192,7 @@ public final class Constants {
     }
     public static class ClamperConstants {
       public static final int kModID = 2;
-      public static final int kClamperChannel = 10;
+      public static final int kClamperChannel = 8;
     }
     public static class ElevatorConstants{
       public static final int kElevatorMotor1ID = 41;

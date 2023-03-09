@@ -7,7 +7,7 @@ import java.util.function.DoubleSupplier;
 public class ClamperOpenCommand extends CommandBase{
     private final ClamperSubsystem m_ClamperSubsystem;
 
-    public ClamperOpenCommand(ClamperSubsystem subsystem, DoubleSupplier elevatorEncoderValues) {
+    public ClamperOpenCommand(ClamperSubsystem subsystem) {
         m_ClamperSubsystem = subsystem;
         addRequirements(subsystem);
     }
@@ -17,4 +17,9 @@ public class ClamperOpenCommand extends CommandBase{
         m_ClamperSubsystem.openClamper();
         System.out.println("Clamper Opened: " + m_ClamperSubsystem.isEngaged());
     }
+    @Override
+    public void end(boolean interrupted){
+        m_ClamperSubsystem.closeClamper();
+    }
+
 }
