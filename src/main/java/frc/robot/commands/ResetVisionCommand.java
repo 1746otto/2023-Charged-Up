@@ -106,7 +106,7 @@ public class ResetVisionCommand extends CommandBase {
                 y /= (double)ycount;
                 rot /= (double)rotcount;
 
-                m_swerve.resetOdometry(new Pose2d(new Translation2d(x, y), Rotation2d.fromRadians(rot)));
+                m_swerve.poseEstimator.resetPosition(Rotation2d.fromRadians(rot), m_swerve.getModulePositions(), new Pose2d(new Translation2d(x, y), Rotation2d.fromRadians(rot)));
  
             }
             else {
@@ -140,7 +140,7 @@ public class ResetVisionCommand extends CommandBase {
                 y /= (double)ycount;
                 rot /= (double)rotcount;
 
-                m_swerve.swerveOdometry.resetPosition(Rotation2d.fromRadians(rot), m_swerve.getModulePositions(), new Pose2d(new Translation2d(x, y), Rotation2d.fromRadians(rot)));
+                m_swerve.poseEstimator.resetPosition(Rotation2d.fromRadians(rot), m_swerve.getModulePositions(), new Pose2d(new Translation2d(x, y), Rotation2d.fromRadians(rot)));
             }
             
             
