@@ -73,6 +73,7 @@ public class RobotContainer {
     private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
+    private final IntakeExtendSubsystem m_IntakeExtendSubsystem = new IntakeExtendSubsystem();
 
     
 
@@ -121,13 +122,18 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         JoystickButton xBoxLBumper = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
         JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
-        JoystickButton xBoxA2 = new JoystickButton(m_controller, XboxController.Button.kA.value);
+        JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
+        JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
         JoystickButton xBoxRBumper = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+    
        
     
         xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem, m_Flapsubsystem));
         xBoxLBumper.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
         xBoxRBumper.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+        xBoxX2.toggleOnTrue(new IntakeExtendCommand(m_IntakeExtendSubsystem));
+        xBoxY2.toggleOnTrue(new IntakeRetractCommand(m_IntakeExtendSubsystem));
+
 
     }
 
