@@ -119,16 +119,27 @@ public class TeleopSwerve extends CommandBase {
             Constants.Swerve.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vxMetersPerSecond, 
             Constants.Swerve.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vyMetersPerSecond
         );
+
+
+        System.out.print("Robot Centric velocity: ");
+        System.out.println(velocityVector);
+
         velocityVector.rotateBy(new Rotation2d(s_Swerve.gyro.getYaw()));
         
         double changeAngle = Math.atan2(driveVector.getY() - velocityVector.getY(), driveVector.getX() - velocityVector.getX());
         double magChange = Math.sqrt((driveVector.getX() - velocityVector.getX())*(driveVector.getX() - velocityVector.getX()) + (driveVector.getY() - velocityVector.getY())*(driveVector.getY() - velocityVector.getY()));
+        System.out.print("Change Angle: ");
         System.out.println(changeAngle);
-        if (magChange > Constants.Swerve.slewLimit*slewTimer.get())
+        System.out.print("Change Magnitude: ");
+        System.out.println(magChange);
+        if (magChange > Constants.Swerve.slewLimit)
             magChange = Constants.Swerve.slewLimit;
         slewTimer.reset();
         driveVector = new Translation2d(velocityVector.getX() + magChange*Math.cos(changeAngle), velocityVector.getY() + magChange*Math.sin(changeAngle));
+        System.out.print("Drive Vector: ");
         System.out.println(driveVector);
+        System.out.print("Velocity Vector: ");
+        System.out.println(velocityVector);
         /* Drive */        
         s_Swerve.drive(
             driveVector, 
