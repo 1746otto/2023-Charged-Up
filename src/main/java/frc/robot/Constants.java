@@ -27,7 +27,7 @@ public final class Constants {
         public static final double trackWidth = Units.inchesToMeters(18.75); //TODO: This must be tuned to specific robot
         public static final double wheelBase = Units.inchesToMeters(18.75); //TODO: This must be tuned to specific robot
         public static final double wheelCircumference = chosenModule.wheelCircumference;
-        public static final double slewLimit = 1.0; // Max acceleration meters per second squared.
+        public static final double slewLimit = 1.5; // Max acceleration meters per second squared.
 
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
@@ -61,8 +61,8 @@ public final class Constants {
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double openLoopRamp = 0.75;
-        public static final double closedLoopRamp = 1.5;
+        public static final double openLoopRamp = 0.0;
+        public static final double closedLoopRamp = 0.01;
         public static final double openLoopRampAngle = 0.15;
 
         /* Angle Motor PID Values */
@@ -79,19 +79,19 @@ public final class Constants {
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-        public static final double driveKS = (0); //TODO: This must be tuned to specific robot
-        public static final double driveKV = (0);
-        public static final double driveKA = (0);
+        public static final double driveKS = (0.18986/12.0); //TODO: This must be tuned to specific robot
+        public static final double driveKV = (1.7999/12.0);
+        public static final double driveKA = (0.19507/12.0);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 2; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
         /** Radians per Second */
         public static final double maxAngularVelocity = 5; //TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Coast;
+        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 1 */

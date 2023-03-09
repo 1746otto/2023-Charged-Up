@@ -53,30 +53,13 @@ public class SwerveModule {
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
         if(isOpenLoop){
-            double slewOutput = slewLimiter(Constants.Swerve.slewLimit, getState().speedMetersPerSecond, desiredState.speedMetersPerSecond);
-            double percentOutput = slewOutput / Constants.Swerve.maxSpeed;
+            double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
         }
         else {
             double velocity = Conversions.MPSToFalcon(desiredState.speedMetersPerSecond, Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio);
             mDriveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward, feedforward.calculate(desiredState.speedMetersPerSecond));
         }
-    }
-
-    /*This has to do with making sure that the robot doesn't accelerate so fast it tips over.*/
-    private double slewLimiter(double limit, double value, double output) {
-        double error = value - output;
-        if(error > limit){
-            error = limit;
-        }else if (error < (limit * -1)){
-            error = limit * -1;
-        }
-        output += error;
-        return output;
-    }
-
-    private void resetSlew(double output) {
-        output = 0.0;
     }
 
     private void setAngle(SwerveModuleState desiredState){
