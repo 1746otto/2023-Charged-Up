@@ -1,21 +1,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClamperSubsystem;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
+import frc.robot.subsystems.PlacerSubsystem;
 
+// This entire class should just be a lambda, or at least an instant command.
 public class ClamperCloseCommand extends CommandBase{
-    private final ClamperSubsystem m_ClamperSubsystem;
-
-    public ClamperCloseCommand(ClamperSubsystem subsystem) {
-        m_ClamperSubsystem = subsystem;
-        addRequirements(subsystem);
+    private final PlacerSubsystem m_PlacerSubsystem;
+    
+    public ClamperCloseCommand(PlacerSubsystem subsystem) {
+        m_PlacerSubsystem = subsystem;
+        addRequirements(m_PlacerSubsystem);
     }
 
     @Override
     public void initialize() {
-        m_ClamperSubsystem.closeClamper();
-        System.out.println("Clamper Closed: " + m_ClamperSubsystem.isEngaged());
+        m_PlacerSubsystem.closeClamper();
+        
+    }
+
+    @Override
+    public boolean isFinished() {
+        return !m_PlacerSubsystem.isClamperOpen();
     }
 }

@@ -186,12 +186,9 @@ public final class Constants {
       public static final int kRetractSolenoidChannel = 13;
       public static final int kbeambreak = 3;
     }
-    public static class PlungerConstants {
+    public static class PlacerConstants {
       public static final int kModID = 2;
       public static final int kPlungerChannel = 9;
-    }
-    public static class ClamperConstants {
-      public static final int kModID = 2;
       public static final int kClamperChannel = 8;
     }
     public static class ElevatorConstants{

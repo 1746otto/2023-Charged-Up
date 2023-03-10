@@ -1,26 +1,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClamperSubsystem;
-import frc.robot.subsystems.PlungerSubsystem;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
+import frc.robot.subsystems.PlacerSubsystem;
 
+// Again this could just be a set of lambdas/Instant Commands.
 public class PlungerExtendCommand extends CommandBase{
-    private final PlungerSubsystem m_Plungersubsystem;
+    private final PlacerSubsystem m_Placersubsystem;
 
-    public PlungerExtendCommand(PlungerSubsystem subsystem) {
-        m_Plungersubsystem = subsystem;
+    public PlungerExtendCommand(PlacerSubsystem subsystem) {
+        m_Placersubsystem = subsystem;
         addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        m_Plungersubsystem.extendPlunger();
-        System.out.println("Plunger Extended: " + m_Plungersubsystem.isEngaged());
+        m_Placersubsystem.extendPlunger();
     }
+
     @Override
     public void end(boolean interrupted){
-        m_Plungersubsystem.retractPlunger();
+        m_Placersubsystem.retractPlunger();
     }
 }

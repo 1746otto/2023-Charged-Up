@@ -16,7 +16,6 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
-import frc.robot.subsystems.PlungerSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -67,8 +66,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     // private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
-    private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
-    private final PlungerSubsystem m_PlungerSubsystem = new PlungerSubsystem();
+    private final PlacerSubsystem m_PlacerSubsystem = new PlacerSubsystem();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
     private final Compressor m_Compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
@@ -141,17 +139,17 @@ public class RobotContainer {
         );
         // This will be interupted if any of the subsystems below are being used, and will continue when they aren't.
         // This allows us to not run this if we are actively running indexer, which will turn off when beam is broken.
-        m_ClamperSubsystem.setDefaultCommand(
+        m_PlacerSubsystem.setDefaultCommand(
             new RunCommand(
                 //TODO: Tune these numbers to be realistic not guesses.
                 () -> {
                     if (m_ElevatorSubsystem.getElevatorEncoderValues() < Constants.ElevatorConstants.kOriginPosition + 250 
                     && m_ElevatorSubsystem.getElevatorEncoderValues() > Constants.ElevatorConstants.kOriginPosition - 250
                     && m_IndexerSubsystem.beambreakBroken()) {
-                        m_ClamperSubsystem.closeClamper();
+                        m_PlacerSubsystem.closeClamper();
                     }
                 }, 
-                m_ClamperSubsystem, 
+                m_PlacerSubsystem, 
                 m_ElevatorSubsystem, 
                 m_IndexerSubsystem
             )
@@ -178,8 +176,8 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
        
     
-        xBoxLBumper.toggleOnTrue(new ClamperOpenCommand(m_ClamperSubsystem));
-        xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem));
+        xBoxLBumper.toggleOnTrue(new ClamperOpenCommand(m_PlacerSubsystem));
+        xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlacerSubsystem));
        
 
        // xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem, () -> m_ElevatorSubsystem.getElevatorEncoderValues()));
