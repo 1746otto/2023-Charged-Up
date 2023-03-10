@@ -13,8 +13,6 @@ public class ClamperCloseCommand extends CommandBase{
     
     public ClamperCloseCommand(PlacerSubsystem subsystem) {
         m_PlacerSubsystem = subsystem;
-        this.indexerBeamBreak = indexerBeamBreak;
-        this.elevatorBeamBreak = elevatorBeamBreak;
         addRequirements(m_PlacerSubsystem);
     }
 

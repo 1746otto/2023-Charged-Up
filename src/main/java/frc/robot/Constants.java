@@ -210,6 +210,7 @@ public final class Constants {
       // TODO: change channel num to proper num
       public static final int kElevatorAnalogInputChannel = 0;
     }
+  
 
     public static class FlapConstants{
         public static final int kIndexerMotor = 33;
