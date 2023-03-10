@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
-    public SwerveDrivePoseEstimator poseEstimator;
+    public final SwerveDrivePoseEstimator poseEstimator;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID,(Constants.Swerve.CANBus));
@@ -38,13 +38,12 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
 
-        poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions(), getPose());
-
         /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
          * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
          */
         Timer.delay(5.0);
         resetModulesToAbsolute();
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions(), new Pose2d());
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -123,11 +122,11 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         poseEstimator.update(getYaw(), getModulePositions());  
-
-        SmartDashboard.putNumber("Positionx", getPose().getX());
-        SmartDashboard.putNumber("Positiony", getPose().getY());
-        SmartDashboard.putNumber("Positiontheta", getPose().getRotation().getDegrees());
-
+        if (poseEstimator != null) {
+            SmartDashboard.putNumber("Positionx", getPose().getX());
+            SmartDashboard.putNumber("Positiony", getPose().getY());
+            SmartDashboard.putNumber("Positiontheta", getPose().getRotation().getDegrees());
+        }
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());

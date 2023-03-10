@@ -66,15 +66,15 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-
-
-    /*Commands */
-    private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
-    private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
+    private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
     private final IntakeExtendSubsystem m_IntakeExtendSubsystem = new IntakeExtendSubsystem();
     private final Compressor m_compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
+    
+    /*Commands */
+    private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
+    private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
 
     
 
