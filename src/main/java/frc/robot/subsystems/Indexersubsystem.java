@@ -19,14 +19,7 @@ public class Indexersubsystem extends SubsystemBase {
     CANSparkMax Motor2;
     private final Solenoid pistons;
     private final AnalogInput beambreak;
-
-    private boolean beambreakLastState = false;
-
-
-  
     
-
-
     public Indexersubsystem() {
 
         MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
@@ -101,7 +94,10 @@ public class Indexersubsystem extends SubsystemBase {
 
     }
     public boolean beambreakBroken() {
-      return beambreakLastState;
+      if (beambreak.getValue() > 1000) {
+        return true;
+      }
+      return false;
     }
     public void autoIndexer() {
       if (beambreakBroken()) {
@@ -110,8 +106,6 @@ public class Indexersubsystem extends SubsystemBase {
         runAllMotors();
       }
     }
-    
-
 
 
 

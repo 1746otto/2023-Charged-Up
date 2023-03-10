@@ -71,6 +71,7 @@ public class RobotContainer {
     private final PlungerSubsystem m_PlungerSubsystem = new PlungerSubsystem();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
     private final Compressor m_Compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
+    private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
 
     
 
@@ -111,6 +112,50 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+    }
+
+
+    private void configureDefaultCommands() {
+        s_Swerve.setDefaultCommand(
+            /*  new TeleopSwerve(
+                 s_Swerve, 
+                 () -> -driver.getRawAxis((int) limiterT.calculate(translationAxis)), 
+                 () -> -driver.getRawAxis((int)limiterT.calculate(strafeAxis)), 
+                 () -> -driver.getRawAxis(rotationAxis), 
+                 () -> false   //robotCentric.getAsBoolean()
+                 
+             )*/
+             new TeleopSwerve(
+                 s_Swerve, 
+                 () -> -driver.getRawAxis(translationAxis), 
+                 () -> -driver.getRawAxis(strafeAxis), 
+                 () -> -driver.getRawAxis(rotationAxis), 
+                 () -> false,   //robotCentric.getAsBoolean()
+                 () -> faceUp.getAsBoolean(),
+                 () -> faceDown.getAsBoolean(),
+                 () -> faceRight.getAsBoolean(),
+                 () -> faceLeft.getAsBoolean()
+                 
+             )
+                 
+        );
+        // This will be interupted if any of the subsystems below are being used, and will continue when they aren't.
+        // This allows us to not run this if we are actively running indexer, which will turn off when beam is broken.
+        m_ClamperSubsystem.setDefaultCommand(
+            new RunCommand(
+                //TODO: Tune these numbers to be realistic not guesses.
+                () -> {
+                    if (m_ElevatorSubsystem.getElevatorEncoderValues() < Constants.ElevatorConstants.kOriginPosition + 250 
+                    && m_ElevatorSubsystem.getElevatorEncoderValues() > Constants.ElevatorConstants.kOriginPosition - 250
+                    && m_IndexerSubsystem.beambreakBroken()) {
+                        m_ClamperSubsystem.closeClamper();
+                    }
+                }, 
+                m_ClamperSubsystem, 
+                m_ElevatorSubsystem, 
+                m_IndexerSubsystem
+            )
+        );
     }
 
     /**
