@@ -5,9 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeExtendConstants;
@@ -15,19 +15,15 @@ import frc.robot.Constants.IntakeExtendConstants;
 public class IntakeExtendSubsystem extends SubsystemBase {
 /** Creates a new ExampleSubsystem. */
   CANSparkMax masterMotor;
-  CANSparkMax slaveMotor;
-  DigitalInput limitSwitch1;
-  DigitalInput limitSwitch2;
+  SparkMaxLimitSwitch limitSwitch1;
+  SparkMaxLimitSwitch limitSwitch2;
 
 
   public IntakeExtendSubsystem() {
     masterMotor = new CANSparkMax(IntakeExtendConstants.CANID1, MotorType.kBrushless);
-    slaveMotor = new CANSparkMax(IntakeExtendConstants.CANID2, MotorType.kBrushless);
-    limitSwitch1 = new DigitalInput(IntakeExtendConstants.kLimitSwitch1);
-    limitSwitch2 = new DigitalInput(IntakeExtendConstants.kLimitSwitch2);
-
-    slaveMotor.follow(masterMotor);
-    slaveMotor.setInverted(true);
+    limitSwitch1 = masterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    limitSwitch2 = masterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    masterMotor.setInverted(true);
   }
 
   public void extend() {
@@ -40,14 +36,15 @@ public class IntakeExtendSubsystem extends SubsystemBase {
   
   public void stopRunning() {
     masterMotor.set(IntakeExtendConstants.kZeroPower);
+  
   }
 
-  public boolean isExtended() {
-    return limitSwitch1.get();
-  }
+   public boolean isExtended() {
+    return limitSwitch1.isPressed();
+   }
 
   public boolean isRetracted() {
-    return limitSwitch2.get();
+    return limitSwitch2.isPressed();
   }
 
   /**
@@ -77,6 +74,8 @@ public class IntakeExtendSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println("limit switch 1: " + limitSwitch1.isPressed());
+    System.out.println("limiy switch 2: " + limitSwitch2.isPressed());
     // This method will be called once per scheduler run
   }
 
