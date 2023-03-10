@@ -16,11 +16,4 @@ public class ClamperOpenCommand extends CommandBase{
     public void initialize() {
         m_PlacerSubsystem.openClamper();
     }
-
-    @Override
-    public void end(boolean interrupted){
-        // Why are we doing this? There is no situation I can think of where this would be required.
-        m_PlacerSubsystem.closeClamper();
-    }
-
 }

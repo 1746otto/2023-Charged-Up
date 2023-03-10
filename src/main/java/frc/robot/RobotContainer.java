@@ -176,8 +176,10 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
        
     
-        xBoxLBumper.toggleOnTrue(new ClamperOpenCommand(m_PlacerSubsystem));
-        xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlacerSubsystem));
+        // xBoxLBumper.toggleOnTrue(new ClamperOpenCommand(m_PlacerSubsystem));
+        // xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlacerSubsystem));
+        xBoxRBumper.onTrue(new SequentialCommandGroup(new IndexerCommand(m_IndexerSubsystem), new ClamperCloseCommand(m_PlacerSubsystem)));
+        //xBoxLBumper.onTrue();
        
 
        // xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem, () -> m_ElevatorSubsystem.getElevatorEncoderValues()));
