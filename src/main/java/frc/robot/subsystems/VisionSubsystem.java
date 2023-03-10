@@ -125,16 +125,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-      fetchvision();
-      System.out.print(xOffset);
-      try {
-      System.out.println(getNumTags());
-      System.out.println(getPose2d());
-      } catch (Exception e) {
-        System.out.println(e);
-      }
-      
-      
+    fetchvision();      
   }
 }
 
