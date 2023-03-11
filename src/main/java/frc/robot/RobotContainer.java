@@ -69,7 +69,7 @@ public class RobotContainer {
     /*Commands */
     private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
     private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
-    private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
+    //private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
 
     
 
@@ -170,15 +170,11 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
        
-        // xboxX.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_PlacerSubsystem), new ClamperOpenCommand(m_PlacerSubsystem)));
-        // xBoxLBumper.onTrue(new SequentialCommandGroup(new IndexerCommand(m_IndexerSubsystem), new ClamperCloseCommand(m_PlacerSubsystem)));
-        // xBoxY.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition)));
-        // xBoxB.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition)));
-        // xBoxA.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
-        xBoxA.onTrue(new PlungerExtendCommand(m_PlacerSubsystem));
-        xBoxB.onTrue(new PlungerRetractCommand(m_PlacerSubsystem));
-        xBoxX.onTrue(new ClamperCloseCommand(m_PlacerSubsystem));
-        xBoxY.onTrue(new ClamperOpenCommand(m_PlacerSubsystem));
+        xBoxX.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_PlacerSubsystem), new ClamperOpenCommand(m_PlacerSubsystem)));
+        xBoxLBumper.onTrue(new SequentialCommandGroup(new IndexerCommand(m_IndexerSubsystem), new ClamperCloseCommand(m_PlacerSubsystem)));
+        xBoxY.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition)));
+        xBoxB.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition)));
+        xBoxA.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
 
 
 

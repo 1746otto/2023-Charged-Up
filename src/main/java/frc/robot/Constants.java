@@ -189,7 +189,7 @@ public final class Constants {
       public static double reverseSpeed = -.4;
       public static double Tspeed = .5;
       public static double RevTspeed = -.1;
-      public static final int kChannel = 8;
+      public static final int kChannel = 10;
       public static final int kExtendSolenoidChannel = 12;
       public static final int kRetractSolenoidChannel = 13;
       public static final int kbeambreak = 3;
@@ -213,14 +213,11 @@ public final class Constants {
   
 
     public static class FlapConstants{
-        public static final int kIndexerMotor = 33;
-        public static final int kIndexerMotor2 = 32;
-        public static final int kIndexerMotorT = 31;
       public static double speed = .4;
       public static double reverseSpeed = -.4;
       public static double Tspeed = .1;
       public static double RevTspeed = -.1;
-      public static final int kChannel = 8;
+      public static final int kChannel = 10;
       public static final int kExtendSolenoidChannel = 12;
       public static final int kRetractSolenoidChannel = 13;
       }

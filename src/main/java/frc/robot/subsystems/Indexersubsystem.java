@@ -22,11 +22,11 @@ public class Indexersubsystem extends SubsystemBase {
     
     public Indexersubsystem() {
 
-        MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
+        MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotorT, MotorType.kBrushless);
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
-        Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
+        Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor2, MotorType.kBrushless);
         Motor2.setInverted(true);
-        pistons =new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
+        pistons = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
         
         beambreak = new AnalogInput(IndexerConstants.kbeambreak);
 
