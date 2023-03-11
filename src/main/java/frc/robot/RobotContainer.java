@@ -13,6 +13,10 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.Compressor;
@@ -54,6 +58,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 public class RobotContainer {
     private final XboxController m_controller = new XboxController(ControllerConstants.kport);
     private final XboxController m_controller2 = new XboxController(ControllerConstants.kport2);
+    private final Alliance allianceColor = DriverStation.getAlliance();
+    private final SendableChooser<String> m_chooser = new SendableChooser<>();
   
   
     /* Controllers */
@@ -93,6 +99,11 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+     
+        m_chooser.setDefaultOption("Auton1", "Auton1");
+        //m_chooser.addOption("Auton2", getAutonomousCommand());
+        m_chooser.addOption("Auton2", "Auton2");
+        SmartDashboard.putData(m_chooser);
         disableCompressor();
     
        // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
