@@ -187,20 +187,32 @@ public final class Constants {
     }
 
     public static class IndexerConstants{
-<<<<<<< HEAD
-      public static final int kIndexerMotor = 1;
-      public static int speed = 2;
-      public static int reverseSpeed = -2;
+      public static final int kIndexerMotor = 33;
+      public static final int kIndexerMotor2 = 32;
+      public static final int kIndexerMotorT = 31;
+      public static double speed = .4;
+      public static double reverseSpeed = -.4;
+      public static double Tspeed = .5;
+      public static double RevTspeed = -.1;
       public static final int kChannel = 8;
       public static final int kExtendSolenoidChannel = 12;
       public static final int kRetractSolenoidChannel = 13;
-      public static final int kbeambreak = 3;
+      public static final int kbeambreak = 1;
     }
     public static class PlacerConstants {
       public static final int kModID = 2;
       public static final int kPlungerChannel = 9;
       public static final int kClamperChannel = 8;
     }
+    public static class ClamperConstants {
+      public static final int kExtendSolenoidChannel = 14;
+      public static final int kRetractSolenoidChannel = 15;
+      public static final int kChannel = 0;
+      public static final boolean kPlacerEngaged = false;
+    }
+    public static class FlapConstants{
+      public static final int kChannel = 8;
+      }
     public static class ElevatorConstants{
       public static final int kElevatorMotor1ID = 41;
       public static final double kElevatorD = 0.0;
@@ -214,52 +226,3 @@ public final class Constants {
     }
   
 }
-=======
-      public static final int kIndexerMotor = 33;
-      public static final int kIndexerMotor2 = 32;
-      public static final int kIndexerMotorT = 31;
-    public static double speed = .4;
-    public static double reverseSpeed = -.4;
-    public static double Tspeed = .5;
-    public static double RevTspeed = -.1;
-    public static final int kChannel = 8;
-    public static final int kExtendSolenoidChannel = 12;
-    public static final int kRetractSolenoidChannel = 13;
-   public static final int kbeambreak = 1;
-    }
-
-    public static class FlapConstants{
-        public static final int kIndexerMotor = 33;
-        public static final int kIndexerMotor2 = 32;
-        public static final int kIndexerMotorT = 31;
-      public static double speed = .4;
-      public static double reverseSpeed = -.4;
-      public static double Tspeed = .1;
-      public static double RevTspeed = -.1;
-      public static final int kChannel = 8;
-      public static final int kExtendSolenoidChannel = 12;
-      public static final int kRetractSolenoidChannel = 13;
-      }
-
-  
-    public static final int kbeambreak = 3;
-
-  public static class ClamperConstants {
-    public static final int kExtendSolenoidChannel = 14;
-    public static final int kRetractSolenoidChannel = 15;
-    public static final int kChannel = 0;
-    public static final boolean kPlacerEngaged = false;
-  }
-  public static class ElevatorConstants{
-    public static final int kElevatorMotor1ID = 41;
-    public static final double kElevatorD = 0.0;
-    public static final double kElevatorP = 1.0;
-    public static final int kOriginPosition = 0;
-    public static final int kMidPosition = 48;
-    public static final int kHighPosition = 55;
-    public static final double kElevatorSpeed = 1.0;
-    // TODO: change channel num to proper num
-    public static final int kElevatorAnalogInputChannel = 0;
-  }
-}
->>>>>>> main
