@@ -36,6 +36,12 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import java.lang.Math;
+
+
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -63,6 +69,7 @@ public class RobotContainer {
     private final JoystickButton faceDown = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton faceRight = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton faceLeft = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton balance = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -121,6 +128,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        balance.onTrue(new BalancingCommand(s_Swerve, robotCentric));
         JoystickButton xBoxLBumper = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
         JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
         JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);

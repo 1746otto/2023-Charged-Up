@@ -73,7 +73,7 @@ public class TeleopSwerve extends CommandBase {
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
 
         double currentAngle = MathUtil.inputModulus(s_Swerve.getYaw().getDegrees(), 0, 360);
-        System.out.println("Current Angle: " + currentAngle);
+        //System.out.println("Current Angle: " + currentAngle);
 
         if(joystickBeingUsed(rotationVal)) {
             rotationAngle = -600;
