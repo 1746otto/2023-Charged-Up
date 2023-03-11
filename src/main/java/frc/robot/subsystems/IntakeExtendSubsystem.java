@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeExtendConstants;
+import frc.robot.constants.IntakeExtendConstants;
 
 public class IntakeExtendSubsystem extends SubsystemBase {
 /** Creates a new ExampleSubsystem. */

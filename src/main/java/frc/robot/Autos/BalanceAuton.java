@@ -1,6 +1,5 @@
 package frc.robot.Autos;
 
-import frc.robot.Constants;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.DriveTo5DegreesCommand;
 import frc.robot.commands.DriveBackTo5DegreesCommand;

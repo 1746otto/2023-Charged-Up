@@ -25,9 +25,9 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.RobotConstants;
+import frc.robot.constants.ControllerConstants;
+import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.Flapsubsystem;
@@ -50,7 +50,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.ElevatorConstants;
+import frc.robot.constants.ElevatorConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -174,8 +174,8 @@ public class RobotContainer {
             new RunCommand(
                 //TODO: Tune these numbers to be realistic not guesses.
                 () -> {
-                    if (m_ElevatorSubsystem.getElevatorEncoderValues() < Constants.ElevatorConstants.kOriginPosition + 250 
-                    && m_ElevatorSubsystem.getElevatorEncoderValues() > Constants.ElevatorConstants.kOriginPosition - 250
+                    if (m_ElevatorSubsystem.getElevatorEncoderValues() < ElevatorConstants.kOriginPosition + 250 
+                    && m_ElevatorSubsystem.getElevatorEncoderValues() > ElevatorConstants.kOriginPosition - 250
                     && m_IndexerSubsystem.beambreakBroken()) {
                         m_PlacerSubsystem.closeClamper();
                     }

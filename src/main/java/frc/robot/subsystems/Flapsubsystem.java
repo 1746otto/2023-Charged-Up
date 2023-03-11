@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.FlapConstants;
-import frc.robot.Constants.RobotConstants;
+import frc.robot.constants.FlapConstants;
+import frc.robot.constants.RobotConstants;
 import edu.wpi.first.wpilibj.util.Color;
 import com.revrobotics.ColorSensorV3;
 

@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import frc.robot.Constants;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class DriveForwardsCommand extends CommandBase{
     private Swerve s_Swerve;
-    private double speed = Constants.Swerve.autonDriveSpeed;
+    private double speed = SwerveConstants.autonDriveSpeed;
     private BooleanSupplier robotCentricSup;
     private Timer time;
 
@@ -27,7 +27,7 @@ public class DriveForwardsCommand extends CommandBase{
 
     @Override
     public void execute(){
-        s_Swerve.drive(new Translation2d(speed, 0).times(Constants.Swerve.maxSpeed),
+        s_Swerve.drive(new Translation2d(speed, 0).times(SwerveConstants.maxSpeed),
         0.0, robotCentricSup.getAsBoolean(), true);
     }
 
