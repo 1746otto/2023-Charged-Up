@@ -19,119 +19,118 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-    public SwerveModule[] mSwerveMods;
-    public Pigeon2 gyro;
-    public final SwerveDrivePoseEstimator poseEstimator;
+  public SwerveModule[] mSwerveMods;
+  public Pigeon2 gyro;
+  public final SwerveDrivePoseEstimator poseEstimator;
 
 
-    public Swerve() {
-        gyro = new Pigeon2(SwerveConstants.pigeonID,(SwerveConstants.CANBus));
-        gyro.configFactoryDefault();
-        zeroGyro();
+  public Swerve() {
+    gyro = new Pigeon2(SwerveConstants.pigeonID, (SwerveConstants.CANBus));
+    gyro.configFactoryDefault();
+    zeroGyro();
 
-        mSwerveMods = new SwerveModule[] {
-            new SwerveModule(0, SwerveConstants.Mod0.constants),
-            new SwerveModule(1, SwerveConstants.Mod1.constants),
-            new SwerveModule(2, SwerveConstants.Mod2.constants),
-            new SwerveModule(3, SwerveConstants.Mod3.constants)
-        };
+    mSwerveMods = new SwerveModule[] {new SwerveModule(0, SwerveConstants.Mod0.constants),
+        new SwerveModule(1, SwerveConstants.Mod1.constants),
+        new SwerveModule(2, SwerveConstants.Mod2.constants),
+        new SwerveModule(3, SwerveConstants.Mod3.constants)};
 
-        /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
-         * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
-         */
-        Timer.delay(5.0);
-        resetModulesToAbsolute();
-        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, getYaw(), getModulePositions(), new Pose2d());
+    /*
+     * By pausing init for a second before setting module offsets, we avoid a bug with inverting
+     * motors. See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+     */
+    Timer.delay(5.0);
+    resetModulesToAbsolute();
+    poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, getYaw(),
+        getModulePositions(), new Pose2d());
+  }
+
+  public double getMagnitude(Translation2d translation) {
+    return Math
+        .sqrt(translation.getX() * translation.getX() + translation.getY() * translation.getY());
+  }
+
+  // fieldRelative switches the speeds from fieldRelative to robotRelative and vice versa
+  public void drive(Translation2d translation, double rotation, boolean fieldRelative,
+      boolean isOpenLoop) {
+    SwerveModuleState[] swerveModuleStates =
+        SwerveConstants.swerveKinematics.toSwerveModuleStates(fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(),
+                rotation, getYaw())
+            : new ChassisSpeeds((translation.getX()), (translation.getY()), rotation));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.maxSpeed);
+
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
-    public double getMagnitude(Translation2d translation){
-        return Math.sqrt(translation.getX()*translation.getX() + translation.getY()*translation.getY());
-    }
-    // fieldRelative switches the speeds from fieldRelative to robotRelative and vice versa
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        SwerveModuleState[] swerveModuleStates =
-            SwerveConstants.swerveKinematics.toSwerveModuleStates(
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation, 
-                                    getYaw()
-                                )
-                                : new ChassisSpeeds(
-                                    (translation.getX()), 
-                                    (translation.getY()), 
-                                    rotation)
-                                );
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.maxSpeed);
+  }
 
-        for(SwerveModule mod : mSwerveMods){
-            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-        }
-    }
+  /* Used by SwerveControllerCommand in Auto */
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxSpeed);
 
-    /* Used by SwerveControllerCommand in Auto */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxSpeed);
-        
-        for(SwerveModule mod : mSwerveMods){
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
-        }
-    }    
-
-    public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setDesiredState(desiredStates[mod.moduleNumber], false);
     }
+  }
 
-    public void resetOdometry(Pose2d pose) {
-        poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
-    }
+  public Pose2d getPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
 
-    public SwerveModuleState[] getModuleStates(){
-        SwerveModuleState[] states = new SwerveModuleState[4];
-        for(SwerveModule mod : mSwerveMods){
-            states[mod.moduleNumber] = mod.getState();
-        }
-        return states;
-    }
+  public void resetOdometry(Pose2d pose) {
+    poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
+  }
 
-    public SwerveModulePosition[] getModulePositions(){
-        SwerveModulePosition[] positions = new SwerveModulePosition[4];
-        for(SwerveModule mod : mSwerveMods){
-            positions[mod.moduleNumber] = mod.getPosition();
-        }
-        return positions;
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] states = new SwerveModuleState[4];
+    for (SwerveModule mod : mSwerveMods) {
+      states[mod.moduleNumber] = mod.getState();
     }
+    return states;
+  }
 
-    public void zeroGyro(){
-        gyro.setYaw(0);
+  public SwerveModulePosition[] getModulePositions() {
+    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    for (SwerveModule mod : mSwerveMods) {
+      positions[mod.moduleNumber] = mod.getPosition();
     }
+    return positions;
+  }
 
-    public Rotation2d getYaw() {
-        return (SwerveConstants.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
-    }
+  public void zeroGyro() {
+    gyro.setYaw(0);
+  }
 
-    public void resetModulesToAbsolute(){
-        for(SwerveModule mod : mSwerveMods){
-           
-            mod.resetToAbsolute();
-        }
-    }
+  public Rotation2d getYaw() {
+    return (SwerveConstants.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw())
+        : Rotation2d.fromDegrees(gyro.getYaw());
+  }
 
-    public void addVisionMeasurement(Pose2d pose, double latency) {
-        poseEstimator.addVisionMeasurement(pose, latency);
+  public void resetModulesToAbsolute() {
+    for (SwerveModule mod : mSwerveMods) {
+      mod.resetToAbsolute();
     }
+  }
 
-    @Override
-    public void periodic(){
-        poseEstimator.update(getYaw(), getModulePositions());  
-        if (poseEstimator != null) {
-            SmartDashboard.putNumber("Positionx", getPose().getX());
-            SmartDashboard.putNumber("Positiony", getPose().getY());
-            SmartDashboard.putNumber("Positiontheta", getPose().getRotation().getDegrees());
-        }
-        for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getPosition().distanceMeters);    
-        }
+  public void addVisionMeasurement(Pose2d pose, double latency) {
+    poseEstimator.addVisionMeasurement(pose, latency);
+  }
+
+  @Override
+  public void periodic() {
+    poseEstimator.update(getYaw(), getModulePositions());
+    if (poseEstimator != null) {
+      SmartDashboard.putNumber("Positionx", getPose().getX());
+      SmartDashboard.putNumber("Positiony", getPose().getY());
+      SmartDashboard.putNumber("Positiontheta", getPose().getRotation().getDegrees());
     }
+    for (SwerveModule mod : mSwerveMods) {
+      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder",
+          mod.getCanCoder().getDegrees());
+      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated",
+          mod.getPosition().angle.getDegrees());
+      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity",
+          mod.getPosition().distanceMeters);
+    }
+  }
 }
