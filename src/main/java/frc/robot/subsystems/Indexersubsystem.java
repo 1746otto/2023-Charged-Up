@@ -37,8 +37,6 @@ public class Indexersubsystem extends SubsystemBase {
 
   
     
-
-
     public Indexersubsystem() {
 
         MotorTread = new CANSparkMax(IndexerConstants.kIndexerMotorT, MotorType.kBrushless);
