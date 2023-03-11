@@ -18,23 +18,9 @@ import com.revrobotics.ColorSensorV3;
 
 
 public class Flapsubsystem extends SubsystemBase {
-    
-
- 
     private final Solenoid pistons; 
- 
-
-
-  
-    
-
-
     public Flapsubsystem() {
-
-         pistons =new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, FlapConstants.kChannel);
-    
-
-
+      pistons =new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, FlapConstants.kChannel);
     }
    public boolean isEngaged(){
     return pistons.get();

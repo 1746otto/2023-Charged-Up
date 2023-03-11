@@ -30,6 +30,8 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
+import frc.robot.subsystems.Flapsubsystem;
+import frc.robot.subsystems.Indexersubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import frc.robot.commands.IntakeExtendCommand;
 import frc.robot.commands.IntakeRetractCommand;
@@ -44,12 +46,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ElevatorRunToRequestCommand;
 import java.lang.Math;
-
-
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.ElevatorConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -193,15 +194,32 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+      JoystickButton xBoxY = new JoystickButton(m_controller, XboxController.Button.kY.value);
+      JoystickButton xBoxB = new JoystickButton(m_controller, XboxController.Button.kB.value);
+      JoystickButton xBoxA = new JoystickButton(m_controller, XboxController.Button.kA.value);
+      JoystickButton xBoxX = new JoystickButton(m_controller, XboxController.Button.kX.value);
+      JoystickButton xBoxLBumper = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+      JoystickButton xBoxRBumper = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+  
+  
+  
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+       
+        xBoxX.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_PlacerSubsystem), new ClamperOpenCommand(m_PlacerSubsystem)));
+        xBoxLBumper.onTrue(new SequentialCommandGroup(new IndexerCommand(m_IndexerSubsystem), new ClamperCloseCommand(m_PlacerSubsystem)));
+        xBoxY.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition)));
+        xBoxB.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition)));
+        xBoxA.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem), new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
 
-       // xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem, () -> m_ElevatorSubsystem.getElevatorEncoderValues()));
+
+
         //xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
         // xBoxRBumper.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
         // xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerExtendCommand(m_PlungerSubsystem), new ClamperCloseCommand(m_ClamperSubsystem)));
             
     
+        JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
   
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
@@ -220,11 +238,17 @@ public class RobotContainer {
     
         JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
         JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
-        JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
-        JoystickButton xBoxRBumper = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+
+        // xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem, m_Flapsubsystem));
+        // xBoxRBumper.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+        // xBoxX2.toggleOnTrue(new IntakeExtendCommand(m_IntakeExtendSubsystem));
+        // xBoxY2.toggleOnTrue(new IntakeRetractCommand(m_IntakeExtendSubsystem));
     
        
     
+        // xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem));
+        // xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
+        // xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
         xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem, m_Flapsubsystem));
         //xBoxLBumper.whileTrue(new IndexerCommand(m_IndexerSubsystem));
         xBoxRBumper.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));

@@ -16,9 +16,4 @@ public class PlungerExtendCommand extends CommandBase{
     public void initialize() {
         m_Placersubsystem.extendPlunger();
     }
-
-    @Override
-    public void end(boolean interrupted){
-        m_Placersubsystem.retractPlunger();
-    }
 }

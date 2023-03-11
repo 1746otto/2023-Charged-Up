@@ -1,21 +1,17 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
-import edu.wpi.first.wpilibj.util.Color;
 import com.revrobotics.ColorSensorV3;
-import frc.robot.subsystems.Flapsubsystem;
-
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.I2C;
 
 
 public class Indexersubsystem extends SubsystemBase {
@@ -64,35 +60,7 @@ public class Indexersubsystem extends SubsystemBase {
     public void engagePistons() {
       disengage.set(false);
     }
-
-    public Color getColorMatched(){
-      Color detectedColor = m_colorSensor.getColor();
-      ColorMatch m_colorMatch = new ColorMatch();
-      m_colorMatch.addColorMatch(sheetColor);
-      m_colorMatch.addColorMatch(cubeColor);
-      m_colorMatch.addColorMatch(coneColor);
-
-      Color returnedColor = m_colorMatch.matchClosestColor(detectedColor).color;
-      return returnedColor;
-
-    }
-
-    public int getObjectInIndexer(){ //0 = none, 1 = cone, 2 = cube
-      if (getColorMatched().equals(sheetColor)){
-        return 0;
-      }
-      else if (getColorMatched().equals(coneColor)){
-        return 1;
-      }
-      else if (getColorMatched().equals(cubeColor)){
-        return 2;
-      }
-      return 0;
-    }
-
-
-
-*/
+  */
 
 
     public void runMotor1Clockwise() {
@@ -102,7 +70,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.set(IndexerConstants.speed);
     }
     public void runMotorTread() {
-       MotorTread.set(IndexerConstants.Tspeed);
+        MotorTread.set(IndexerConstants.Tspeed);
     }
 
     public void runAllMotors() {
@@ -117,7 +85,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.set(IndexerConstants.reverseSpeed);
     }
     public void runMotorTreadRev() {
-        //MotorTread.set(IndexerConstants.RevTspeed);
+        MotorTread.set(IndexerConstants.reverseSpeed);
     }
     
     public void runAllMotorsRev() {
@@ -137,8 +105,6 @@ public class Indexersubsystem extends SubsystemBase {
 
 
     }
-
-
     public void turnOffIndexer() {
         runZeroPower();
 
@@ -151,11 +117,10 @@ public class Indexersubsystem extends SubsystemBase {
       return beambreak.getVoltage() > .67;
     }
   public void autoIndexer() {
-    if(beambreakBroken()) {
-      runZeroPower();
-    }
-    else{
-      runAllMotors();
+      if (beambreakBroken()) {
+        runZeroPower();
+      } else {
+        runAllMotors();
       }
     }
 

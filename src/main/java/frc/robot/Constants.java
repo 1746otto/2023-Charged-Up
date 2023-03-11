@@ -195,8 +195,6 @@ public final class Constants {
       public static double Tspeed = .5;
       public static double RevTspeed = -.1;
       public static final int kChannel = 8;
-      public static final int kExtendSolenoidChannel = 12;
-      public static final int kRetractSolenoidChannel = 13;
       public static final int kbeambreak = 1;
     }
     public static class PlacerConstants {
@@ -205,9 +203,9 @@ public final class Constants {
       public static final int kClamperChannel = 8;
     }
     public static class ClamperConstants {
-      public static final int kExtendSolenoidChannel = 14;
-      public static final int kRetractSolenoidChannel = 15;
-      public static final int kChannel = 0;
+      public static final int kExtendSolenoidChannel = 10;
+      public static final int kRetractSolenoidChannel = 10;
+      public static final int kChannel = 10;
       public static final boolean kPlacerEngaged = false;
     }
     public static class FlapConstants{
@@ -225,4 +223,5 @@ public final class Constants {
       public static final int kElevatorAnalogInputChannel = 0;
     }
   
+
 }
