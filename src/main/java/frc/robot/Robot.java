@@ -40,7 +40,8 @@ public class Robot extends TimedRobot {
     PathPlannerServer.startServer(5811);
     m_robotContainer = new RobotContainer();
    
-    m_ZeroOutElevator = new ZeroOutElevatorCommand(m_robotContainer.m_ElevatorSubsystem);
+    // This won't work because the robot will be disabled. Also, the elevator subsystem within robot container is private.
+    // m_ZeroOutElevator = new ZeroOutElevatorCommand(m_robotContainer.m_ElevatorSubsystem);
   }
 
   /**
