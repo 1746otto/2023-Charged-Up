@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.IntakeExtendCommand;
 import frc.robot.commands.IntakeRetractCommand;
@@ -35,6 +36,8 @@ import frc.robot.subsystems.IntakeExtendSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ElevatorRunToRequestCommand;
 import java.lang.Math;
 
 
@@ -67,7 +70,7 @@ public class RobotContainer {
     
     private final JoystickButton faceUp = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton faceDown = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton faceRight = new JoystickButton(driver, XboxController.Button.kB.value);
+    //private final JoystickButton faceRight = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton faceLeft = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton balance = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
@@ -82,6 +85,8 @@ public class RobotContainer {
     private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
     private final IntakeExtendSubsystem m_IntakeExtendSubsystem = new IntakeExtendSubsystem();
     private final Compressor m_compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
+    final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+    private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
 
     
 
@@ -106,10 +111,10 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(strafeAxis), 
                 () -> -driver.getRawAxis(rotationAxis), 
                 () -> false,   //robotCentric.getAsBoolean()
-                () -> false,
-                () -> false,
-                () -> false,
-                () -> false
+                () -> faceUp.getAsBoolean(),
+                () -> faceUp.getAsBoolean(),
+                () -> faceUp.getAsBoolean(),
+                () -> faceUp.getAsBoolean()
                 
             )
                 
@@ -126,10 +131,23 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+  
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        balance.onTrue(new BalancingCommand(s_Swerve, robotCentric));
-        JoystickButton xBoxLBumper = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+        JoystickButton xBoxYButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
+        JoystickButton xBoxBButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
+        JoystickButton xBoxAButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
+        JoystickButton xBoxXButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
+        JoystickButton xBoxStartButton = new JoystickButton(m_controller, XboxController.Button.kStart.value);
+        JoystickButton xBoxLBumperButton =
+            new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+        JoystickButton xBoxRBumperButton =
+            new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+    
+            xBoxLBumperButton.toggleOnTrue(new ClamperCommand(m_ClamperSubsystem));
+            
+    
+    
         JoystickButton xBoxX2 = new JoystickButton(m_controller2, XboxController.Button.kX.value);
         JoystickButton xBoxA2 = new JoystickButton(m_controller2, XboxController.Button.kA.value);
         JoystickButton xBoxY2 = new JoystickButton(m_controller2, XboxController.Button.kY.value);
@@ -138,12 +156,11 @@ public class RobotContainer {
        
     
         xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem, m_Flapsubsystem));
-        xBoxLBumper.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
-        xBoxRBumper.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
-        xBoxX2.toggleOnTrue(new IntakeExtendCommand(m_IntakeExtendSubsystem));
-        xBoxY2.toggleOnTrue(new IntakeRetractCommand(m_IntakeExtendSubsystem));
-
-
+        xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
+        xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+        xBoxBButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
+        xBoxXButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
+        xBoxAButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
     }
 
     public void enableCompressor() {
@@ -163,5 +180,5 @@ public class RobotContainer {
         // An ExampleCommand will run in autonomous
         return autos.exampleAuto();
     }
+  
 }
-
