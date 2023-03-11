@@ -16,16 +16,11 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.commands.ScoringAlignCommand;
-import frc.robot.commands.ExampleCommand;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;

@@ -1,19 +1,12 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimeLightHelpers;
 import frc.robot.LimeLightHelpers.LimelightResults;
-import frc.robot.LimeLightHelpers.Results;
-import frc.robot.subsystems.VisionSubsystem.pipelineStates;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 
 public class VisionSubsystem extends SubsystemBase {
   private boolean validTarget;

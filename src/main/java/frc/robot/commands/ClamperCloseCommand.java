@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PlacerSubsystem;
-import java.util.function.DoubleSupplier;
 import java.util.function.BooleanSupplier;
 
 // This entire class should just be a lambda, or at least an instant command.

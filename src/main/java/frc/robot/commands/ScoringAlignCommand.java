@@ -4,14 +4,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Swerve;
-
-import java.io.IOException;
-
-import javax.lang.model.util.ElementScanner14;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
