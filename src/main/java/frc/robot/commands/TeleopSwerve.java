@@ -81,7 +81,6 @@ public class TeleopSwerve extends CommandBase {
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
         Translation2d driveVector = new Translation2d(translationVal, strafeVal).times(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed);
         double currentAngle = MathUtil.inputModulus(s_Swerve.getYaw().getDegrees(), 0, 360);
-        //System.out.println("Current Angle: " + currentAngle);
 
         if(joystickBeingUsed(rotationVal)) {
             rotationAngle = -600;
@@ -90,9 +89,7 @@ public class TeleopSwerve extends CommandBase {
 
         if(rotationAngle >= 0) {
             double clockwiseDist =  MathUtil.inputModulus(currentAngle - rotationAngle, 0, 360);
-            //System.out.println("Clock Dist: " + clockwiseDist);
             double counterClockwiseDist = 360 - clockwiseDist;//360 - MathUtil.inputModulus(currentAngle, 0, 360);
-            //System.out.println("CounterClock Dist: " + counterClockwiseDist);
 
             boolean moveCounterClockwise = !(clockwiseDist <= counterClockwiseDist);
 

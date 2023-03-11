@@ -190,7 +190,7 @@ public final class Constants {
       public static final int kIndexerMotor = 33;
       public static final int kIndexerMotor2 = 32;
       public static final int kIndexerMotorT = 31;
-      public static double speed = .4;
+      public static double speed = .3;
       public static double reverseSpeed = -.4;
       public static double Tspeed = .5;
       public static double RevTspeed = -.1;

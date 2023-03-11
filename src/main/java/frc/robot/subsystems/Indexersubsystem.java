@@ -148,7 +148,7 @@ public class Indexersubsystem extends SubsystemBase {
 
     }
   public boolean beambreakBroken() {
-      return beambreakLastState;
+      return beambreak.getVoltage() > .67;
     }
   public void autoIndexer() {
     if(beambreakBroken()) {
@@ -162,10 +162,8 @@ public class Indexersubsystem extends SubsystemBase {
   
     @Override
     public void periodic(){
-
-      beambreakLastState = (Math.round(beambreak.getVoltage()) == 0);
-      System.out.println(beambreakLastState);
-
+      //This code wouldn't have worked any ways
+      //System.out.println(beambreak.getVoltage());
     }
 }
   

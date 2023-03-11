@@ -84,19 +84,21 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
     // private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final PlacerSubsystem m_PlacerSubsystem = new PlacerSubsystem();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
     private final Compressor m_Compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
 
-    /*Commands */
-    private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
-    private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
     private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
     private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
     private final IntakeExtendSubsystem m_IntakeExtendSubsystem = new IntakeExtendSubsystem();
     private final Compressor m_compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
+    
+    /*Commands */
+    private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
+    private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
 
     
 
@@ -224,6 +226,12 @@ public class RobotContainer {
        
     
         xBoxA2.toggleOnTrue(new LowGoalCommand(m_IndexerSubsystem, m_Flapsubsystem));
+        //xBoxLBumper.whileTrue(new IndexerCommand(m_IndexerSubsystem));
+        xBoxRBumper.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
+        xBoxX2.toggleOnTrue(new IntakeExtendCommand(m_IntakeExtendSubsystem));
+        xBoxY2.toggleOnTrue(new IntakeRetractCommand(m_IntakeExtendSubsystem));
+
+
         xBoxY2.toggleOnTrue(new IndexerCommand(m_IndexerSubsystem));
         xBoxX2.toggleOnTrue(new IndexerReverseCommand(m_IndexerSubsystem));
         xBoxBButton.toggleOnTrue(new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
