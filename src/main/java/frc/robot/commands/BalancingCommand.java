@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import frc.robot.Constants;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,10 +32,10 @@ public class BalancingCommand extends CommandBase{
         speed = kP * xError;
         // xSpeed = (xError - xPrevError) * kD + (kP * xError);
 
-        if (speed > Constants.Swerve.autonDriveSpeed){
-            speed = Constants.Swerve.autonDriveSpeed;
-        }else if (speed < -Constants.Swerve.autonDriveSpeed){
-            speed = -Constants.Swerve.autonDriveSpeed;
+        if (speed > SwerveConstants.autonDriveSpeed){
+            speed = SwerveConstants.autonDriveSpeed;
+        }else if (speed < -SwerveConstants.autonDriveSpeed){
+            speed = -SwerveConstants.autonDriveSpeed;
         }
 
         xPrevError = xError;
@@ -56,7 +56,7 @@ public class BalancingCommand extends CommandBase{
         //     yPrevError = yError;
         // }
 
-        s_Swerve.drive(new Translation2d(speed, 0).times(Constants.Swerve.maxSpeed),
+        s_Swerve.drive(new Translation2d(speed, 0).times(SwerveConstants.maxSpeed),
         0.0, robotCentricSup.getAsBoolean(), true);
     }
 

@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Swerve;
-import frc.robot.Constants;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -17,15 +16,11 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.ScoringAlignCommand;
-import frc.robot.commands.ExampleCommand;
-
+import frc.robot.constants.AutoConstants;
+import frc.robot.constants.SwerveConstants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -61,7 +56,7 @@ public final class Autos {
         //     new PPSwerveControllerCommand(
         //         goToStart, 
         //         m_swerve::getPose, 
-        //         Constants.Swerve.swerveKinematics, 
+        //         SwerveConstants.swerveKinematics, 
         //         new PIDController(0, 0, 0), 
         //         new PIDController(0, 0, 0), 
         //         new PIDController(0, 0, 0), 
@@ -79,7 +74,7 @@ public final class Autos {
                 new PPSwerveControllerCommand(
                     traj, 
                     m_swerve::getPose, 
-                    Constants.Swerve.swerveKinematics, 
+                    SwerveConstants.swerveKinematics, 
                     new PIDController(0, 0, 0), 
                     new PIDController(0, 0, 0), 
                     new PIDController(0, 0, 0), 

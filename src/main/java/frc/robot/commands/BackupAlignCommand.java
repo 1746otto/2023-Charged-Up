@@ -2,8 +2,8 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.pipelineStates;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
-import frc.robot.Constants;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
@@ -25,11 +25,11 @@ public class BackupAlignCommand extends CommandBase {
     private int allianceDirection = -1;
 
   private double getRotationSignal(double distFromTarget){
-    return Math.copySign(Math.abs(distFromTarget)/90.0*Constants.Swerve.maxAngularVelocity/3.0 + 0.05*Constants.Swerve.maxAngularVelocity, distFromTarget);
+    return Math.copySign(Math.abs(distFromTarget)/90.0*SwerveConstants.maxAngularVelocity/3.0 + 0.05*SwerveConstants.maxAngularVelocity, distFromTarget);
   }
 
   private double getStrafeVal(double distFromTarget) {
-    return Math.copySign(Math.abs(Math.sin(distFromTarget*2))*Constants.Swerve.maxSpeed/3.0 + 0.05*Constants.Swerve.maxSpeed, distFromTarget*allianceDirection);
+    return Math.copySign(Math.abs(Math.sin(distFromTarget*2))*SwerveConstants.maxSpeed/3.0 + 0.05*SwerveConstants.maxSpeed, distFromTarget*allianceDirection);
   }
 
     /**

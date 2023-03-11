@@ -13,7 +13,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
-import frc.robot.Constants.ElevatorConstants;
+import frc.robot.constants.ElevatorConstants;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class ElevatorSubsystem extends SubsystemBase{

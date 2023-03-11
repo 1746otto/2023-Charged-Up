@@ -4,13 +4,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
-
-import java.io.IOException;
-
-import javax.lang.model.util.ElementScanner14;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
@@ -20,7 +15,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 
 /** An example command that uses an example subsystem. */
 
@@ -94,7 +88,7 @@ public class ScoringAlignCommand extends CommandBase {
     if (stage == 0) {
       m_swerve.drive(
         new Translation2d(0, Math.copySign(Math.sqrt(Math.abs((closest - m_swerve.getPose().getY())/halfNodeSpacing)), closest - m_swerve.getPose().getY())*alliance)
-          .times(Constants.Swerve.maxSpeed*0.025), 
+          .times(SwerveConstants.maxSpeed*0.025), 
         Math.copySign(Math.sqrt(Math.abs(targetAngle - (m_gyro.getYaw() + 180) % 360 - 180)/45.0), targetAngle - (m_gyro.getYaw() + 180) % 360 - 180),
         true, true);
       if (Math.abs(closest - m_swerve.getPose().getY()) < 0.01)
@@ -109,7 +103,7 @@ public class ScoringAlignCommand extends CommandBase {
         new Translation2d(
           Math.copySign(Math.sqrt(Math.abs((targetX - m_swerve.getPose().getX()))/0.2032), targetX - m_swerve.getPose().getX()), 
           Math.copySign(Math.sqrt(Math.abs((closest - m_swerve.getPose().getY())/halfNodeSpacing)), closest - m_swerve.getPose().getY())*alliance)
-            .times(Constants.Swerve.maxSpeed*0.025), 
+            .times(SwerveConstants.maxSpeed*0.025), 
         Math.copySign(Math.sqrt(Math.abs(targetAngle - (m_gyro.getYaw() + 180) % 360 - 180)/45.0), targetAngle - (m_gyro.getYaw() + 180) % 360 - 180),
         true, true);
     }

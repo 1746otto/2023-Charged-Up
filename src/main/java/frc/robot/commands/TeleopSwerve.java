@@ -1,11 +1,11 @@
 package frc.robot.commands;
 
-import frc.robot.Constants;
+import frc.robot.constants.ControllerConstants;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -74,12 +74,12 @@ public class TeleopSwerve extends CommandBase {
             rotationAngle = 90;
         }
         /* Get Values, Deadband*/
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
+        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), ControllerConstants.stickDeadband);
         //translationVal = Math.copySign(translationVal*translationVal, translationSup.getAsDouble());
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
+        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), ControllerConstants.stickDeadband);
         //translationVal = Math.copySign(translationVal*strafeVal, strafeSup.getAsDouble());
-        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
-        Translation2d driveVector = new Translation2d(translationVal, strafeVal).times(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed);
+        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), ControllerConstants.stickDeadband);
+        Translation2d driveVector = new Translation2d(translationVal, strafeVal).times(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)).times(SwerveConstants.maxSpeed);
         double currentAngle = MathUtil.inputModulus(s_Swerve.getYaw().getDegrees(), 0, 360);
 
         if(joystickBeingUsed(rotationVal)) {
@@ -119,8 +119,8 @@ public class TeleopSwerve extends CommandBase {
         
         // Slew limiting stuff
         Translation2d velocityVector = new Translation2d(
-            Constants.Swerve.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vxMetersPerSecond, 
-            Constants.Swerve.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vyMetersPerSecond
+            SwerveConstants.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vxMetersPerSecond, 
+            SwerveConstants.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vyMetersPerSecond
         );
 
 
@@ -135,8 +135,8 @@ public class TeleopSwerve extends CommandBase {
         System.out.println(changeAngle);
         System.out.print("Change Magnitude: ");
         System.out.println(magChange);
-        if (magChange > Constants.Swerve.slewLimit*slewTimer.get())
-            magChange = Constants.Swerve.slewLimit*slewTimer.get();
+        if (magChange > SwerveConstants.slewLimit*slewTimer.get())
+            magChange = SwerveConstants.slewLimit*slewTimer.get();
         slewTimer.reset();
         if (Math.abs(velocityVector.getNorm()) < 0.01)
             driveVector = new Translation2d(velocityVector.getX() + magChange*Math.cos(changeAngle), velocityVector.getY() + magChange*Math.sin(changeAngle));
@@ -147,7 +147,7 @@ public class TeleopSwerve extends CommandBase {
         /* Drive */        
         s_Swerve.drive(
             driveVector, 
-            rotationVal * Constants.Swerve.maxAngularVelocity, 
+            rotationVal * SwerveConstants.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
             false
         );

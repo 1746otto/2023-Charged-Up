@@ -3,7 +3,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Indexersubsystem;
 import frc.robot.subsystems.Flapsubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class LowGoalCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
