@@ -13,7 +13,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
-
 import frc.robot.Constants.ElevatorConstants;
 import edu.wpi.first.wpilibj.AnalogInput;
 
@@ -60,6 +59,9 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
     public void setPositionTo0(){
         elevatorMotor.getEncoder().setPosition(0);
+    }
+    public double getElevatorEncoderValues(){
+        return currState;
     }
 
     public void runToRequest(int reqPosition){

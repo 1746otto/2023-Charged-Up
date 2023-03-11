@@ -2,7 +2,6 @@ package frc.robot;
 
 
 import frc.robot.commands.Autos;
-import frc.robot.commands.ClamperCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.IndexerReverseCommand;
@@ -29,11 +28,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.subsystems.IntakeExtendSubsystem;
+import frc.robot.subsystems.IntakeRollerSubsystem;
+import edu.wpi.first.wpilibj.GenericHID;
 import frc.robot.commands.IntakeExtendCommand;
 import frc.robot.commands.IntakeRetractCommand;
 import frc.robot.commands.IntakeRollCommand;
 import frc.robot.commands.LowGoalCommand;
-import frc.robot.subsystems.ClamperSubsystem;
 import frc.robot.subsystems.Flapsubsystem;
 import frc.robot.subsystems.Indexersubsystem;
 import frc.robot.subsystems.IntakeExtendSubsystem;
@@ -48,6 +49,7 @@ import java.lang.Math;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -82,6 +84,10 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    // private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+    private final PlacerSubsystem m_PlacerSubsystem = new PlacerSubsystem();
+    private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+    private final Compressor m_Compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
 
     /*Commands */
@@ -91,14 +97,13 @@ public class RobotContainer {
     private final Flapsubsystem m_Flapsubsystem = new Flapsubsystem();
     private final IntakeExtendSubsystem m_IntakeExtendSubsystem = new IntakeExtendSubsystem();
     private final Compressor m_compressor = new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
-    final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-    private final ClamperSubsystem m_ClamperSubsystem = new ClamperSubsystem();
 
     
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        disableCompressor();
      
         m_chooser.setDefaultOption("Auton1", "Auton1");
         //m_chooser.addOption("Auton2", getAutonomousCommand());
@@ -135,6 +140,50 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
+
+    private void configureDefaultCommands() {
+        s_Swerve.setDefaultCommand(
+            /*  new TeleopSwerve(
+                 s_Swerve, 
+                 () -> -driver.getRawAxis((int) limiterT.calculate(translationAxis)), 
+                 () -> -driver.getRawAxis((int)limiterT.calculate(strafeAxis)), 
+                 () -> -driver.getRawAxis(rotationAxis), 
+                 () -> false   //robotCentric.getAsBoolean()
+                 
+             )*/
+             new TeleopSwerve(
+                 s_Swerve, 
+                 () -> -driver.getRawAxis(translationAxis), 
+                 () -> -driver.getRawAxis(strafeAxis), 
+                 () -> -driver.getRawAxis(rotationAxis), 
+                 () -> false,   //robotCentric.getAsBoolean()
+                 () -> false,
+                 () -> false,
+                 () -> false,
+                 () -> false
+                 
+             )
+                 
+        );
+        // This will be interupted if any of the subsystems below are being used, and will continue when they aren't.
+        // This allows us to not run this if we are actively running indexer, which will turn off when beam is broken.
+        m_PlacerSubsystem.setDefaultCommand(
+            new RunCommand(
+                //TODO: Tune these numbers to be realistic not guesses.
+                () -> {
+                    if (m_ElevatorSubsystem.getElevatorEncoderValues() < Constants.ElevatorConstants.kOriginPosition + 250 
+                    && m_ElevatorSubsystem.getElevatorEncoderValues() > Constants.ElevatorConstants.kOriginPosition - 250
+                    && m_IndexerSubsystem.beambreakBroken()) {
+                        m_PlacerSubsystem.closeClamper();
+                    }
+                }, 
+                m_PlacerSubsystem, 
+                m_ElevatorSubsystem, 
+                m_IndexerSubsystem
+            )
+        );
+    }
+
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -142,6 +191,15 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        /* Driver Buttons */
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+
+       // xBoxRBumper.toggleOnTrue(new PlungerExtendCommand(m_PlungerSubsystem, () -> m_ElevatorSubsystem.getElevatorEncoderValues()));
+        //xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
+        // xBoxRBumper.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlungerSubsystem), new ClamperOpenCommand(m_ClamperSubsystem)));
+        // xBoxRBumper.toggleOnFalse(new SequentialCommandGroup(new PlungerExtendCommand(m_PlungerSubsystem), new ClamperCloseCommand(m_ClamperSubsystem)));
+            
+    
   
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
@@ -155,7 +213,6 @@ public class RobotContainer {
         JoystickButton xBoxRBumperButton =
             new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
     
-            xBoxLBumperButton.toggleOnTrue(new ClamperCommand(m_ClamperSubsystem));
             
     
     

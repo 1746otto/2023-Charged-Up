@@ -79,17 +79,7 @@ public class TeleopSwerve extends CommandBase {
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
         //translationVal = Math.copySign(translationVal*strafeVal, strafeSup.getAsDouble());
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
-<<<<<<< HEAD
-        double slowZone = 25.0;// Get current facing of robot and determine which direction is the fastest to target
-        System.out.print("Translation Value");
-        System.out.println(translationVal);
         Translation2d driveVector = new Translation2d(translationVal, strafeVal).times(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed);
-        
-        System.out.print("PreDriveVector: ");
-        System.out.println(driveVector);
-=======
-
->>>>>>> origin/main
         double currentAngle = MathUtil.inputModulus(s_Swerve.getYaw().getDegrees(), 0, 360);
         //System.out.println("Current Angle: " + currentAngle);
 
