@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
-
+import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.I2C;
 
 
 public class Indexersubsystem extends SubsystemBase {
@@ -17,8 +19,19 @@ public class Indexersubsystem extends SubsystemBase {
     CANSparkMax MotorTread;
     CANSparkMax Motor1;
     CANSparkMax Motor2;
-    private final Solenoid pistons;
     private final AnalogInput beambreak;
+
+    private boolean beambreakLastState = false;
+    // private float beamBreakIntVolt;
+
+
+    private final ColorSensorV3 m_colorSensor = new ColorSensorV3(I2C.Port.kMXP);
+    private final Color sheetColor = Color.kGreen;
+    private final Color cubeColor = Color.kPurple;
+    private final Color coneColor = Color.kYellow;
+
+
+  
     
     public Indexersubsystem() {
 
@@ -26,17 +39,28 @@ public class Indexersubsystem extends SubsystemBase {
         Motor1 = new CANSparkMax(IndexerConstants.kIndexerMotor, MotorType.kBrushless);
         Motor2 = new CANSparkMax(IndexerConstants.kIndexerMotor2, MotorType.kBrushless);
         Motor2.setInverted(true);
-        pistons = new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, IndexerConstants.kChannel);
-        
         beambreak = new AnalogInput(IndexerConstants.kbeambreak);
 
 
     }
+  
+  
 
-    public void toggle() {
-      pistons.set(true);
+
+ /* 
+    public int[] getColorRGB(){
+      int red = m_colorSensor.getRed();
+      int green = m_colorSensor.getGreen();
+      int blue = m_colorSensor.getBlue();
+      return new int[] {red,green,blue};
+    public void DisengagePistons() {
+      disengage.set(true);
     }
 
+    public void engagePistons() {
+      disengage.set(false);
+    }
+  */
 
 
     public void runMotor1Clockwise() {
@@ -46,7 +70,7 @@ public class Indexersubsystem extends SubsystemBase {
         Motor2.set(IndexerConstants.speed);
     }
     public void runMotorTread() {
-        MotorTread.set(IndexerConstants.speed);
+        MotorTread.set(IndexerConstants.Tspeed);
     }
 
     public void runAllMotors() {
@@ -77,7 +101,9 @@ public class Indexersubsystem extends SubsystemBase {
     }
     public void RunLowGoal(){
         runAllMotors();
-        toggle();
+
+
+
     }
     public void turnOffIndexer() {
         runZeroPower();
@@ -85,20 +111,28 @@ public class Indexersubsystem extends SubsystemBase {
     }
     public void turnOffShooter() {
         runZeroPower();
-        toggle();
 
     }
-    public boolean beambreakBroken() {
-      if (beambreak.getValue() > 1000) {
-        return true;
-      }
-      return false;
+  public boolean beambreakBroken() {
+      return beambreak.getVoltage() > .67;
     }
-    public void autoIndexer() {
+  public void autoIndexer() {
       if (beambreakBroken()) {
         runZeroPower();
       } else {
         runAllMotors();
       }
     }
+
+  
+    @Override
+    public void periodic(){
+      //This code wouldn't have worked any ways
+      //System.out.println(beambreak.getVoltage());
+    }
 }
+  
+
+
+    
+

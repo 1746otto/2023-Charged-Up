@@ -12,18 +12,21 @@ import javax.swing.text.Position;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    public final SwerveDrivePoseEstimator poseEstimator;
+
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID,(Constants.Swerve.CANBus));
@@ -42,10 +45,12 @@ public class Swerve extends SubsystemBase {
          */
         Timer.delay(5.0);
         resetModulesToAbsolute();
-
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions(), new Pose2d());
     }
-
+    public double getMagnitude(Translation2d translation){
+        return Math.sqrt(translation.getX()*translation.getX() + translation.getY()*translation.getY());
+    }
+    // fieldRelative switches the speeds from fieldRelative to robotRelative and vice versa
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(
@@ -65,7 +70,7 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-    }    
+    }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -77,11 +82,11 @@ public class Swerve extends SubsystemBase {
     }    
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     public void resetOdometry(Pose2d pose) {
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
     public SwerveModuleState[] getModuleStates(){
@@ -115,14 +120,18 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public void addVisionMeasurement(Pose2d pose, double latency) {
+        poseEstimator.addVisionMeasurement(pose, latency);
+    }
+
     @Override
     public void periodic(){
-        swerveOdometry.update(getYaw(), getModulePositions());  
-
-        SmartDashboard.putNumber("Positionx", getPose().getX());
-        SmartDashboard.putNumber("Positiony", getPose().getY());
-        SmartDashboard.putNumber("Positiontheta", getPose().getRotation().getDegrees());
-
+        poseEstimator.update(getYaw(), getModulePositions());  
+        if (poseEstimator != null) {
+            SmartDashboard.putNumber("Positionx", getPose().getX());
+            SmartDashboard.putNumber("Positiony", getPose().getY());
+            SmartDashboard.putNumber("Positiontheta", getPose().getRotation().getDegrees());
+        }
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());

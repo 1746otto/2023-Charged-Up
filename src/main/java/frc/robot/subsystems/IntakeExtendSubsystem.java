@@ -74,8 +74,6 @@ public class IntakeExtendSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println("limit switch 1: " + limitSwitch1.isPressed());
-    System.out.println("limiy switch 2: " + limitSwitch2.isPressed());
     // This method will be called once per scheduler run
   }
 

@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ZeroOutElevatorCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,6 +26,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private ZeroOutElevatorCommand m_ZeroOutElevator;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -34,6 +39,9 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     PathPlannerServer.startServer(5811);
     m_robotContainer = new RobotContainer();
+   
+    // This won't work because the robot will be disabled. Also, the elevator subsystem within robot container is private.
+    // m_ZeroOutElevator = new ZeroOutElevatorCommand(m_robotContainer.m_ElevatorSubsystem);
   }
 
   /**
@@ -98,6 +106,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
 
     CommandScheduler.getInstance().cancelAll();
+    m_ZeroOutElevator.schedule();
     m_robotContainer.enableCompressor();
   }
 

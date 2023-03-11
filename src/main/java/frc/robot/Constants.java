@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -59,6 +60,7 @@ public final class Constants {
         public static final double trackWidth = Units.inchesToMeters(18.75); //TODO: This must be tuned to specific robot
         public static final double wheelBase = Units.inchesToMeters(18.75); //TODO: This must be tuned to specific robot
         public static final double wheelCircumference = chosenModule.wheelCircumference;
+        public static final double slewLimit = 1.5; // Max acceleration meters per second squared.
 
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
@@ -92,8 +94,9 @@ public final class Constants {
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double openLoopRamp = 0.25;
-        public static final double closedLoopRamp = 0.0;
+        public static final double openLoopRamp = 0.0;
+        public static final double closedLoopRamp = 0.01;
+        public static final double openLoopRampAngle = 0.15;
 
         /* Angle Motor PID Values */
         public static final double angleKP = chosenModule.angleKP;
@@ -115,9 +118,11 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 2; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
         /** Radians per Second */
         public static final double maxAngularVelocity = 5; //TODO: This must be tuned to specific robot
+
+        public static final double autonDriveSpeed = 0.2;
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -159,7 +164,7 @@ public final class Constants {
             public static final int driveMotorID = 21;
             public static final int angleMotorID = 22;
             public static final int canCoderID = 20;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(72.158203+180);//158.378906
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(242.490234);//158.378906
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -185,20 +190,27 @@ public final class Constants {
       public static final int kIndexerMotor = 33;
       public static final int kIndexerMotor2 = 32;
       public static final int kIndexerMotorT = 31;
-      public static double speed = .4;
+      public static double speed = .3;
       public static double reverseSpeed = -.4;
       public static double Tspeed = .5;
       public static double RevTspeed = -.1;
-      public static final int kChannel = 10;
-      public static final int kExtendSolenoidChannel = 12;
-      public static final int kRetractSolenoidChannel = 13;
-      public static final int kbeambreak = 3;
+      public static final int kChannel = 8;
+      public static final int kbeambreak = 1;
     }
     public static class PlacerConstants {
       public static final int kModID = 2;
       public static final int kPlungerChannel = 9;
       public static final int kClamperChannel = 8;
     }
+    public static class ClamperConstants {
+      public static final int kExtendSolenoidChannel = 10;
+      public static final int kRetractSolenoidChannel = 10;
+      public static final int kChannel = 10;
+      public static final boolean kPlacerEngaged = false;
+    }
+    public static class FlapConstants{
+      public static final int kChannel = 8;
+      }
     public static class ElevatorConstants{
       public static final int kElevatorMotor1ID = 41;
       public static final double kElevatorD = 0.0;
@@ -212,27 +224,4 @@ public final class Constants {
     }
   
 
-    public static class FlapConstants{
-      public static double speed = .4;
-      public static double reverseSpeed = -.4;
-      public static double Tspeed = .1;
-      public static double RevTspeed = -.1;
-      public static final int kChannel = 10;
-      public static final int kExtendSolenoidChannel = 12;
-      public static final int kRetractSolenoidChannel = 13;
-      }
-
-  public static class ClamperConstants {
-    public static final int kExtendSolenoidChannel = 12;
-    public static final int kRetractSolenoidChannel = 13;
-    public static final int kChannel = 0;
-    public static final boolean kPlacerEngaged = false;
-  }
-
 }
-  
-    
-
-
-  
-

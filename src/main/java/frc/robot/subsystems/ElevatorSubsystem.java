@@ -17,6 +17,7 @@ import frc.robot.Constants.ElevatorConstants;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class ElevatorSubsystem extends SubsystemBase{
+    private static final Mode AnalogMode = null;
     private CANSparkMax elevatorMotor;
     private SparkMaxPIDController pidController;
     private AnalogInput beamBreak;

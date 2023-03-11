@@ -5,9 +5,11 @@ import frc.robot.subsystems.Swerve;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TeleopSwerve extends CommandBase {    
@@ -20,7 +22,12 @@ public class TeleopSwerve extends CommandBase {
     private BooleanSupplier faceDownSup;
     private BooleanSupplier faceRightSup;
     private BooleanSupplier faceLeftSup;
+    Timer slewTimer;
     private int rotationAngle; 
+    private double prevError;
+
+    private double kP = 0.015;
+    private double kD = 1;
 
     public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup, BooleanSupplier faceUpSup, BooleanSupplier faceDownSup, BooleanSupplier faceRightSup, BooleanSupplier faceLeftSup) {
         this.s_Swerve = s_Swerve;
@@ -35,6 +42,8 @@ public class TeleopSwerve extends CommandBase {
         this.faceLeftSup = faceLeftSup;
         this.faceRightSup = faceRightSup;
         rotationAngle = -600;
+        slewTimer = new Timer();
+        prevError = 0;
 
     }
 
@@ -45,6 +54,10 @@ public class TeleopSwerve extends CommandBase {
         return true;
     }
 
+    @Override
+    public void initialize() {
+        slewTimer.start();
+    }
     @Override
     public void execute() {
         // Turning Buttons
@@ -60,56 +73,83 @@ public class TeleopSwerve extends CommandBase {
         if(faceLeftSup.getAsBoolean()) {
             rotationAngle = 90;
         }
-        
         /* Get Values, Deadband*/
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
         //translationVal = Math.copySign(translationVal*translationVal, translationSup.getAsDouble());
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
         //translationVal = Math.copySign(translationVal*strafeVal, strafeSup.getAsDouble());
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
-        double slowZone = 25.0;// Get current facing of robot and determine which direction is the fastest to target
-
+        Translation2d driveVector = new Translation2d(translationVal, strafeVal).times(Math.sqrt(translationVal*translationVal+strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed);
         double currentAngle = MathUtil.inputModulus(s_Swerve.getYaw().getDegrees(), 0, 360);
-        System.out.println("Current Angle: " + currentAngle);
 
         if(joystickBeingUsed(rotationVal)) {
             rotationAngle = -600;
+            prevError = 0;
         }
 
         if(rotationAngle >= 0) {
             double clockwiseDist =  MathUtil.inputModulus(currentAngle - rotationAngle, 0, 360);
-            //System.out.println("Clock Dist: " + clockwiseDist);
             double counterClockwiseDist = 360 - clockwiseDist;//360 - MathUtil.inputModulus(currentAngle, 0, 360);
-            //System.out.println("CounterClock Dist: " + counterClockwiseDist);
 
-            boolean moveClockwise = !(clockwiseDist <= counterClockwiseDist);
+            boolean moveCounterClockwise = !(clockwiseDist <= counterClockwiseDist);
 
             // Set initial rotation velocity at max in desired direction of travel
-            double travelDistance;
-            if (moveClockwise) {
-                travelDistance = counterClockwiseDist;
+            double error;
+            if (moveCounterClockwise) {
+                error = counterClockwiseDist;
                 rotationVal = .8;
             }
             else {
-                travelDistance = -clockwiseDist;
+                error = -clockwiseDist;
                 rotationVal = -.8;
             }
 
-            // Slow down as you approach the target
-            if (Math.abs(travelDistance) < slowZone) {
-                rotationVal = Math.pow(((travelDistance * .6) / slowZone), 7);
+            rotationVal = kP * error;
+            // rotationVal = (error - prevError) * kD + (kP * error);
+
+            if (rotationVal > 1){
+                rotationVal = 1;
+            }else if (rotationVal < -1){
+                rotationVal = -1;
             }
+            
+            prevError = error;
         }
-        int targetMinusNum = 5;
-        if (currentAngle == rotationAngle || (currentAngle > rotationAngle - targetMinusNum && currentAngle < rotationAngle + targetMinusNum) || ((rotationAngle == 0) && (currentAngle > 360 - targetMinusNum || currentAngle < rotationAngle + targetMinusNum))){
-            rotationVal = 0;
-        }
-        /* Drive */
+        
+        
+        // Slew limiting stuff
+        Translation2d velocityVector = new Translation2d(
+            Constants.Swerve.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vxMetersPerSecond, 
+            Constants.Swerve.swerveKinematics.toChassisSpeeds(s_Swerve.getModuleStates()).vyMetersPerSecond
+        );
+
+
+        System.out.print("Robot Centric velocity: ");
+        System.out.println(velocityVector);
+
+        velocityVector.rotateBy(Rotation2d.fromDegrees(s_Swerve.gyro.getYaw()));
+        
+        double changeAngle = Math.atan2(driveVector.getY() - velocityVector.getY(), driveVector.getX() - velocityVector.getX());
+        double magChange = Math.sqrt((driveVector.getX() - velocityVector.getX())*(driveVector.getX() - velocityVector.getX()) + (driveVector.getY() - velocityVector.getY())*(driveVector.getY() - velocityVector.getY()));
+        System.out.print("Change Angle: ");
+        System.out.println(changeAngle);
+        System.out.print("Change Magnitude: ");
+        System.out.println(magChange);
+        if (magChange > Constants.Swerve.slewLimit*slewTimer.get())
+            magChange = Constants.Swerve.slewLimit*slewTimer.get();
+        slewTimer.reset();
+        if (Math.abs(velocityVector.getNorm()) < 0.01)
+            driveVector = new Translation2d(velocityVector.getX() + magChange*Math.cos(changeAngle), velocityVector.getY() + magChange*Math.sin(changeAngle));
+        System.out.print("Drive Vector: ");
+        System.out.println(driveVector);
+        System.out.print("Velocity Vector: ");
+        System.out.println(velocityVector);
+        /* Drive */        
         s_Swerve.drive(
-            new Translation2d(translationVal,strafeVal).times(Math.sqrt(translationVal*translationVal + strafeVal*strafeVal)).times(Constants.Swerve.maxSpeed), 
+            driveVector, 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
-            true
+            false
         );
     }
 } 
