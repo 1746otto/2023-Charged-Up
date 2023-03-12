@@ -5,6 +5,10 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.basic.ClamperCloseCommand;
+import frc.robot.commands.basic.ClamperOpenCommand;
+import frc.robot.commands.basic.PlungerExtendCommand;
+import frc.robot.commands.basic.PlungerRetractCommand;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,7 +26,6 @@ import frc.robot.subsystems.Indexersubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ElevatorRunToRequestCommand;
-import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -45,7 +48,7 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
-  private final JoystickButton zeroGyro =
+  private final JoystickButton xboxStart =
       new JoystickButton(driver, XboxController.Button.kStart.value);
   private final JoystickButton xBoxY =
       new JoystickButton(m_controller, XboxController.Button.kY.value);
@@ -128,7 +131,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    xboxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     xBoxX.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_PlacerSubsystem),
         new ClamperOpenCommand(m_PlacerSubsystem)));
     xBoxLBumper.onTrue(new SequentialCommandGroup(new IndexerCommand(m_IndexerSubsystem),
