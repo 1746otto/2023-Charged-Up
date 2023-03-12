@@ -7,27 +7,29 @@ import java.util.function.BooleanSupplier;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 
-public class DriveBackTo5DegreesCommand extends CommandBase{
-    private BooleanSupplier robotCentricSup;
-    private Swerve s_Swerve;
-    private double speed = SwerveConstants.autonDriveSpeed;
-    private double initRoll;
+public class DriveBackTo5DegreesCommand extends CommandBase {
+  private double kSpeed = SwerveConstants.autonDriveSpeed;
 
-    public DriveBackTo5DegreesCommand(Swerve s_Swerve, BooleanSupplier robotCentricSup){
-        this.s_Swerve = s_Swerve;
-        addRequirements(s_Swerve);
-        this.robotCentricSup = robotCentricSup;
-        initRoll = s_Swerve.gyro.getRoll();
-    }
-    @Override
-    public void execute(){
-        s_Swerve.drive(new Translation2d(-speed, 0).times(SwerveConstants.maxSpeed),
-         0.0, robotCentricSup.getAsBoolean(), true);
-         System.out.println("Roll: " + s_Swerve.gyro.getRoll());
-    }
+  private BooleanSupplier robotCentricSup;
+  private Swerve s_Swerve;
+  private double initRoll;
 
-    @Override 
-    public boolean isFinished(){
-        return (s_Swerve.gyro.getRoll() > (initRoll + 5));
-    }
+  public DriveBackTo5DegreesCommand(Swerve s_Swerve, BooleanSupplier robotCentricSup) {
+    this.s_Swerve = s_Swerve;
+    addRequirements(s_Swerve);
+    this.robotCentricSup = robotCentricSup;
+    initRoll = s_Swerve.gyro.getRoll();
+  }
+
+  @Override
+  public void execute() {
+    s_Swerve.drive(new Translation2d(-kSpeed, 0).times(SwerveConstants.maxSpeed), 0.0,
+        robotCentricSup.getAsBoolean(), true);
+    System.out.println("Roll: " + s_Swerve.gyro.getRoll());
+  }
+
+  @Override
+  public boolean isFinished() {
+    return (s_Swerve.gyro.getRoll() > (initRoll + 5));
+  }
 }

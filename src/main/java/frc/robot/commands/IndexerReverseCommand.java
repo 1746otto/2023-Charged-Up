@@ -5,27 +5,23 @@ import frc.robot.subsystems.Indexersubsystem;
 
 public class IndexerReverseCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Indexersubsystem m_subsystem;
+  private final Indexersubsystem m_indexerSubsystem;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
   public IndexerReverseCommand(Indexersubsystem subsystem) {
-    m_subsystem = subsystem;
+    m_indexerSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
+
   @Override
-  public void initialize(){
-    m_subsystem.runAllMotorsRev();
+  public void initialize() {
+    m_indexerSubsystem.runAllMotorsRev();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.turnOffIndexer();
+    m_indexerSubsystem.turnOffIndexer();
   }
 
   // Returns true when the command should end.

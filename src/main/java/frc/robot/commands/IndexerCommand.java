@@ -5,7 +5,7 @@ import frc.robot.subsystems.Indexersubsystem;
 
 public class IndexerCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Indexersubsystem m_subsystem;
+  private final Indexersubsystem m_indexerSubsystem;
 
   /**
    * Creates a new ExampleCommand.
@@ -13,30 +13,29 @@ public class IndexerCommand extends CommandBase {
    * @param subsystem The subsystem used by this command.
    */
   public IndexerCommand(Indexersubsystem subsystem) {
-    m_subsystem = subsystem;
+    m_indexerSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
+
   @Override
-  public void initialize(){
-    m_subsystem.runAllMotors();
+  public void initialize() {
+    m_indexerSubsystem.runAllMotors();
     System.out.println("ran");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //System.out.println(m_subsystem.beambreakBroken());
-    m_subsystem.turnOffIndexer();
+    // System.out.println(m_subsystem.beambreakBroken());
+    m_indexerSubsystem.turnOffIndexer();
   }
-  
 
   // Returns true when the command should end.
-  
   @Override
   public boolean isFinished() {
-    return m_subsystem.beambreakBroken();
-  } 
+    return m_indexerSubsystem.beambreakBroken();
+  }
 
 
 }

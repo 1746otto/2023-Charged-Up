@@ -5,32 +5,26 @@ import frc.robot.subsystems.Indexersubsystem;
 import frc.robot.subsystems.Flapsubsystem;
 
 public class LowGoalCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Indexersubsystem m_subsystem;
-  private final Flapsubsystem m_subsystem1;
+  private final Indexersubsystem m_indexerSubsystem;
+  private final Flapsubsystem m_flapSubsystem;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
   public LowGoalCommand(Indexersubsystem subsystem, Flapsubsystem subsystem1) {
-    m_subsystem = subsystem;
-    m_subsystem1 = subsystem1;
-    // Use addRequirements() here to declare subsystem dependencies.
+    m_indexerSubsystem = subsystem;
+    m_flapSubsystem = subsystem1;
     addRequirements(subsystem);
   }
+
   @Override
-  public void initialize(){
-    m_subsystem.RunLowGoal();
-    m_subsystem1.openFlap();
+  public void initialize() {
+    m_indexerSubsystem.RunLowGoal();
+    m_flapSubsystem.openFlap();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.turnOffShooter();
-    m_subsystem1.closeFlap();
+    m_indexerSubsystem.turnOffShooter();
+    m_flapSubsystem.closeFlap();
   }
 
   // Returns true when the command should end.

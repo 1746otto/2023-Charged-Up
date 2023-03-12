@@ -9,13 +9,12 @@ import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import java.util.function.BooleanSupplier;
 
-public class BalanceAuton extends SequentialCommandGroup{
-    public BalanceAuton(Swerve s_Swerve, BooleanSupplier robotCentricSup){
-        addCommands(new SequentialCommandGroup(new DriveTo5DegreesCommand(s_Swerve, robotCentricSup)
-        , new DriveForwardsCommand(s_Swerve, robotCentricSup)
-        , new DriveBackTo5DegreesCommand(s_Swerve, robotCentricSup)
-        , new BalancingCommand(s_Swerve, robotCentricSup)
-         ));
-    }
-    
+public class BalanceAuton extends SequentialCommandGroup {
+  public BalanceAuton(Swerve s_Swerve, BooleanSupplier robotCentricSup) {
+    addCommands(new SequentialCommandGroup(new DriveTo5DegreesCommand(s_Swerve, robotCentricSup),
+        new DriveForwardsCommand(s_Swerve, robotCentricSup),
+        new DriveBackTo5DegreesCommand(s_Swerve, robotCentricSup),
+        new BalancingCommand(s_Swerve, robotCentricSup)));
+  }
+
 }
