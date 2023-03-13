@@ -77,16 +77,14 @@ public class RobotContainer {
   public RobotContainer() {
     disableCompressor();
 
-    m_chooser.setDefaultOption("Auton1", "Auton1");
-    m_chooser.addOption("Auton2", "Auton2");
-    SmartDashboard.putData(m_chooser);
-    disableCompressor();
-
     // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
     configureDefaultCommands();
 
     // Configure the button bindings
     configureButtonBindings();
+
+    //Initalize Auton Selector
+    autos.initAutonSelector();
   }
 
   private void configureDefaultCommands() {
@@ -144,7 +142,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.exampleAuto();
+    return autos.getSelectedAuto();
   }
 
 }

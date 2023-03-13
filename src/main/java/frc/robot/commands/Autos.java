@@ -23,12 +23,28 @@ import java.util.List;
 import java.util.HashMap;
 
 public final class Autos {
+  // Subsystems
   Swerve m_swerve;
+
+  // Commands
   ScoringAlignCommand m_scoringAlignCommand;
+
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
 
   public Autos(Swerve swerve, ScoringAlignCommand alignCommand) {
     m_swerve = swerve;
     m_scoringAlignCommand = alignCommand;
+  }
+
+  public void initAutonSelector() {
+    m_chooser.setDefaultOption("Example Auton", exampleAuto());
+    m_chooser.addOption("Example Auton", exampleAuto());
+    SmartDashboard.putData(m_chooser);
+  }
+
+  public Command getSelectedAuto() {
+    
   }
 
   public Command exampleAuto() {
