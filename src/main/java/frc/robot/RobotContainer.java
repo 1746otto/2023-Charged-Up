@@ -6,14 +6,6 @@ import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.basic.ClamperCloseCommand;
 import frc.robot.commands.basic.ClamperOpenCommand;
-import frc.robot.commands.basic.IndexerRollerIntakeCommand;
-import frc.robot.commands.basic.IndexerRollerStopCommand;
-import frc.robot.commands.basic.IndexerTreadIntakeCommand;
-import frc.robot.commands.basic.IndexerTreadScoreCommand;
-import frc.robot.commands.basic.IndexerTreadStopCommand;
-import frc.robot.commands.basic.IntakeExtensionExtendCommand;
-import frc.robot.commands.basic.IntakeRollerIntakeCommand;
-import frc.robot.commands.basic.IntakeRollerStopCommand;
 import frc.robot.commands.basic.PlungerExtendCommand;
 import frc.robot.commands.basic.PlungerRetractCommand;
 import frc.robot.subsystems.Swerve;
@@ -32,7 +24,6 @@ import frc.robot.constants.RobotConstants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ElevatorRunToRequestCommand;
-import frc.robot.commands.LowGoalCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -74,37 +65,12 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   private final PlungerSubsystem m_plungerSubsystem = new PlungerSubsystem();
   private final ClamperSubsystem m_clamperSubsystem = new ClamperSubsystem();
-  private final FlapSubsystem m_flapSubsystem = new FlapSubsystem();
 
   private final Compressor m_compressor =
       new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
-  private final IntakeExtensionExtendCommand m_intakeExtensionExtendCommand =
-      new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem);
-  private final IntakeRollerIntakeCommand m_intakeRollerIntakeCommand =
-      new IntakeRollerIntakeCommand(m_intakeRollerSubsystem);
-  private final IndexerRollerIntakeCommand m_indexerRollerIntakeCommand =
-      new IndexerRollerIntakeCommand(m_indexerRollerSubsystem);
-  private final IndexerTreadIntakeCommand m_indexerTreadIntakeCommand =
-      new IndexerTreadIntakeCommand(m_indexerTreadSubsystem);
-  private final ClamperCloseCommand m_vlamperCloseCommand =
-      new ClamperCloseCommand(m_clamperSubsystem);
-  private final PlungerExtendCommand m_plungerExtendCommand =
-      new PlungerExtendCommand(m_plungerSubsystem);
-  private final ClamperOpenCommand m_clamperOpenCommand =
-      new ClamperOpenCommand(m_clamperSubsystem);
-  private final PlungerRetractCommand m_plungerRetractCommand =
-      new PlungerRetractCommand(m_plungerSubsystem);
-  private final IndexerRollerStopCommand m_indexerRollerStopCommand =
-      new IndexerRollerStopCommand(m_indexerRollerSubsystem);
-  private final LowGoalCommand m_lowGoalCommand =
-      new LowGoalCommand(m_indexerRollerSubsystem, m_flapSubsystem, m_indexerTreadSubsystem);
-  private final IntakeRollerStopCommand m_intakeRollerStopCommand =
-      new IntakeRollerStopCommand(m_intakeRollerSubsystem);
-  private final IndexerTreadStopCommand m_indexerTreadStopCommand =
-      new IndexerTreadStopCommand(m_indexerTreadSubsystem);
   private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -166,7 +132,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-
+    xBoxA.onTrue(
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition));
+    xBoxB.onTrue(
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition));
+    xBoxY.onTrue(
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition));
   }
 
   public void enableCompressor() {

@@ -71,6 +71,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     beamBreakLastState = ((Math.round(beamBreak.getVoltage()) == 0) && (elevatorMotor.get() < 0));
+    System.out.println("BeamBreak: " + beamBreakLastState);
     currState = elevatorMotor.getEncoder().getPosition();
   }
 }
