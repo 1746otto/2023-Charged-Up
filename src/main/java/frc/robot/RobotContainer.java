@@ -6,6 +6,8 @@ import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.basic.ClamperCloseCommand;
 import frc.robot.commands.basic.ClamperOpenCommand;
+import frc.robot.commands.basic.FlapCloseCommand;
+import frc.robot.commands.basic.FlapOpenCommand;
 import frc.robot.commands.basic.IndexerRollerIntakeCommand;
 import frc.robot.commands.basic.IndexerRollerStopCommand;
 import frc.robot.commands.basic.IndexerTreadIntakeCommand;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -32,9 +35,11 @@ import frc.robot.constants.RobotConstants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ElevatorRunToRequestCommand;
+import frc.robot.commands.IndexerRunTreadAndRollers;
 import frc.robot.commands.LowGoalCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -89,7 +94,7 @@ public class RobotContainer {
       new IndexerRollerIntakeCommand(m_indexerRollerSubsystem);
   private final IndexerTreadIntakeCommand m_indexerTreadIntakeCommand =
       new IndexerTreadIntakeCommand(m_indexerTreadSubsystem);
-  private final ClamperCloseCommand m_vlamperCloseCommand =
+  private final ClamperCloseCommand m_clamperCloseCommand =
       new ClamperCloseCommand(m_clamperSubsystem);
   private final PlungerExtendCommand m_plungerExtendCommand =
       new PlungerExtendCommand(m_plungerSubsystem);
@@ -105,6 +110,10 @@ public class RobotContainer {
       new IntakeRollerStopCommand(m_intakeRollerSubsystem);
   private final IndexerTreadStopCommand m_indexerTreadStopCommand =
       new IndexerTreadStopCommand(m_indexerTreadSubsystem);
+  private final IndexerRunTreadAndRollers m_IndexerRunTreadAndRollers =
+      new IndexerRunTreadAndRollers(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand);
+  private final FlapOpenCommand m_flapOpenCommand = new FlapOpenCommand(m_flapSubsystem);
+  private final FlapCloseCommand m_flapCloseCommand = new FlapCloseCommand(m_flapSubsystem);
   private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -166,6 +175,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    xBoxA.toggleOnTrue(m_intakeRollerIntakeCommand);
+    xBoxA.toggleOnFalse(m_intakeRollerStopCommand);
+    xBoxB.toggleOnTrue(Commands.race(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand));
+    xBoxB.toggleOnFalse(m_indexerTreadStopCommand);
+    xBoxB.toggleOnFalse(m_indexerRollerStopCommand);
+    xBoxY.toggleOnTrue(m_clamperCloseCommand);
+    xBoxX.toggleOnTrue(m_plungerExtendCommand);
+    xBoxX.toggleOnFalse(m_plungerRetractCommand);
+    xBoxLBumper.toggleOnTrue(m_flapOpenCommand);
+    xBoxLBumper.toggleOnFalse(m_flapCloseCommand);
 
   }
 

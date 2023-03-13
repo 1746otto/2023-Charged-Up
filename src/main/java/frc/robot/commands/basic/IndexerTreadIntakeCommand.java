@@ -21,4 +21,10 @@ public class IndexerTreadIntakeCommand extends CommandBase {
   public void initialize() {
     m_indexerTreadSubsystem.setMotorIntakeSpeed();
   }
+
+  @Override
+  public boolean isFinished() {
+    // TODO Auto-generated method stub
+    return m_indexerTreadSubsystem.beambreakBroken();
+  }
 }
