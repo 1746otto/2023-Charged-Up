@@ -1,13 +1,23 @@
 package frc.robot.constants;
 
 public final class IndexerConstants {
-  public static final int kIndexerMotor = 33;
-  public static final int kIndexerMotor2 = 32;
-  public static final int kIndexerMotorT = 31;
-  public static double speed = .3;
-  public static double reverseSpeed = -.4;
-  public static double Tspeed = .5;
-  public static double RevTspeed = -.1;
-  public static final int kChannel = 8;
-  public static final int kbeambreak = 1;
+  // CAN IDs
+  public static final int kIndexerTreadMotor = 31;
+  public static final int kIndexerRightRollerMotor = 32;
+  public static final int kIndexerLeftRollerMotor = 33;
+
+  // RIO Analog IO Ports
+  public static final int kbeamBreak = 1;
+
+  // Tunable constants
+  public static final double kRollerIntakeSpeed = .3;
+  public static final double kRollerOuttakeSpeed = -.4;
+  public static final double kRollerStopSpeed = 0;
+
+  public static final double kTreadIntakeSpeed = .5;
+  public static final double kTreadOuttakeSpeed = -.1;
+  public static final double kTreadScoreSpeed = .5;
+  public static final double kTreadStopSpeed = 0;
+
+  public static final double kBeamBreakBrokenVoltage = .67;
 }
