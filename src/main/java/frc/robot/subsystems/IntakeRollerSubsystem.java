@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
@@ -15,29 +11,25 @@ public class IntakeRollerSubsystem extends SubsystemBase {
   CANSparkMax slaveMotor;
 
   public IntakeRollerSubsystem() {
-    masterMotor = new CANSparkMax(IntakeRollerConstants.CANID1, MotorType.kBrushless);
-    slaveMotor = new CANSparkMax(IntakeRollerConstants.CANID2, MotorType.kBrushless);
+    masterMotor = new CANSparkMax(IntakeRollerConstants.kMasterMotor, MotorType.kBrushless);
+    slaveMotor = new CANSparkMax(IntakeRollerConstants.kSlaveMotor, MotorType.kBrushless);
 
     slaveMotor.follow(masterMotor, true);
   }
 
-  public void runFullPower() {
-    masterMotor.set(IntakeRollerConstants.kFullPower);
+  public void setMotorSpeed(double speed) {
+    masterMotor.set(speed);
   }
 
-  public void runCustomPower(double input) {
-    masterMotor.set(input);
+  public void setMotorIntakeSpeed() {
+    setMotorSpeed(IntakeRollerConstants.kRollerIntakeSpeed);
   }
 
-  public void runZeroPower() {
-    masterMotor.set(0);
+  public void setMotorOuttakeSpeed() {
+    setMotorSpeed(IntakeRollerConstants.kRollerOuttakeSpeed);
   }
 
-  public void runClockwise(double input) {
-    masterMotor.set(input);
-  }
-
-  public void runCounterClockwise(double input) {
-    masterMotor.set((-1 * input));
+  public void setMotorStoppedSpeed() {
+    setMotorSpeed(IntakeRollerConstants.kRollerStopSpeed);
   }
 }

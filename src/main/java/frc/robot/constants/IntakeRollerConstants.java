@@ -1,7 +1,12 @@
 package frc.robot.constants;
 
 public final class IntakeRollerConstants {
-  public static final int CANID1 = 21;
-  public static final int CANID2 = 22;
-  public static final double kFullPower = 0.8;
+  // CAN IDs
+  public static final int kMasterMotor = 21;
+  public static final int kSlaveMotor = 22;
+
+  // Tunable Constants
+  public static final double kRollerIntakeSpeed = 0.8;
+  public static final double kRollerOuttakeSpeed = -0.8;
+  public static final double kRollerStopSpeed = 0;
 }
