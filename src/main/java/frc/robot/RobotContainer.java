@@ -2,7 +2,6 @@ package frc.robot;
 
 
 import frc.robot.commands.Autos;
-import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.basic.ClamperCloseCommand;
@@ -22,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.RobotConstants;
-import frc.robot.subsystems.Indexersubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ElevatorRunToRequestCommand;
@@ -36,11 +34,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final XboxController m_controller = new XboxController(ControllerConstants.kport);
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   /* Controllers */
-  private final Joystick driver = new Joystick(0);
+  private final XboxController m_driver = new XboxController(ControllerConstants.kDriverPort);
+  private final XboxController m_operator = new XboxController(ControllerConstants.kOperatorPort);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -48,24 +46,26 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
-  private final JoystickButton xboxStart =
-      new JoystickButton(driver, XboxController.Button.kStart.value);
-  private final JoystickButton xBoxY =
-      new JoystickButton(m_controller, XboxController.Button.kY.value);
-  private final JoystickButton xBoxB =
-      new JoystickButton(m_controller, XboxController.Button.kB.value);
-  private final JoystickButton xBoxA =
-      new JoystickButton(m_controller, XboxController.Button.kA.value);
-  private final JoystickButton xBoxX =
-      new JoystickButton(m_controller, XboxController.Button.kX.value);
+  private final JoystickButton xBoxStart =
+      new JoystickButton(m_driver, XboxController.Button.kStart.value);
+  private final JoystickButton xBoxY = new JoystickButton(m_driver, XboxController.Button.kY.value);
+  private final JoystickButton xBoxB = new JoystickButton(m_driver, XboxController.Button.kB.value);
+  private final JoystickButton xBoxA = new JoystickButton(m_driver, XboxController.Button.kA.value);
+  private final JoystickButton xBoxX = new JoystickButton(m_driver, XboxController.Button.kX.value);
   private final JoystickButton xBoxLBumper =
-      new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+      new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value);
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
-  private final PlacerSubsystem m_PlacerSubsystem = new PlacerSubsystem();
-  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-  private final Indexersubsystem m_IndexerSubsystem = new Indexersubsystem();
+  private final IntakeRollerSubsystem m_intakeRollerSubsystem = new IntakeRollerSubsystem();
+  private final IntakeExtensionSubsystem m_intakeExtensionSubsystem =
+      new IntakeExtensionSubsystem();
+  private final IndexerTreadSubsystem m_indexerTreadSubsystem = new IndexerTreadSubsystem();
+  private final IndexerRollerSubsystem m_indexerRollerSubsystem = new IndexerRollerSubsystem();
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+  private final PlungerSubsystem m_plungerSubsystem = new PlungerSubsystem();
+  private final ClamperSubsystem m_clamperSubsystem = new ClamperSubsystem();
+
   private final Compressor m_compressor =
       new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
@@ -99,8 +99,8 @@ public class RobotContainer {
          * 
          * )
          */
-        new TeleopSwerve(s_Swerve, () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis), () -> -driver.getRawAxis(rotationAxis),
+        new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
+            () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
             () -> false, // robotCentric.getAsBoolean()
             () -> false, () -> false, () -> false, () -> false
 
@@ -111,17 +111,17 @@ public class RobotContainer {
     // they aren't.
     // This allows us to not run this if we are actively running indexer, which will turn off when
     // beam is broken.
-    m_PlacerSubsystem.setDefaultCommand(new RunCommand(
-        // TODO: Tune these numbers to be realistic not guesses.
-        () -> {
-          if (m_ElevatorSubsystem.getElevatorEncoderValues() < ElevatorConstants.kOriginPosition
-              + 250
-              && m_ElevatorSubsystem.getElevatorEncoderValues() > ElevatorConstants.kOriginPosition
-                  - 250
-              && m_IndexerSubsystem.beambreakBroken()) {
-            m_PlacerSubsystem.closeClamper();
-          }
-        }, m_PlacerSubsystem, m_ElevatorSubsystem, m_IndexerSubsystem));
+    // m_PlacerSubsystem.setDefaultCommand(new RunCommand(
+    // // TODO: Tune these numbers to be realistic not guesses.
+    // () -> {
+    // if (m_ElevatorSubsystem.getElevatorEncoderValues() < ElevatorConstants.kOriginPosition
+    // + 250
+    // && m_ElevatorSubsystem.getElevatorEncoderValues() > ElevatorConstants.kOriginPosition
+    // - 250
+    // && m_IndexerSubsystem.beambreakBroken()) {
+    // m_PlacerSubsystem.closeClamper();
+    // }
+    // }, m_PlacerSubsystem, m_ElevatorSubsystem, m_IndexerSubsystem));
   }
 
   /**
@@ -131,17 +131,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    xboxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    xBoxX.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_PlacerSubsystem),
-        new ClamperOpenCommand(m_PlacerSubsystem)));
-    xBoxLBumper.onTrue(new SequentialCommandGroup(new IndexerCommand(m_IndexerSubsystem),
-        new ClamperCloseCommand(m_PlacerSubsystem)));
-    xBoxY.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem),
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition)));
-    xBoxB.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem),
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition)));
-    xBoxA.toggleOnTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_PlacerSubsystem),
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
+    xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
   }
 
   public void enableCompressor() {
