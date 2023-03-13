@@ -4,20 +4,19 @@
 
 package frc.robot.commands.basic;
 
-import frc.robot.subsystems.IntakeExtendSubsystem;
+import frc.robot.subsystems.IntakeExtensionSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class IntakeExtendCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeExtendSubsystem m_intakeSubsystem;
+public class IntakeExtensionStopCommand extends CommandBase {
+  private final IntakeExtensionSubsystem m_intakeSubsystem;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeExtendCommand(IntakeExtendSubsystem subsystem) {
+  public IntakeExtensionStopCommand(IntakeExtensionSubsystem subsystem) {
     m_intakeSubsystem = subsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,19 +26,6 @@ public class IntakeExtendCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intakeSubsystem.extend();
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_intakeSubsystem.stopRunning();
-  }
-
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return m_intakeSubsystem.isExtended();
+    m_intakeSubsystem.setMotorStoppedSpeed();
   }
 }
