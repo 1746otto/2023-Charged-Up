@@ -53,7 +53,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void elevatorRunDown() {
-    elevatorMotor.set(-0.5);
+    elevatorMotor.set(-0.1);
   }
 
   public void setPositionTo0() {
@@ -65,13 +65,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void runToRequest(int reqPosition) {
-    pidController.setReference(reqPosition, ControlType.kSmartMotion);
+    pidController.setReference(reqPosition, ControlType.kPosition);
   }
 
   @Override
   public void periodic() {
-    beamBreakLastState = ((Math.round(beamBreak.getVoltage()) == 0) && (elevatorMotor.get() < 0));
-    System.out.println("BeamBreak: " + beamBreakLastState);
+    beamBreakLastState = (Math.floor(beamBreak.getVoltage()) > 0 && (elevatorMotor.get() < 0));
+    System.out.println("Beam break: " + beamBreakLastState);
     currState = elevatorMotor.getEncoder().getPosition();
   }
 }

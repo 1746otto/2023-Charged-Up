@@ -4,11 +4,12 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.ZeroOutElevatorCommand;
 import frc.robot.commands.basic.ClamperCloseCommand;
 import frc.robot.commands.basic.ClamperOpenCommand;
+import frc.robot.commands.basic.IndexerRollerIntakeCommand;
 import frc.robot.commands.basic.PlungerExtendCommand;
 import frc.robot.commands.basic.PlungerRetractCommand;
-import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -54,6 +55,8 @@ public class RobotContainer {
   private final JoystickButton xBoxX = new JoystickButton(m_driver, XboxController.Button.kX.value);
   private final JoystickButton xBoxLBumper =
       new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton xBoxRBumper =
+      new JoystickButton(m_driver, XboxController.Button.kRightBumper.value);
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -138,6 +141,7 @@ public class RobotContainer {
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition));
     xBoxY.onTrue(
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition));
+    xBoxRBumper.onTrue(new ZeroOutElevatorCommand(m_elevatorSubsystem));
   }
 
   public void enableCompressor() {
