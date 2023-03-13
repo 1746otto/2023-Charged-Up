@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.FlapConstants;
 import frc.robot.constants.RobotConstants;
 
-public class Flapsubsystem extends SubsystemBase {
+public class FlapSubsystem extends SubsystemBase {
   private final Solenoid pistons;
 
-  public Flapsubsystem() {
+  public FlapSubsystem() {
     pistons =
         new Solenoid(RobotConstants.kREVPH, PneumaticsModuleType.REVPH, FlapConstants.kChannel);
   }
@@ -19,11 +19,11 @@ public class Flapsubsystem extends SubsystemBase {
   }
 
   public void closeFlap() {
-    pistons.set(false);
+    pistons.set(FlapConstants.kFlapClosed);
   }
 
   public void openFlap() {
-    pistons.set(true);
+    pistons.set(FlapConstants.kFlapOpen);
   }
 
 }
