@@ -1,18 +1,18 @@
 package frc.robot.commands.basic;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PlacerSubsystem;
+import frc.robot.subsystems.PlungerSubsystem;
 
 public class PlungerRetractCommand extends CommandBase {
-  private final PlacerSubsystem m_placerSubsystem;
+  private final PlungerSubsystem m_plungerSubsystem;
 
-  public PlungerRetractCommand(PlacerSubsystem subsystem) {
-    m_placerSubsystem = subsystem;
+  public PlungerRetractCommand(PlungerSubsystem subsystem) {
+    m_plungerSubsystem = subsystem;
     addRequirements(subsystem);
   }
 
   @Override
   public void initialize() {
-    m_placerSubsystem.retractPlunger();
+    m_plungerSubsystem.retract();
   }
 }

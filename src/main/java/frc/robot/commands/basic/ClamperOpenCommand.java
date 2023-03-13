@@ -1,18 +1,18 @@
 package frc.robot.commands.basic;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PlacerSubsystem;
+import frc.robot.subsystems.ClamperSubsystem;
 
 public class ClamperOpenCommand extends CommandBase {
-  private final PlacerSubsystem m_PlacerSubsystem;
+  private final ClamperSubsystem m_ClamperSubsystem;
 
-  public ClamperOpenCommand(PlacerSubsystem subsystem) {
-    m_PlacerSubsystem = subsystem;
-    addRequirements(subsystem);
+  public ClamperOpenCommand(ClamperSubsystem subsystem) {
+    m_ClamperSubsystem = subsystem;
+    addRequirements(m_ClamperSubsystem);
   }
 
   @Override
   public void initialize() {
-    m_PlacerSubsystem.openClamper();
+    m_ClamperSubsystem.open();
   }
 }

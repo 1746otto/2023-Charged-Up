@@ -1,8 +1,11 @@
 package frc.robot.constants;
 
 public final class ClamperConstants {
-  public static final int kExtendSolenoidChannel = 10;
-  public static final int kRetractSolenoidChannel = 10;
-  public static final int kChannel = 10;
-  public static final boolean kPlacerEngaged = false;
+  // CAN IDs
+  public static final int kPH = 2;
+  public static final int kClamperChannel = 8;
+
+  // Tunable Constants
+  public static final boolean kClamperClosed = true;
+  public static final boolean kClamperOpen = false;
 }

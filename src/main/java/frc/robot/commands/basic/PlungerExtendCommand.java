@@ -1,18 +1,18 @@
 package frc.robot.commands.basic;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PlacerSubsystem;
+import frc.robot.subsystems.PlungerSubsystem;
 
 public class PlungerExtendCommand extends CommandBase {
-  private final PlacerSubsystem m_placerSubsystem;
+  private final PlungerSubsystem m_plungerSubsystem;
 
-  public PlungerExtendCommand(PlacerSubsystem subsystem) {
-    m_placerSubsystem = subsystem;
+  public PlungerExtendCommand(PlungerSubsystem subsystem) {
+    m_plungerSubsystem = subsystem;
     addRequirements(subsystem);
   }
 
   @Override
   public void initialize() {
-    m_placerSubsystem.extendPlunger();
+    m_plungerSubsystem.extend();
   }
 }
