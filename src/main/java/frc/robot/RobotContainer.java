@@ -1,6 +1,7 @@
 package frc.robot;
 
 
+import frc.robot.commands.AutomaticIntakeClamperCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
@@ -115,6 +116,9 @@ public class RobotContainer {
   private final FlapOpenCommand m_flapOpenCommand = new FlapOpenCommand(m_flapSubsystem);
   private final FlapCloseCommand m_flapCloseCommand = new FlapCloseCommand(m_flapSubsystem);
   private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
+  private final AutomaticIntakeClamperCommand m_AutomaticIntakeClamperCommand =
+      new AutomaticIntakeClamperCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem,
+          m_intakeRollerSubsystem, m_clamperSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -175,16 +179,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    xBoxA.toggleOnTrue(m_IndexerRunTreadAndRollers);
-    // xBoxA.toggleOnFalse(m_In);
+    xBoxA.toggleOnTrue(m_lowGoalCommand);
     // xBoxB.toggleOnTrue(Commands.race(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand));
-    xBoxA.toggleOnFalse(m_indexerTreadStopCommand);
-    xBoxA.toggleOnFalse(m_indexerRollerStopCommand);
-    xBoxY.toggleOnTrue(m_clamperCloseCommand);
-    xBoxX.toggleOnTrue(m_plungerExtendCommand);
-    xBoxX.toggleOnFalse(m_plungerRetractCommand);
-    xBoxLBumper.toggleOnTrue(m_flapOpenCommand);
-    xBoxLBumper.toggleOnFalse(m_flapCloseCommand);
+    xBoxB.onTrue(m_AutomaticIntakeClamperCommand);
+    xBoxY.onTrue(m_clamperOpenCommand);
+    xBoxX.onTrue(m_plungerExtendCommand);
+    xBoxX.onFalse(m_plungerRetractCommand);
+    xBoxLBumper.onTrue(m_flapOpenCommand);
+    xBoxLBumper.onFalse(m_flapCloseCommand);
 
   }
 

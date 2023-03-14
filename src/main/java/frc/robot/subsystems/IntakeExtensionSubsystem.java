@@ -48,4 +48,5 @@ public class IntakeExtensionSubsystem extends SubsystemBase {
   public boolean isRetracted() {
     return topLimitSwitch.isPressed();
   }
+
 }
