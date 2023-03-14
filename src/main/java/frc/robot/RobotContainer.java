@@ -10,12 +10,16 @@ import frc.robot.commands.basic.ClamperOpenCommand;
 import frc.robot.commands.basic.FlapCloseCommand;
 import frc.robot.commands.basic.FlapOpenCommand;
 import frc.robot.commands.basic.IndexerRollerIntakeCommand;
+import frc.robot.commands.basic.IndexerRollerOuttakeCommand;
 import frc.robot.commands.basic.IndexerRollerStopCommand;
 import frc.robot.commands.basic.IndexerTreadIntakeCommand;
+import frc.robot.commands.basic.IndexerTreadOuttakeCommand;
 import frc.robot.commands.basic.IndexerTreadScoreCommand;
 import frc.robot.commands.basic.IndexerTreadStopCommand;
 import frc.robot.commands.basic.IntakeExtensionExtendCommand;
+import frc.robot.commands.basic.IntakeExtensionRetractCommand;
 import frc.robot.commands.basic.IntakeRollerIntakeCommand;
+import frc.robot.commands.basic.IntakeRollerOuttakeCommand;
 import frc.robot.commands.basic.IntakeRollerStopCommand;
 import frc.robot.commands.basic.PlungerExtendCommand;
 import frc.robot.commands.basic.PlungerRetractCommand;
@@ -36,6 +40,7 @@ import frc.robot.constants.RobotConstants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ElevatorRunToRequestCommand;
+import frc.robot.commands.FullOutakeCommand;
 import frc.robot.commands.IndexerRunTreadAndRollers;
 import frc.robot.commands.LowGoalCommand;
 import frc.robot.subsystems.*;
@@ -105,8 +110,8 @@ public class RobotContainer {
       new PlungerRetractCommand(m_plungerSubsystem);
   private final IndexerRollerStopCommand m_indexerRollerStopCommand =
       new IndexerRollerStopCommand(m_indexerRollerSubsystem);
-  private final LowGoalCommand m_lowGoalCommand =
-      new LowGoalCommand(m_indexerRollerSubsystem, m_flapSubsystem, m_indexerTreadSubsystem);
+  private final LowGoalCommand m_lowGoalCommand = new LowGoalCommand(m_indexerRollerSubsystem,
+      m_flapSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem);
   private final IntakeRollerStopCommand m_intakeRollerStopCommand =
       new IntakeRollerStopCommand(m_intakeRollerSubsystem);
   private final IndexerTreadStopCommand m_indexerTreadStopCommand =
@@ -115,10 +120,16 @@ public class RobotContainer {
       new IndexerRunTreadAndRollers(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand);
   private final FlapOpenCommand m_flapOpenCommand = new FlapOpenCommand(m_flapSubsystem);
   private final FlapCloseCommand m_flapCloseCommand = new FlapCloseCommand(m_flapSubsystem);
+
   private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
   private final AutomaticIntakeClamperCommand m_AutomaticIntakeClamperCommand =
       new AutomaticIntakeClamperCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem,
           m_intakeRollerSubsystem, m_clamperSubsystem);
+  private final IntakeExtensionRetractCommand m_IntakeExtensionRetractCommand =
+      new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem);
+  private final FullOutakeCommand m_full = new FullOutakeCommand(m_indexerRollerSubsystem,
+      m_intakeRollerSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -181,12 +192,13 @@ public class RobotContainer {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     xBoxA.toggleOnTrue(m_lowGoalCommand);
     // xBoxB.toggleOnTrue(Commands.race(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand));
-    xBoxB.onTrue(m_AutomaticIntakeClamperCommand);
-    xBoxY.onTrue(m_clamperOpenCommand);
-    xBoxX.onTrue(m_plungerExtendCommand);
-    xBoxX.onFalse(m_plungerRetractCommand);
-    xBoxLBumper.onTrue(m_flapOpenCommand);
-    xBoxLBumper.onFalse(m_flapCloseCommand);
+    xBoxB.toggleOnTrue(m_AutomaticIntakeClamperCommand);
+    xBoxY.toggleOnTrue(m_full);
+    xBoxX.toggleOnTrue(m_intakeExtensionExtendCommand);
+    // xBoxX.onFalse(m_plungerRetractCommand);
+    xBoxLBumper.toggleOnTrue(m_IntakeExtensionRetractCommand);
+    // xBoxLBumper.onFalse(m_flapCloseCommand);
+
 
   }
 

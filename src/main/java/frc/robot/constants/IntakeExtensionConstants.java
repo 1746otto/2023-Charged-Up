@@ -6,6 +6,6 @@ public final class IntakeExtensionConstants {
 
   // Tunable Constants
   public static final double kExtensionSpeed = 0.2;
-  public static final double kRetractionSpeed = 0.2;
+  public static final double kRetractionSpeed = -0.2;
   public static final double kStopSpeed = 0;
 }

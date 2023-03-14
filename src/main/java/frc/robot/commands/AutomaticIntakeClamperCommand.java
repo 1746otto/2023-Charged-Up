@@ -30,6 +30,7 @@ public class AutomaticIntakeClamperCommand extends CommandBase {
     m_IntakeRollerSubsystem.setMotorIntakeSpeed();
     m_indexerSubsystem.setMotorIntakeSpeed();
     m_IndexerTreadSubsystem.setMotorScoreSpeed();
+    m_ClamperSubsystem.open();
 
   }
 
