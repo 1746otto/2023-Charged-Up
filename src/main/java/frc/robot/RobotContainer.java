@@ -175,11 +175,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    xBoxA.toggleOnTrue(m_intakeRollerIntakeCommand);
-    xBoxA.toggleOnFalse(m_intakeRollerStopCommand);
-    xBoxB.toggleOnTrue(Commands.race(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand));
-    xBoxB.toggleOnFalse(m_indexerTreadStopCommand);
-    xBoxB.toggleOnFalse(m_indexerRollerStopCommand);
+    xBoxA.toggleOnTrue(m_IndexerRunTreadAndRollers);
+    // xBoxA.toggleOnFalse(m_In);
+    // xBoxB.toggleOnTrue(Commands.race(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand));
+    xBoxA.toggleOnFalse(m_indexerTreadStopCommand);
+    xBoxA.toggleOnFalse(m_indexerRollerStopCommand);
     xBoxY.toggleOnTrue(m_clamperCloseCommand);
     xBoxX.toggleOnTrue(m_plungerExtendCommand);
     xBoxX.toggleOnFalse(m_plungerRetractCommand);
