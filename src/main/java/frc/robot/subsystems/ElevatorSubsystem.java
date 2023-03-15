@@ -16,7 +16,6 @@ import frc.robot.constants.ElevatorConstants;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  private final double kSpeedConstant = ElevatorConstants.kElevatorSpeed;
   private final double kP = ElevatorConstants.kElevatorP;
   // private final double kD = ElevatorConstants.kElevatorD;
 
@@ -36,8 +35,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     // pidController.setD(kD, 0);
     // pidController.setFF(.005, 0);
     pidController.setOutputRange(-1, 1);
-    pidController.setSmartMotionMaxVelocity(kSpeedConstant, 0);
-    pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
+  }
+
+  public void elevatorRunUp() {
+    elevatorMotor.set(ElevatorConstants.kElevatorSpeed);
+  }
+
+  public void elevatorRunDown() {
+    elevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
   }
 
   public void stopElevator() {
@@ -52,10 +57,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     return limitSwitch.isPressed();
   }
 
-  public void elevatorRunDown() {
-    elevatorMotor.set(-0.1);
-  }
-
   public void setPositionTo0() {
     elevatorMotor.getEncoder().setPosition(0);
   }
@@ -64,7 +65,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return currState;
   }
 
-  public void runToRequest(int reqPosition) {
+  public void runToRequest(double reqPosition) {
     pidController.setReference(reqPosition, ControlType.kPosition);
   }
 

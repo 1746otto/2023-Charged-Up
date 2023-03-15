@@ -7,7 +7,10 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.ZeroOutElevatorCommand;
 import frc.robot.commands.basic.ClamperCloseCommand;
 import frc.robot.commands.basic.ClamperOpenCommand;
+import frc.robot.commands.basic.ElevatorRunUpCommand;
 import frc.robot.commands.basic.IndexerRollerIntakeCommand;
+import frc.robot.commands.basic.IndexerTreadIntakeCommand;
+import frc.robot.commands.basic.IntakeRollerIntakeCommand;
 import frc.robot.commands.basic.PlungerExtendCommand;
 import frc.robot.commands.basic.PlungerRetractCommand;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -24,6 +27,7 @@ import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.RobotConstants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.ElevatorRunToRequestCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -57,6 +61,22 @@ public class RobotContainer {
       new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton xBoxRBumper =
       new JoystickButton(m_driver, XboxController.Button.kRightBumper.value);
+
+  /* Operator Buttons */
+  private final JoystickButton xBoxStart2 =
+      new JoystickButton(m_driver, XboxController.Button.kStart.value);
+  private final JoystickButton xBoxY2 =
+      new JoystickButton(m_operator, XboxController.Button.kY.value);
+  private final JoystickButton xBoxB2 =
+      new JoystickButton(m_operator, XboxController.Button.kB.value);
+  private final JoystickButton xBoxA2 =
+      new JoystickButton(m_operator, XboxController.Button.kA.value);
+  private final JoystickButton xBoxX2 =
+      new JoystickButton(m_operator, XboxController.Button.kX.value);
+  private final JoystickButton xBoxLBumper2 =
+      new JoystickButton(m_operator, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton xBoxRBumper2 =
+      new JoystickButton(m_operator, XboxController.Button.kRightBumper.value);
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -135,13 +155,26 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    xBoxA.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition));
-    xBoxB.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition));
-    xBoxY.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition));
-    xBoxRBumper.onTrue(new ZeroOutElevatorCommand(m_elevatorSubsystem));
+    xBoxA.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition)));
+
+    xBoxB.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition)));
+
+    xBoxY.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition)));
+
+    xBoxX.onTrue(new SequentialCommandGroup(new ElevatorRunUpCommand(m_elevatorSubsystem),
+        new ZeroOutElevatorCommand(m_elevatorSubsystem)));
+
+    xBoxRBumper.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_plungerSubsystem),
+        new ClamperOpenCommand(m_clamperSubsystem)));
+
+    xBoxLBumper.onTrue(new SequentialCommandGroup(
+        new ParallelDeadlineGroup(new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
+            new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
+            new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
+        new ClamperCloseCommand(m_clamperSubsystem)));
   }
 
   public void enableCompressor() {
@@ -156,5 +189,4 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return autos.exampleAuto();
   }
-
 }
