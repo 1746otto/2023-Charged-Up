@@ -8,8 +8,14 @@ import frc.robot.commands.ZeroOutElevatorCommand;
 import frc.robot.commands.basic.ClamperCloseCommand;
 import frc.robot.commands.basic.ClamperOpenCommand;
 import frc.robot.commands.basic.ElevatorRunUpCommand;
+import frc.robot.commands.basic.FlapOpenCommand;
+import frc.robot.commands.basic.FlapCloseCommand;
 import frc.robot.commands.basic.IndexerRollerIntakeCommand;
 import frc.robot.commands.basic.IndexerTreadIntakeCommand;
+import frc.robot.commands.basic.IndexerTreadScoreCommand;
+import frc.robot.commands.basic.IntakeExtensionExtendCommand;
+import frc.robot.commands.basic.IntakeExtensionRetractCommand;
+import frc.robot.commands.basic.IntakeExtensionStopCommand;
 import frc.robot.commands.basic.IntakeRollerIntakeCommand;
 import frc.robot.commands.basic.PlungerExtendCommand;
 import frc.robot.commands.basic.PlungerRetractCommand;
@@ -27,6 +33,7 @@ import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.RobotConstants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.ElevatorRunToRequestCommand;
 import frc.robot.subsystems.*;
@@ -53,6 +60,8 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton xBoxStart =
       new JoystickButton(m_driver, XboxController.Button.kStart.value);
+  private final JoystickButton xBoxBack =
+      new JoystickButton(m_driver, XboxController.Button.kBack.value);
   private final JoystickButton xBoxY = new JoystickButton(m_driver, XboxController.Button.kY.value);
   private final JoystickButton xBoxB = new JoystickButton(m_driver, XboxController.Button.kB.value);
   private final JoystickButton xBoxA = new JoystickButton(m_driver, XboxController.Button.kA.value);
@@ -88,6 +97,7 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   private final PlungerSubsystem m_plungerSubsystem = new PlungerSubsystem();
   private final ClamperSubsystem m_clamperSubsystem = new ClamperSubsystem();
+  private final FlapSubsystem m_flapSubsystem = new FlapSubsystem();
 
   private final Compressor m_compressor =
       new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
@@ -155,26 +165,43 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    // Elevator goes down to the origin position and then the flap closes
     xBoxA.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition)));
-
-    xBoxB.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition),
+        new FlapCloseCommand(m_flapSubsystem)));
+    // Flap opens and then the elevator moves up
+    xBoxB.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem),
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition)));
-
-    xBoxY.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
+    // Flap opens and then the elevator moves up
+    xBoxY.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem),
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition)));
-
+    // Elevator runs up and goes back down to beam break to get the zero position.
     xBoxX.onTrue(new SequentialCommandGroup(new ElevatorRunUpCommand(m_elevatorSubsystem),
         new ZeroOutElevatorCommand(m_elevatorSubsystem)));
-
+    // Plunger goes down and then opens the clamper
     xBoxRBumper.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_plungerSubsystem),
         new ClamperOpenCommand(m_clamperSubsystem)));
-
+    // Intake and indexer run at the same time until the beam break is broken then the clamper
+    // closes
     xBoxLBumper.onTrue(new SequentialCommandGroup(
         new ParallelDeadlineGroup(new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
             new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
+            new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
             new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
-        new ClamperCloseCommand(m_clamperSubsystem)));
+        new ClamperCloseCommand(m_clamperSubsystem),
+        new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem)));
+    // The flap opens and then the intake and indexer run at the same time to get a low goal
+    xBoxBack.toggleOnTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new ParallelCommandGroup(new IndexerTreadScoreCommand(m_indexerTreadSubsystem),
+            new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
+            new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
+            new IndexerRollerIntakeCommand(m_indexerRollerSubsystem))));
+    // Intake retracts and flap closes
+    xBoxBack.toggleOnFalse(
+        new SequentialCommandGroup(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem),
+            new FlapCloseCommand(m_flapSubsystem)));
   }
 
   public void enableCompressor() {
