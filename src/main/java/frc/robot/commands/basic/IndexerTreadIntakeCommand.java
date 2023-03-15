@@ -24,7 +24,11 @@ public class IndexerTreadIntakeCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    // TODO Auto-generated method stub
     return m_indexerTreadSubsystem.beambreakBroken();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_indexerTreadSubsystem.setMotorStoppedSpeed();
   }
 }

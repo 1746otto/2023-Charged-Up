@@ -15,4 +15,9 @@ public class ClamperOpenCommand extends CommandBase {
   public void initialize() {
     m_ClamperSubsystem.open();
   }
+
+  @Override
+  public boolean isFinished() {
+    return m_ClamperSubsystem.isClamperOpen();
+  }
 }
