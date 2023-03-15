@@ -194,7 +194,7 @@ public class RobotContainer {
     // xBoxB.toggleOnTrue(Commands.race(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand));
     xBoxB.toggleOnTrue(m_AutomaticIntakeClamperCommand);
     xBoxY.toggleOnTrue(m_full);
-    xBoxX.toggleOnTrue(m_intakeExtensionExtendCommand);
+    xBoxX.toggleOnTrue(m_intakeRollerIntakeCommand);
     // xBoxX.onFalse(m_plungerRetractCommand);
     xBoxLBumper.toggleOnTrue(m_IntakeExtensionRetractCommand);
     // xBoxLBumper.onFalse(m_flapCloseCommand);
