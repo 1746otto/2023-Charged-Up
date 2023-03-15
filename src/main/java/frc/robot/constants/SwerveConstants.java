@@ -97,7 +97,7 @@ public final class SwerveConstants {
 
   /* Neutral Modes */
   public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-  public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+  public static final NeutralMode driveNeutralMode = NeutralMode.Coast;
 
   /* Module Specific Constants */
   /* Front Left Module - Module 1 */
