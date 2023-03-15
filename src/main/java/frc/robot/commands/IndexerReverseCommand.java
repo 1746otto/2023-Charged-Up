@@ -15,6 +15,7 @@ public class IndexerReverseCommand extends CommandBase {
    */
   public IndexerReverseCommand(Indexersubsystem subsystem) {
     m_subsystem = subsystem;
+    
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
