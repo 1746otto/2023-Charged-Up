@@ -10,6 +10,7 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
 import frc.robot.constants.ElevatorConstants;
@@ -35,6 +36,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // pidController.setD(kD, 0);
     // pidController.setFF(.005, 0);
     pidController.setOutputRange(-1, 1);
+    elevatorMotor.setIdleMode(IdleMode.kBrake);
   }
 
   public void elevatorRunUp() {
@@ -42,7 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void elevatorRunDown() {
-    elevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
+    elevatorMotor.set(-0.2);
   }
 
   public void stopElevator() {
