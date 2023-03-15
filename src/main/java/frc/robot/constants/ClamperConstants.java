@@ -6,6 +6,6 @@ public final class ClamperConstants {
   public static final int kClamperChannel = 8;
 
   // Tunable Constants
-  public static final boolean kClamperClosed = true;
-  public static final boolean kClamperOpen = false;
+  public static final boolean kClamperClosed = false;
+  public static final boolean kClamperOpen = true;
 }

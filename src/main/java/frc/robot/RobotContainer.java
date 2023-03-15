@@ -1,20 +1,31 @@
 package frc.robot;
 
 
+import frc.robot.commands.AutomaticIntakeClamperCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.ZeroOutElevatorCommand;
 import frc.robot.commands.basic.ClamperCloseCommand;
 import frc.robot.commands.basic.ClamperOpenCommand;
+import frc.robot.commands.basic.FlapCloseCommand;
+import frc.robot.commands.basic.FlapOpenCommand;
+import frc.robot.commands.basic.IndexerRollerIntakeCommand;
+import frc.robot.commands.basic.IndexerRollerOuttakeCommand;
+import frc.robot.commands.basic.IndexerRollerStopCommand;
 import frc.robot.commands.basic.ElevatorRunUpCommand;
 import frc.robot.commands.basic.FlapOpenCommand;
 import frc.robot.commands.basic.FlapCloseCommand;
 import frc.robot.commands.basic.IndexerRollerIntakeCommand;
 import frc.robot.commands.basic.IndexerTreadIntakeCommand;
+import frc.robot.commands.basic.IndexerTreadOuttakeCommand;
 import frc.robot.commands.basic.IndexerTreadScoreCommand;
+import frc.robot.commands.basic.IndexerTreadStopCommand;
 import frc.robot.commands.basic.IntakeExtensionExtendCommand;
 import frc.robot.commands.basic.IntakeExtensionRetractCommand;
+import frc.robot.commands.basic.IntakeRollerIntakeCommand;
+import frc.robot.commands.basic.IntakeRollerOuttakeCommand;
+import frc.robot.commands.basic.IntakeRollerStopCommand;
 import frc.robot.commands.basic.IntakeExtensionStopCommand;
 import frc.robot.commands.basic.IntakeRollerIntakeCommand;
 import frc.robot.commands.basic.PlungerExtendCommand;
@@ -24,6 +35,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -36,8 +48,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.ElevatorRunToRequestCommand;
+import frc.robot.commands.FullOutakeCommand;
+import frc.robot.commands.IndexerRunTreadAndRollers;
+import frc.robot.commands.LowGoalCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -104,7 +120,44 @@ public class RobotContainer {
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
+  private final IntakeExtensionExtendCommand m_intakeExtensionExtendCommand =
+      new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem);
+  private final IntakeRollerIntakeCommand m_intakeRollerIntakeCommand =
+      new IntakeRollerIntakeCommand(m_intakeRollerSubsystem);
+  private final IndexerRollerIntakeCommand m_indexerRollerIntakeCommand =
+      new IndexerRollerIntakeCommand(m_indexerRollerSubsystem);
+  private final IndexerTreadIntakeCommand m_indexerTreadIntakeCommand =
+      new IndexerTreadIntakeCommand(m_indexerTreadSubsystem);
+  private final ClamperCloseCommand m_clamperCloseCommand =
+      new ClamperCloseCommand(m_clamperSubsystem);
+  private final PlungerExtendCommand m_plungerExtendCommand =
+      new PlungerExtendCommand(m_plungerSubsystem);
+  private final ClamperOpenCommand m_clamperOpenCommand =
+      new ClamperOpenCommand(m_clamperSubsystem);
+  private final PlungerRetractCommand m_plungerRetractCommand =
+      new PlungerRetractCommand(m_plungerSubsystem);
+  private final IndexerRollerStopCommand m_indexerRollerStopCommand =
+      new IndexerRollerStopCommand(m_indexerRollerSubsystem);
+  private final LowGoalCommand m_lowGoalCommand = new LowGoalCommand(m_indexerRollerSubsystem,
+      m_flapSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem);
+  private final IntakeRollerStopCommand m_intakeRollerStopCommand =
+      new IntakeRollerStopCommand(m_intakeRollerSubsystem);
+  private final IndexerTreadStopCommand m_indexerTreadStopCommand =
+      new IndexerTreadStopCommand(m_indexerTreadSubsystem);
+  private final IndexerRunTreadAndRollers m_IndexerRunTreadAndRollers =
+      new IndexerRunTreadAndRollers(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand);
+  private final FlapOpenCommand m_flapOpenCommand = new FlapOpenCommand(m_flapSubsystem);
+  private final FlapCloseCommand m_flapCloseCommand = new FlapCloseCommand(m_flapSubsystem);
+
   private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
+  private final AutomaticIntakeClamperCommand m_AutomaticIntakeClamperCommand =
+      new AutomaticIntakeClamperCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem,
+          m_intakeRollerSubsystem, m_clamperSubsystem);
+  private final IntakeExtensionRetractCommand m_IntakeExtensionRetractCommand =
+      new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem);
+  private final FullOutakeCommand m_full = new FullOutakeCommand(m_indexerRollerSubsystem,
+      m_intakeRollerSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -134,10 +187,7 @@ public class RobotContainer {
          */
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
-            () -> false, // robotCentric.getAsBoolean()
-            () -> false, () -> false, () -> false, () -> false
-
-        )
+            () -> false)
 
     );
     // This will be interupted if any of the subsystems below are being used, and will continue when
@@ -165,20 +215,25 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    xBoxB.toggleOnTrue(m_AutomaticIntakeClamperCommand);
+    xBoxX.toggleOnTrue(m_intakeRollerIntakeCommand);
+    xBoxLBumper.toggleOnTrue(m_IntakeExtensionRetractCommand);
+
+
     // Elevator goes down to the origin position and then the flap closes
-    xBoxA.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
+    xBoxA2.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition),
         new FlapCloseCommand(m_flapSubsystem)));
     // Flap opens and then the elevator moves up
-    xBoxB.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+    xBoxB2.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         // new PlungerRetractCommand(m_plungerSubsystem),
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition)));
     // Flap opens and then the elevator moves up
-    xBoxY.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+    xBoxY2.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         // new PlungerRetractCommand(m_plungerSubsystem),
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition)));
     // Elevator runs up and goes back down to beam break to get the zero position.
-    xBoxX.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+    xBoxX2.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         new ElevatorRunUpCommand(m_elevatorSubsystem),
         new ZeroOutElevatorCommand(m_elevatorSubsystem), new FlapCloseCommand(m_flapSubsystem)));
     // // Plunger goes down and then opens the clamper
@@ -193,8 +248,8 @@ public class RobotContainer {
     // new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
     // new ClamperCloseCommand(m_clamperSubsystem),
     // new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem)));
-    xBoxLBumper.onTrue(new PlungerExtendCommand(m_plungerSubsystem));
-    xBoxRBumper.onTrue(new PlungerRetractCommand(m_plungerSubsystem));
+    xBoxLBumper2.onTrue(new PlungerExtendCommand(m_plungerSubsystem));
+    xBoxRBumper2.onTrue(new PlungerRetractCommand(m_plungerSubsystem));
     // // The flap opens and then the intake and indexer run at the same time(Used for low goals)
     // xBoxBack.toggleOnTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
     // new ClamperOpenCommand(m_clamperSubsystem),

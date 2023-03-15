@@ -48,4 +48,11 @@ public class IntakeExtensionSubsystem extends SubsystemBase {
   public boolean isRetracted() {
     return topLimitSwitch.isPressed();
   }
+
+  @Override
+  public void periodic() {
+    System.out.println("Top limit switch: " + topLimitSwitch.isPressed());
+    System.out.println("Bottom limit switch: " + bottomLimitSwitch.isPressed());
+  }
+
 }
