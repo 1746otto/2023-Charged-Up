@@ -25,12 +25,15 @@ import frc.robot.Constants.AutoConstants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import frc.robot.subsystems.IntakeRollerSubsystem;
+import frc.robot.subsystems.IntakeExtendSubsystem;
 
-public final class Autos {
+
+public final class AutosHighAutonOne {
     Swerve m_swerve;
    // ScoringAlignCommand m_scoringAlignCommand;
 
-   public Autos(Swerve swerve) {
+   public AutosHighAutonOne(Swerve swerve) {
         m_swerve = swerve;
      //   m_scoringAlignCommand = alignCommand;
     }
@@ -40,7 +43,7 @@ public final class Autos {
         //Each trajectory we want to use is seperated by a stop point.
         //We store each path in the deploy/Path Planner/ folder.
         //You can have multiple constraints for each path, but for our purposes it is not required.
-        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Example Path", new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("pathplannerHighAutonOne", new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
         
         //Then we use the position we got from vision to get our actual initial pose and make a trajectory to go to it.
         PathPlannerTrajectory goToStart = PathPlanner.generatePath(
@@ -110,10 +113,10 @@ public final class Autos {
 
         //Now we create an event map that will hold the name of the marker and the corresponding event.
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("do sumthin", new InstantCommand(() -> {
+        eventMap.put("intake on", new InstantCommand(() -> {
             //do sumthin here
         }));
-        eventMap.put("do sumthin else", new InstantCommand(() -> {
+        eventMap.put("Intake Off", new InstantCommand(() -> {
             //do sumthin else here
         }));
 
