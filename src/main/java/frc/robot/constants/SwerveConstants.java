@@ -64,7 +64,7 @@ public final class SwerveConstants {
    * found a small open loop ramp (0.25) helps with tread wear, tipping, etc
    */
   public static final double openLoopRamp = 0.0;
-  public static final double closedLoopRamp = 0.01;
+  public static final double closedLoopRamp = 0.0;
   public static final double openLoopRampAngle = 0.15;
 
   /* Angle Motor PID Values */
@@ -83,9 +83,9 @@ public final class SwerveConstants {
    * Drive Motor Characterization Values Divide SYSID values by 12 to convert from volts to percent
    * output for CTRE
    */
-  public static final double driveKS = (0.18986 / 12.0); // TODO: This must be tuned cuz its bad
-  public static final double driveKV = (1.7999 / 12.0);
-  public static final double driveKA = (0.19507 / 12.0);
+  public static final double driveKS = (0.21583 / 12.0); // TODO: This must be tuned cuz its bad
+  public static final double driveKV = (1.7616 / 12.0);
+  public static final double driveKA = (0.21552 / 12.0);
 
   /* Swerve Profiling Values */
   /** Meters per Second */
@@ -97,7 +97,7 @@ public final class SwerveConstants {
 
   /* Neutral Modes */
   public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-  public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+  public static final NeutralMode driveNeutralMode = NeutralMode.Coast;
 
   /* Module Specific Constants */
   /* Front Left Module - Module 1 */
@@ -106,8 +106,11 @@ public final class SwerveConstants {
     public static final int angleMotorID = 12;
     public static final int canCoderID = 10;
     public static final Rotation2d angleOffset = Rotation2d.fromDegrees(20.917969);// 87.187500
+    public static final double kS = driveKS;
+    public static final double kV = driveKV;
+    public static final double kA = driveKA;
     public static final SwerveModuleConstants constants =
-        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, kS, kV, kA);
   }
 
   /* Front Right Module - Module 1 */
@@ -116,8 +119,11 @@ public final class SwerveConstants {
     public static final int angleMotorID = 32;
     public static final int canCoderID = 30;
     public static final Rotation2d angleOffset = Rotation2d.fromDegrees(247.412109);// 108.808594
+    public static final double kS = driveKS;
+    public static final double kV = driveKV;
+    public static final double kA = driveKA;
     public static final SwerveModuleConstants constants =
-        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, kS, kV, kA);
   }
 
   /* Back Left Module - Module 2 */
@@ -126,8 +132,11 @@ public final class SwerveConstants {
     public static final int angleMotorID = 2;
     public static final int canCoderID = 0;
     public static final Rotation2d angleOffset = Rotation2d.fromDegrees(150.468750);// 328.623047
+    public static final double kS = driveKS;
+    public static final double kV = driveKV;
+    public static final double kA = driveKA;
     public static final SwerveModuleConstants constants =
-        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, kS, kV, kA);
   }
 
   /* Back Right Module - Module 3 */
@@ -136,7 +145,10 @@ public final class SwerveConstants {
     public static final int angleMotorID = 22;
     public static final int canCoderID = 20;
     public static final Rotation2d angleOffset = Rotation2d.fromDegrees(242.490234);// 158.378906
+    public static final double kS = driveKS;
+    public static final double kV = driveKV;
+    public static final double kA = driveKA;
     public static final SwerveModuleConstants constants =
-        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, kS, kV, kA);
   }
 }

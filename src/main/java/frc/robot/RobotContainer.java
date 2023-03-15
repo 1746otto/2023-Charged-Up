@@ -159,10 +159,7 @@ public class RobotContainer {
          */
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
-            () -> false, // robotCentric.getAsBoolean()
-            () -> false, () -> false, () -> false, () -> false
-
-        )
+            () -> false)
 
     );
     // This will be interupted if any of the subsystems below are being used, and will continue when
