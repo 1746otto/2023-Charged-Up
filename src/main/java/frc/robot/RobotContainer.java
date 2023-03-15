@@ -184,7 +184,7 @@ public class RobotContainer {
     xBoxRBumper.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_plungerSubsystem),
         new ClamperOpenCommand(m_clamperSubsystem)));
     // Intake and indexer run at the same time until the beam break is broken then the clamper
-    // closes
+    // closes(Used for elevator scoring).
     xBoxLBumper.onTrue(new SequentialCommandGroup(
         new ParallelDeadlineGroup(new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
             new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
@@ -192,7 +192,7 @@ public class RobotContainer {
             new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
         new ClamperCloseCommand(m_clamperSubsystem),
         new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem)));
-    // The flap opens and then the intake and indexer run at the same time to get a low goal
+    // The flap opens and then the intake and indexer run at the same time(Used for low goals)
     xBoxBack.toggleOnTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         new ParallelCommandGroup(new IndexerTreadScoreCommand(m_indexerTreadSubsystem),
             new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
