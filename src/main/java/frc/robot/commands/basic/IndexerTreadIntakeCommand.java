@@ -21,4 +21,14 @@ public class IndexerTreadIntakeCommand extends CommandBase {
   public void initialize() {
     m_indexerTreadSubsystem.setMotorIntakeSpeed();
   }
+
+  @Override
+  public boolean isFinished() {
+    return m_indexerTreadSubsystem.beambreakBroken();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_indexerTreadSubsystem.setMotorStoppedSpeed();
+  }
 }

@@ -10,13 +10,13 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
 import frc.robot.constants.ElevatorConstants;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  private final double kSpeedConstant = ElevatorConstants.kElevatorSpeed;
   private final double kP = ElevatorConstants.kElevatorP;
   // private final double kD = ElevatorConstants.kElevatorD;
 
@@ -36,8 +36,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     // pidController.setD(kD, 0);
     // pidController.setFF(.005, 0);
     pidController.setOutputRange(-1, 1);
-    pidController.setSmartMotionMaxVelocity(kSpeedConstant, 0);
-    pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
+    elevatorMotor.setIdleMode(IdleMode.kBrake);
+  }
+
+  public void elevatorRunUp() {
+    elevatorMotor.set(ElevatorConstants.kElevatorSpeed);
+  }
+
+  public void elevatorRunDown() {
+    elevatorMotor.set(-0.2);
   }
 
   public void stopElevator() {
@@ -52,10 +59,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     return limitSwitch.isPressed();
   }
 
-  public void elevatorRunDown() {
-    elevatorMotor.set(-0.5);
-  }
-
   public void setPositionTo0() {
     elevatorMotor.getEncoder().setPosition(0);
   }
@@ -64,13 +67,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     return currState;
   }
 
-  public void runToRequest(int reqPosition) {
-    pidController.setReference(reqPosition, ControlType.kSmartMotion);
+  public void runToRequest(double reqPosition) {
+    pidController.setReference(reqPosition, ControlType.kPosition);
   }
 
   @Override
   public void periodic() {
-    beamBreakLastState = ((Math.round(beamBreak.getVoltage()) == 0) && (elevatorMotor.get() < 0));
+    beamBreakLastState = (Math.floor(beamBreak.getVoltage()) > 0 && (elevatorMotor.get() < 0));
+    // System.out.println("Beam break: " + beamBreakLastState);
     currState = elevatorMotor.getEncoder().getPosition();
   }
 }
