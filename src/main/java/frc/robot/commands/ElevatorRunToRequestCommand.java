@@ -5,9 +5,9 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorRunToRequestCommand extends CommandBase {
   private final ElevatorSubsystem m_elevator;
-  private final int requestedPosition;
+  private final double requestedPosition;
 
-  public ElevatorRunToRequestCommand(ElevatorSubsystem subsystem, int requestedPosition) {
+  public ElevatorRunToRequestCommand(ElevatorSubsystem subsystem, double requestedPosition) {
     m_elevator = subsystem;
     addRequirements(subsystem);
     this.requestedPosition = requestedPosition;

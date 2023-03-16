@@ -15,4 +15,9 @@ public class ClamperCloseCommand extends CommandBase {
   public void initialize() {
     m_ClamperSubsystem.close();
   }
+
+  @Override
+  public boolean isFinished() {
+    return !m_ClamperSubsystem.isClamperOpen();
+  }
 }

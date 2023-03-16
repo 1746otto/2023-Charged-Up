@@ -23,6 +23,6 @@ public class PlungerSubsystem extends SubsystemBase {
   }
 
   public boolean isExtended() {
-    return plungerPiston.get() == PlungerConstants.kPlungerExtended;
+    return plungerPiston.get();
   }
 }

@@ -8,6 +8,7 @@ public class ZeroOutElevatorCommand extends CommandBase {
 
   public ZeroOutElevatorCommand(ElevatorSubsystem subsystem) {
     m_elevator = subsystem;
+    addRequirements(subsystem);
   }
 
   @Override
