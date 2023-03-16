@@ -5,9 +5,10 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorRunToRequestCommand extends CommandBase {
   private final ElevatorSubsystem m_elevator;
-  private final double requestedPosition;
+  private final int requestedPosition;
+  private boolean needStop;
 
-  public ElevatorRunToRequestCommand(ElevatorSubsystem subsystem, double requestedPosition) {
+  public ElevatorRunToRequestCommand(ElevatorSubsystem subsystem, int requestedPosition) {
     m_elevator = subsystem;
     addRequirements(subsystem);
     this.requestedPosition = requestedPosition;
@@ -23,12 +24,15 @@ public class ElevatorRunToRequestCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_elevator.stopElevator();
-    m_elevator.setPositionTo0();
+    if (needStop) {
+      m_elevator.setPositionTo0();
+    }
   }
 
   // Returns true when the command should end.
   // @Override
   public boolean isFinished() {
-    return (m_elevator.beamBreakBroken() || m_elevator.limitSwitchActivated());
+    needStop = (m_elevator.beamBreakBroken() || m_elevator.limitSwitchActivated());
+    return needStop;
   }
 }

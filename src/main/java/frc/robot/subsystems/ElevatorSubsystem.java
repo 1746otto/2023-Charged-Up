@@ -35,7 +35,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     pidController.setP(kP, 0);
     // pidController.setD(kD, 0);
     // pidController.setFF(.005, 0);
-    pidController.setOutputRange(-1, 1);
+    pidController.setOutputRange(-0.7, 0.7);
     elevatorMotor.setIdleMode(IdleMode.kBrake);
   }
 
@@ -67,7 +67,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return currState;
   }
 
-  public void runToRequest(double reqPosition) {
+  public void runToRequest(int reqPosition) {
     pidController.setReference(reqPosition, ControlType.kPosition);
   }
 

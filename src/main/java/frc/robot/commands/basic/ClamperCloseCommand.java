@@ -14,10 +14,11 @@ public class ClamperCloseCommand extends CommandBase {
   @Override
   public void initialize() {
     m_ClamperSubsystem.close();
+    System.out.println("Clamper Closed: " + m_ClamperSubsystem.isClamperClosed());
   }
 
   @Override
   public boolean isFinished() {
-    return !m_ClamperSubsystem.isClamperOpen();
+    return m_ClamperSubsystem.isClamperClosed();
   }
 }

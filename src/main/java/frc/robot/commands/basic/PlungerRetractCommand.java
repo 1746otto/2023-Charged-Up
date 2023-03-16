@@ -14,6 +14,7 @@ public class PlungerRetractCommand extends CommandBase {
   @Override
   public void initialize() {
     m_plungerSubsystem.retract();
+    System.out.println("Plunger Extended: " + m_plungerSubsystem.isExtended());
   }
 
   @Override

@@ -166,8 +166,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     // Elevator goes down to the origin position and then the flap closes
-    xBoxA.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
+    xBoxA.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem),
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition)));
+    xBoxLBumper.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem),
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kLowPosition)));
     // Flap opens and then the elevator moves up to middle position
     xBoxB.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         new PlungerRetractCommand(m_plungerSubsystem),
@@ -183,27 +187,27 @@ public class RobotContainer {
     // Plunger extends and then opens the clamper
     xBoxRBumper.onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_plungerSubsystem),
         new ClamperOpenCommand(m_clamperSubsystem)));
-    // Intake and indexer run at the same time until the beam break is broken then the clamper
-    // closes(Used for elevator scoring).
-    xBoxLBumper.onTrue(new SequentialCommandGroup(new FlapCloseCommand(m_flapSubsystem),
-        new ClamperOpenCommand(m_clamperSubsystem),
-        new ParallelDeadlineGroup(new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
-            new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
-            new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
-            new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
-        new ClamperCloseCommand(m_clamperSubsystem),
-        new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem)));
-    // The flap opens and then the intake and indexer run at the same time(Used for low goals)
-    xBoxBack.toggleOnTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new ClamperOpenCommand(m_clamperSubsystem),
-        new ParallelCommandGroup(new IndexerTreadScoreCommand(m_indexerTreadSubsystem),
-            new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
-            new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
-            new IndexerRollerIntakeCommand(m_indexerRollerSubsystem))));
-    // Intake retracts and flap closes
-    xBoxBack.toggleOnFalse(
-        new SequentialCommandGroup(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem),
-            new ClamperCloseCommand(m_clamperSubsystem), new FlapCloseCommand(m_flapSubsystem)));
+    // // Intake and indexer run at the same time until the beam break is broken then the clamper
+    // // closes(Used for elevator scoring).
+    // xBoxLBumper.onTrue(new SequentialCommandGroup(new FlapCloseCommand(m_flapSubsystem),
+    // new ClamperOpenCommand(m_clamperSubsystem),
+    // new ParallelDeadlineGroup(new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
+    // new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
+    // new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
+    // new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
+    // new ClamperCloseCommand(m_clamperSubsystem),
+    // new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem)));
+    // // The flap opens and then the intake and indexer run at the same time(Used for low goals)
+    // xBoxBack.toggleOnTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+    // new ClamperOpenCommand(m_clamperSubsystem),
+    // new ParallelCommandGroup(new IndexerTreadScoreCommand(m_indexerTreadSubsystem),
+    // new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
+    // new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
+    // new IndexerRollerIntakeCommand(m_indexerRollerSubsystem))));
+    // // Intake retracts and flap closes
+    // xBoxBack.toggleOnFalse(
+    // new SequentialCommandGroup(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem),
+    // new ClamperCloseCommand(m_clamperSubsystem), new FlapCloseCommand(m_flapSubsystem)));
   }
 
   public void enableCompressor() {
