@@ -22,4 +22,9 @@ public class FlapOpenCommand extends CommandBase {
   public void initialize() {
     m_flapSubsystem.openFlap();
   }
+
+  @Override
+  public boolean isFinished() {
+    return m_flapSubsystem.isEngaged();
+  }
 }

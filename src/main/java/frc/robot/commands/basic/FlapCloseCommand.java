@@ -22,4 +22,9 @@ public class FlapCloseCommand extends CommandBase {
   public void initialize() {
     m_flapSubsystem.closeFlap();
   }
+
+  @Override
+  public boolean isFinished() {
+    return !m_flapSubsystem.isEngaged();
+  }
 }

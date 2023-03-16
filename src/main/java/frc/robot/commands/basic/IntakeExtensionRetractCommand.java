@@ -32,6 +32,7 @@ public class IntakeExtensionRetractCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    // This doesn't do anything because the motors already get stopped by the limit switch.
     m_intakeSubsystem.setMotorStoppedSpeed();
   }
 

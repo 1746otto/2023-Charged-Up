@@ -15,4 +15,9 @@ public class PlungerExtendCommand extends CommandBase {
   public void initialize() {
     m_plungerSubsystem.extend();
   }
+
+  @Override
+  public boolean isFinished() {
+    return m_plungerSubsystem.isExtended();
+  }
 }
