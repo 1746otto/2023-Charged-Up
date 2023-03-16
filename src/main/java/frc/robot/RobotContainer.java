@@ -3,7 +3,7 @@ package frc.robot;
 
 import frc.robot.commands.AutomaticIntakeClamperCommand;
 import frc.robot.commands.Autos;
-import frc.robot.commands.BalancingCommand2;
+import frc.robot.commands.FourDimensionalBalancingCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.basic.ClamperCloseCommand;
@@ -213,7 +213,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new BalancingCommand2(s_Swerve);
+    return new FourDimensionalBalancingCommand(s_Swerve);
   }
 
 }
