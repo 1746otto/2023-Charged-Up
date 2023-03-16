@@ -233,7 +233,8 @@ public class RobotContainer {
     // Why are we toggling code that ends automatically?
     // In case we need to manually stop it
     xBoxRBumper.toggleOnTrue(m_IntakeExtensionRetractCommand);
-    xBoxRightTrigger.toggleOnTrue(m_AutomaticIntakeClamperCommand);
+    xBoxRightTrigger
+        .toggleOnTrue(m_intakeExtensionExtendCommand.andThen(m_AutomaticIntakeClamperCommand));
     xBoxLeftTrigger.toggleOnTrue(m_RetractStopIntakeCommand);
 
     // Elevator goes down to the origin position and then the flap closes
