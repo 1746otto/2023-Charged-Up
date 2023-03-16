@@ -51,8 +51,8 @@ public class IntakeExtensionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println("Top limit switch: " + topLimitSwitch.isPressed());
-    System.out.println("Bottom limit switch: " + bottomLimitSwitch.isPressed());
+    // System.out.println("Top limit switch: " + topLimitSwitch.isPressed());
+    // System.out.println("Bottom limit switch: " + bottomLimitSwitch.isPressed());
   }
 
 }
