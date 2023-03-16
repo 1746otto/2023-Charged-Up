@@ -23,6 +23,6 @@ public class ClamperSubsystem extends SubsystemBase {
   }
 
   public boolean isClamperClosed() {
-    return clamperPiston.get();
+    return clamperPiston.get() == ClamperConstants.kClamperOpen;
   }
 }
