@@ -5,7 +5,7 @@ public final class IntakeExtensionConstants {
   public static final int kExtensionMotor = 23;
 
   // Tunable Constants
-  public static final double kExtensionSpeed = 0.3;
-  public static final double kRetractionSpeed = -0.3;
+  public static final double kExtensionSpeed = 0.4;
+  public static final double kRetractionSpeed = -0.4;
   public static final double kStopSpeed = 0;
 }

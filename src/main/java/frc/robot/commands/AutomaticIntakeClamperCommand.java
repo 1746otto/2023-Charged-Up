@@ -6,21 +6,24 @@ import frc.robot.subsystems.IndexerTreadSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ClamperSubsystem;
+import frc.robot.subsystems.IntakeExtensionSubsystem;
 
 public class AutomaticIntakeClamperCommand extends CommandBase {
   private final IndexerRollerSubsystem m_indexerSubsystem;
   private final IndexerTreadSubsystem m_IndexerTreadSubsystem;
   private final IntakeRollerSubsystem m_IntakeRollerSubsystem;
   private final ClamperSubsystem m_ClamperSubsystem;
+  private final IntakeExtensionSubsystem m_IntakeExtensionSubsystem;
 
 
   public AutomaticIntakeClamperCommand(IndexerRollerSubsystem m_IndexerRollerSubsystem,
       IndexerTreadSubsystem m_IndexerTreadSubsystem, IntakeRollerSubsystem m_IntakeRollerSubsystem,
-      ClamperSubsystem m_ClamperSubsystem) {
+      ClamperSubsystem m_ClamperSubsystem, IntakeExtensionSubsystem m_intakeExtensionSubsystem) {
     this.m_indexerSubsystem = m_IndexerRollerSubsystem;
     this.m_IndexerTreadSubsystem = m_IndexerTreadSubsystem;
     this.m_IntakeRollerSubsystem = m_IntakeRollerSubsystem;
     this.m_ClamperSubsystem = m_ClamperSubsystem;
+    this.m_IntakeExtensionSubsystem = m_intakeExtensionSubsystem;
 
     addRequirements();
   }
@@ -31,6 +34,7 @@ public class AutomaticIntakeClamperCommand extends CommandBase {
     m_indexerSubsystem.setMotorIntakeSpeed();
     m_IndexerTreadSubsystem.setMotorScoreSpeed();
     m_ClamperSubsystem.open();
+    m_IntakeExtensionSubsystem.setMotorExtensionSpeed();
 
   }
 
@@ -39,7 +43,6 @@ public class AutomaticIntakeClamperCommand extends CommandBase {
   public void end(boolean interrupted) {
     m_indexerSubsystem.setMotorStoppedSpeed();
     m_IndexerTreadSubsystem.setMotorStoppedSpeed();
-    m_IntakeRollerSubsystem.setMotorStoppedSpeed();
     m_ClamperSubsystem.close();
 
   }

@@ -32,14 +32,17 @@ import frc.robot.commands.basic.PlungerExtendCommand;
 import frc.robot.commands.basic.PlungerRetractCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.RobotConstants;
@@ -51,6 +54,7 @@ import frc.robot.commands.ElevatorRunToRequestCommand;
 import frc.robot.commands.FullOutakeCommand;
 import frc.robot.commands.IndexerRunTreadAndRollers;
 import frc.robot.commands.LowGoalCommand;
+import frc.robot.commands.RetractStopIntakeCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -86,6 +90,14 @@ public class RobotContainer {
       new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton xBoxRBumper =
       new JoystickButton(m_driver, XboxController.Button.kRightBumper.value);
+  private final BooleanSupplier xBoxLTrigger = () -> {
+    return 0 != Math.round(m_driver.getLeftTriggerAxis());
+  };
+  private final BooleanSupplier xBoxRTrigger = () -> {
+    return 0 != Math.round(m_driver.getRightTriggerAxis());
+  };
+  public Trigger xBoxLeftTrigger = new Trigger(xBoxLTrigger);
+  public Trigger xBoxRightTrigger = new Trigger(xBoxRTrigger);
 
   /* Operator Buttons */
   private final JoystickButton xBoxStart2 =
@@ -148,11 +160,12 @@ public class RobotContainer {
       new IndexerRunTreadAndRollers(m_indexerRollerIntakeCommand, m_indexerTreadIntakeCommand);
   private final FlapOpenCommand m_flapOpenCommand = new FlapOpenCommand(m_flapSubsystem);
   private final FlapCloseCommand m_flapCloseCommand = new FlapCloseCommand(m_flapSubsystem);
-
+  private final RetractStopIntakeCommand m_RetractStopIntakeCommand =
+      new RetractStopIntakeCommand(m_intakeRollerSubsystem, m_intakeExtensionSubsystem);
   private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
   private final AutomaticIntakeClamperCommand m_AutomaticIntakeClamperCommand =
       new AutomaticIntakeClamperCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem,
-          m_intakeRollerSubsystem, m_clamperSubsystem);
+          m_intakeRollerSubsystem, m_clamperSubsystem, m_intakeExtensionSubsystem);
   private final IntakeExtensionRetractCommand m_IntakeExtensionRetractCommand =
       new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem);
   private final FullOutakeCommand m_full = new FullOutakeCommand(m_indexerRollerSubsystem,
@@ -215,14 +228,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     xBoxStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    xBoxB.toggleOnTrue(m_AutomaticIntakeClamperCommand);
-    xBoxY.toggleOnTrue(m_full);
-    xBoxX.toggleOnTrue(m_intakeExtensionExtendCommand);
+    xBoxLBumper.toggleOnTrue(m_intakeExtensionExtendCommand);
     // xBoxX.onFalse(m_plungerRetractCommand);
     // Why are we toggling code that ends automatically?
     // In case we need to manually stop it
-    xBoxLBumper.toggleOnTrue(m_IntakeExtensionRetractCommand);
-
+    xBoxRBumper.toggleOnTrue(m_IntakeExtensionRetractCommand);
+    xBoxRightTrigger.toggleOnTrue(m_AutomaticIntakeClamperCommand);
+    xBoxLeftTrigger.toggleOnTrue(m_RetractStopIntakeCommand);
 
     // Elevator goes down to the origin position and then the flap closes
     xBoxA2.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem),
