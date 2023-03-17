@@ -1,8 +1,10 @@
 package frc.robot;
 
 
+import frc.robot.Autos.BalanceAuton;
 import frc.robot.commands.AutomaticIntakeClamperCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.FourDimensionalBalancingCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
@@ -32,6 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -160,8 +163,7 @@ public class RobotContainer {
          */
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
-            () -> false, // robotCentric.getAsBoolean()
-            () -> false, () -> false, () -> false, () -> false
+            DriverStation::getAlliance
 
         )
 
@@ -213,7 +215,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new FourDimensionalBalancingCommand(s_Swerve);
+    return new BalancingCommand(s_Swerve, true);
   }
 
 }
