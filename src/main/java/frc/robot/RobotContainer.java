@@ -193,7 +193,8 @@ public class RobotContainer {
         new IndexerCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem));
 
     // Elevator goes down to the origin position and then the flap closes
-    operatorA.onTrue(new SequentialCommandGroup(new PlungerRetractCommand(m_plungerSubsystem)));
+    operatorA.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem)));
     operatorA.onTrue(
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition));
     // Flap opens and then the elevator moves up to middle position
