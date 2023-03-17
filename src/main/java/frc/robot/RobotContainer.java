@@ -1,8 +1,11 @@
 package frc.robot;
 
 
+import frc.robot.Autos.BalanceAuton;
 import frc.robot.commands.AutomaticIntakeClamperCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BalancingCommand;
+import frc.robot.commands.FourDimensionalBalancingCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.ZeroOutElevatorCommand;
@@ -27,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -154,7 +158,9 @@ public class RobotContainer {
          */
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
-            () -> false)
+            DriverStation::getAlliance
+
+        )
 
     );
 
@@ -254,6 +260,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.exampleAuto();
+    return new BalancingCommand(s_Swerve, true);
   }
 }
