@@ -17,6 +17,11 @@ public class PlungerExtendCommand extends CommandBase {
   }
 
   @Override
+  public void end(boolean interrupted) {
+    m_plungerSubsystem.Afterdelay();
+  }
+
+  @Override
   public boolean isFinished() {
     return m_plungerSubsystem.isExtended();
   }
