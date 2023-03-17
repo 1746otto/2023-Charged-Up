@@ -14,7 +14,7 @@ public class BalanceAuton extends SequentialCommandGroup {
     addCommands(new SequentialCommandGroup(new DriveTo5DegreesCommand(s_Swerve, robotCentricSup),
         new DriveForwardsCommand(s_Swerve, robotCentricSup),
         new DriveBackTo5DegreesCommand(s_Swerve, robotCentricSup),
-        new BalancingCommand(s_Swerve, robotCentricSup)));
+        new BalancingCommand(s_Swerve, robotCentricSup.getAsBoolean())));
   }
 
 }

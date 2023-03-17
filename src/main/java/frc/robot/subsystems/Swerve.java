@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,12 +20,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
-  public Pigeon2 gyro;
+  public WPI_Pigeon2 gyro;
   public final SwerveDrivePoseEstimator poseEstimator;
 
 
   public Swerve() {
-    gyro = new Pigeon2(SwerveConstants.pigeonID, (SwerveConstants.CANBus));
+    gyro = new WPI_Pigeon2(SwerveConstants.pigeonID, (SwerveConstants.CANBus));
     gyro.configFactoryDefault();
     zeroGyro();
 
@@ -110,6 +110,13 @@ public class Swerve extends SubsystemBase {
     for (SwerveModule mod : mSwerveMods) {
       mod.resetToAbsolute();
     }
+  }
+
+  public void XLock() {
+    mSwerveMods[0].setAngleNoDeadzone(Rotation2d.fromDegrees(45));
+    mSwerveMods[1].setAngleNoDeadzone(Rotation2d.fromDegrees(135));
+    mSwerveMods[2].setAngleNoDeadzone(Rotation2d.fromDegrees(135));
+    mSwerveMods[3].setAngleNoDeadzone(Rotation2d.fromDegrees(45));
   }
 
   public void addVisionMeasurement(Pose2d pose, double latency) {

@@ -93,7 +93,7 @@ public final class SwerveConstants {
   /** Radians per Second */
   public static final double maxAngularVelocity = 5; // TODO: This must be tuned to specific robot
 
-  public static final double autonDriveSpeed = 0.2;
+  public static final double autonDriveSpeed = 0.4;
 
   /* Neutral Modes */
   public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -105,7 +105,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 11;
     public static final int angleMotorID = 12;
     public static final int canCoderID = 10;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(20.917969);// 87.187500
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(19.599609);// 87.187500
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
@@ -118,7 +118,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 31;
     public static final int angleMotorID = 32;
     public static final int canCoderID = 30;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(247.412109);// 108.808594
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(68.027344 + 180);// 108.808594
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
@@ -131,7 +131,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 1;
     public static final int angleMotorID = 2;
     public static final int canCoderID = 0;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(150.468750);// 328.623047
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(332.226563 - 180);// 328.623047
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
@@ -144,7 +144,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 21;
     public static final int angleMotorID = 22;
     public static final int canCoderID = 20;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(242.490234);// 158.378906
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(223.330078);// 158.378906
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
