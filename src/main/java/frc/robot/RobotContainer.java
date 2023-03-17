@@ -102,6 +102,8 @@ public class RobotContainer {
       new JoystickButton(m_operator, XboxController.Button.kLeftBumper.value);
   private final JoystickButton operatorRightBumper =
       new JoystickButton(m_operator, XboxController.Button.kRightBumper.value);
+  private final JoystickButton operatorRightJoystick =
+      new JoystickButton(m_operator, XboxController.Button.kRightStick.value);
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -189,7 +191,8 @@ public class RobotContainer {
                 m_intakeRollerSubsystem, m_clamperSubsystem, m_intakeExtensionSubsystem)));
     driverLeftTrigger.toggleOnTrue(
         new RetractStopIntakeCommand(m_intakeRollerSubsystem, m_intakeExtensionSubsystem));
-    operatorStart.toggleOnTrue(new SequentialCommandGroup(new FlapCloseCommand(m_flapSubsystem),
+    operatorRightJoystick.toggleOnTrue(new SequentialCommandGroup(
+        new FlapCloseCommand(m_flapSubsystem),
         new IndexerCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem)));
 
     // Elevator goes down to the origin position and then the flap closes
@@ -198,14 +201,14 @@ public class RobotContainer {
     operatorA.onTrue(
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition));
     // Flap opens and then the elevator moves up to low position
-    operatorX.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new PlungerRetractCommand(m_plungerSubsystem)));
-    operatorX.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kLowPosition));
-    // Flap opens and then the elevator moves up to middle position
     operatorB.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         new PlungerRetractCommand(m_plungerSubsystem)));
     operatorB.onTrue(
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kLowPosition));
+    // Flap opens and then the elevator moves up to middle position
+    operatorX.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem)));
+    operatorX.onTrue(
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition));
     // Flap opens and then the elevator moves up to high position
     operatorY.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
