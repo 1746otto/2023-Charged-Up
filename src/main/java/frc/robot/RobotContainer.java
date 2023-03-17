@@ -183,20 +183,25 @@ public class RobotContainer {
     driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     driverLBumper.toggleOnTrue(new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem));
     driverRBumper.toggleOnTrue(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem));
-    driverRightTrigger
-        .toggleOnTrue(new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem).andThen(
+    driverRightTrigger.toggleOnTrue(new FlapOpenCommand(m_flapSubsystem)
+        .andThen(new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem)).andThen(
             new AutomaticIntakeClamperCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem,
                 m_intakeRollerSubsystem, m_clamperSubsystem, m_intakeExtensionSubsystem)));
     driverLeftTrigger.toggleOnTrue(
         new RetractStopIntakeCommand(m_intakeRollerSubsystem, m_intakeExtensionSubsystem));
-    operatorStart.toggleOnTrue(
-        new IndexerCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem));
+    operatorStart.toggleOnTrue(new SequentialCommandGroup(new FlapCloseCommand(m_flapSubsystem),
+        new IndexerCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem)));
 
     // Elevator goes down to the origin position and then the flap closes
     operatorA.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         new PlungerRetractCommand(m_plungerSubsystem)));
     operatorA.onTrue(
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition));
+    // Flap opens and then the elevator moves up to low position
+    operatorX.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem)));
+    operatorX.onTrue(
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kLowPosition));
     // Flap opens and then the elevator moves up to middle position
     operatorB.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         new PlungerRetractCommand(m_plungerSubsystem)));
@@ -208,33 +213,32 @@ public class RobotContainer {
     operatorY.onTrue(
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition));
     // Elevator runs up and goes back down to beam break to get the zero position.
-    operatorX.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new ElevatorRunUpCommand(m_elevatorSubsystem),
+    operatorLeftBumper.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         new ZeroOutElevatorCommand(m_elevatorSubsystem), new FlapCloseCommand(m_flapSubsystem)));
     // Plunger extends and then opens the clamper
     operatorRightBumper.onTrue(new SequentialCommandGroup(
         new PlungerExtendCommand(m_plungerSubsystem), new ClamperOpenCommand(m_clamperSubsystem)));
-    // Intake and indexer run at the same time until the beam break is broken then the clamper
-    // closes(Used for elevator scoring).
-    operatorLeftBumper.onTrue(new SequentialCommandGroup(new FlapCloseCommand(m_flapSubsystem),
-        new ClamperOpenCommand(m_clamperSubsystem),
-        new ParallelDeadlineGroup(new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
-            new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
-            new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
-            new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
-        new ClamperCloseCommand(m_clamperSubsystem),
-        new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem)));
-    // The flap opens and then the intake and indexer run at the same time(Used for low goals)
-    operatorBack.toggleOnTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new ClamperOpenCommand(m_clamperSubsystem),
-        new ParallelCommandGroup(new IndexerTreadScoreCommand(m_indexerTreadSubsystem),
-            new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
-            new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
-            new IndexerRollerIntakeCommand(m_indexerRollerSubsystem))));
-    // Intake retracts and flap closes
-    operatorBack.toggleOnFalse(
-        new SequentialCommandGroup(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem),
-            new ClamperCloseCommand(m_clamperSubsystem), new FlapCloseCommand(m_flapSubsystem)));
+    // // Intake and indexer run at the same time until the beam break is broken then the clamper
+    // // closes(Used for elevator scoring).
+    // operatorLeftBumper.onTrue(new SequentialCommandGroup(new FlapCloseCommand(m_flapSubsystem),
+    // new ClamperOpenCommand(m_clamperSubsystem),
+    // new ParallelDeadlineGroup(new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
+    // new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
+    // new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
+    // new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
+    // new ClamperCloseCommand(m_clamperSubsystem),
+    // new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem)));
+    // // The flap opens and then the intake and indexer run at the same time(Used for low goals)
+    // operatorBack.toggleOnTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+    // new ClamperOpenCommand(m_clamperSubsystem),
+    // new ParallelCommandGroup(new IndexerTreadScoreCommand(m_indexerTreadSubsystem),
+    // new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
+    // new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
+    // new IndexerRollerIntakeCommand(m_indexerRollerSubsystem))));
+    // // Intake retracts and flap closes
+    // operatorBack.toggleOnFalse(
+    // new SequentialCommandGroup(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem),
+    // new ClamperCloseCommand(m_clamperSubsystem), new FlapCloseCommand(m_flapSubsystem)));
   }
 
   public void enableCompressor() {
