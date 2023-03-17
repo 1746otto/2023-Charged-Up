@@ -25,6 +25,12 @@ public class RetractStopIntakeCommand extends CommandBase {
 
   }
 
+  @Override
+  public boolean isFinished() {
+    // TODO Auto-generated method stub
+    return m_IntakeExtensionSubsystem.isRetracted();
+  }
+
 
 }
 

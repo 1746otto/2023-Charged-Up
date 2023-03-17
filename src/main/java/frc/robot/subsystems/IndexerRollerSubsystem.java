@@ -18,7 +18,6 @@ public class IndexerRollerSubsystem extends SubsystemBase {
     rightRollerMotor =
         new CANSparkMax(IndexerConstants.kIndexerRightRollerMotor, MotorType.kBrushless);
     rightRollerMotor.follow(leftRollerMotor, true);
-
   }
 
   public void setMotorSpeed(double speed) {
