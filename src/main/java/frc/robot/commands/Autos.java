@@ -15,7 +15,18 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.basic.ClamperCloseCommand;
+import frc.robot.commands.basic.ClamperOpenCommand;
+import frc.robot.commands.basic.FlapCloseCommand;
+import frc.robot.commands.basic.FlapOpenCommand;
+import frc.robot.commands.basic.PlungerExtendCommand;
+import frc.robot.commands.basic.PlungerRetractCommand;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.SwerveConstants;
 import java.util.ArrayList;
@@ -25,10 +36,69 @@ import java.util.HashMap;
 public final class Autos {
   Swerve m_swerve;
   ScoringAlignCommand m_scoringAlignCommand;
+  ElevatorRunToRequestCommand elevatorRunToMid;
+  ElevatorRunToRequestCommand elevatorRunToHigh;
+  ElevatorRunToRequestCommand elevatorRunToOrigin;
+  FlapOpenCommand flapOpenCommand;
+  FlapCloseCommand flapCloseCommand;
+  PlungerExtendCommand plungerExtendCommand;
+  PlungerRetractCommand plungerRetractCommand;
+  ClamperOpenCommand clamperOpenCommand;
+  ClamperCloseCommand clamperCloseCommand;
+  DriveTo5DegreesCommand driveTo5DegreesCommand;
+  DriveBackTo5DegreesCommand driveBackTo5DegreesCommand;
+  BalancingCommand balancingInCommunityCommand;
+  BalancingCommand balancingOutCommunityCommand;
+  DriveOverChargeStationCommand driveOverChargeStationCommand;
 
-  public Autos(Swerve swerve, ScoringAlignCommand alignCommand) {
+  public Autos(Swerve swerve, ScoringAlignCommand alignCommand,
+      ElevatorRunToRequestCommand elevatorRunToMid, ElevatorRunToRequestCommand elevatorRunToHigh,
+      ElevatorRunToRequestCommand elevatorRunToOrigin, FlapOpenCommand flapOpenCommand,
+      FlapCloseCommand flapCloseCommand, PlungerExtendCommand plungerExtendCommand,
+      PlungerRetractCommand plungerRetractCommand, ClamperOpenCommand clamperOpenCommand,
+      ClamperCloseCommand clamperCloseCommand, DriveTo5DegreesCommand driveTo5DegreesCommand,
+      DriveBackTo5DegreesCommand driveBackTo5DegreesCommand,
+      BalancingCommand balancingInCommunityCommand, BalancingCommand balancingOutCommunityCommand,
+      DriveOverChargeStationCommand driveOverChargeStationCommand) {
+
     m_swerve = swerve;
     m_scoringAlignCommand = alignCommand;
+    this.elevatorRunToMid = elevatorRunToMid;
+    this.elevatorRunToHigh = elevatorRunToHigh;
+    this.elevatorRunToOrigin = elevatorRunToOrigin;
+    this.flapOpenCommand = flapOpenCommand;
+    this.flapCloseCommand = flapCloseCommand;
+    this.plungerExtendCommand = plungerExtendCommand;
+    this.plungerRetractCommand = plungerRetractCommand;
+    this.clamperOpenCommand = clamperOpenCommand;
+    this.clamperCloseCommand = clamperCloseCommand;
+    this.driveTo5DegreesCommand = driveTo5DegreesCommand;
+    this.driveBackTo5DegreesCommand = driveBackTo5DegreesCommand;
+    this.balancingInCommunityCommand = balancingInCommunityCommand;
+    this.balancingOutCommunityCommand = balancingOutCommunityCommand;
+    this.driveOverChargeStationCommand = driveOverChargeStationCommand;
+  }
+
+  public Command balance() {
+    return new SequentialCommandGroup(driveTo5DegreesCommand, balancingInCommunityCommand);
+  }
+
+  public Command moveBalance() {
+    return new SequentialCommandGroup(driveOverChargeStationCommand, driveBackTo5DegreesCommand,
+        balancingOutCommunityCommand);
+  }
+
+  public Command scoreOne() {
+    // The reason we need these wait commands because the commands end when the solenoid is set to
+    // true, not when the solenoid is actually fully in that state.
+    return new SequentialCommandGroup(flapOpenCommand, clamperCloseCommand, elevatorRunToHigh,
+        new ParallelCommandGroup(new WaitCommand(.375), plungerExtendCommand),
+        new ParallelCommandGroup(new WaitCommand(.25), clamperOpenCommand), plungerRetractCommand,
+        elevatorRunToOrigin, flapCloseCommand);
+  }
+
+  public Command scoreOneBalance() {
+    return scoreOne().andThen(balance());
   }
 
   public Command exampleAuto() {

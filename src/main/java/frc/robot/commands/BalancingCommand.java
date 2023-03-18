@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class BalancingCommand extends CommandBase {
-  private final double kP = 0.5;
+  private final double kP = 0.4;
   // private final double kD = 0.1;
 
   private Swerve s_Swerve;

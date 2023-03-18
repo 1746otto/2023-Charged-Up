@@ -5,6 +5,9 @@ import frc.robot.Autos.BalanceAuton;
 import frc.robot.commands.AutomaticIntakeClamperCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
+import frc.robot.commands.DriveBackTo5DegreesCommand;
+import frc.robot.commands.DriveOverChargeStationCommand;
+import frc.robot.commands.DriveTo5DegreesCommand;
 import frc.robot.commands.FourDimensionalBalancingCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
@@ -126,7 +129,16 @@ public class RobotContainer {
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
-  private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand);
+  private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand,
+      new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition),
+      new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition),
+      new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition),
+      new FlapOpenCommand(m_flapSubsystem), new FlapCloseCommand(m_flapSubsystem),
+      new PlungerExtendCommand(m_plungerSubsystem), new PlungerRetractCommand(m_plungerSubsystem),
+      new ClamperOpenCommand(m_clamperSubsystem), new ClamperCloseCommand(m_clamperSubsystem),
+      new DriveTo5DegreesCommand(s_Swerve), new DriveBackTo5DegreesCommand(s_Swerve),
+      new BalancingCommand(s_Swerve, true), new BalancingCommand(s_Swerve, false),
+      new DriveOverChargeStationCommand(s_Swerve));
 
   private double elevatorSetPoint;
 

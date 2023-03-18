@@ -10,13 +10,11 @@ import edu.wpi.first.wpilibj.Timer;
 public class DriveForwardsCommand extends CommandBase {
   private double kSpeed = SwerveConstants.autonDriveSpeed;
   private Swerve s_Swerve;
-  private BooleanSupplier robotCentricSup;
   private Timer time;
 
-  public DriveForwardsCommand(Swerve s_Swerve, BooleanSupplier robotCentricSup) {
+  public DriveForwardsCommand(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
-    this.robotCentricSup = robotCentricSup;
     time = new Timer();
   }
 
@@ -27,8 +25,7 @@ public class DriveForwardsCommand extends CommandBase {
 
   @Override
   public void execute() {
-    s_Swerve.drive(new Translation2d(kSpeed, 0).times(SwerveConstants.maxSpeed), 0.0,
-        robotCentricSup.getAsBoolean(), true);
+    s_Swerve.drive(new Translation2d(kSpeed, 0).times(SwerveConstants.maxSpeed), 0.0, true, false);
   }
 
   @Override
