@@ -13,26 +13,14 @@ public class BalancingCommand extends CommandBase {
   // private final double kD = 0.1;
 
   private Swerve s_Swerve;
-  private int direction;
   private double xError;
   private double speed;
 
-  public BalancingCommand(Swerve s_Swerve, boolean isInCommunity) {
+  public BalancingCommand(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
-
-    direction = (isInCommunity) ? 1 : -1;
 
     addRequirements(s_Swerve);
 
-  }
-
-  @Override
-  public void initialize() {
-    if (DriverStation.getAlliance() == Alliance.Red) {
-      direction *= -1;
-    }
-    if (s_Swerve.getYaw().getDegrees() > 90)
-      direction *= -1;
   }
 
   @Override

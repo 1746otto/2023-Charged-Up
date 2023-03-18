@@ -47,8 +47,7 @@ public final class Autos {
   ClamperCloseCommand clamperCloseCommand;
   DriveTo5DegreesCommand driveTo5DegreesCommand;
   DriveBackTo5DegreesCommand driveBackTo5DegreesCommand;
-  BalancingCommand balancingInCommunityCommand;
-  BalancingCommand balancingOutCommunityCommand;
+  BalancingCommand balancingCommand;
   DriveOverChargeStationCommand driveOverChargeStationCommand;
 
   public Autos(Swerve swerve, ScoringAlignCommand alignCommand,
@@ -57,8 +56,7 @@ public final class Autos {
       FlapCloseCommand flapCloseCommand, PlungerExtendCommand plungerExtendCommand,
       PlungerRetractCommand plungerRetractCommand, ClamperOpenCommand clamperOpenCommand,
       ClamperCloseCommand clamperCloseCommand, DriveTo5DegreesCommand driveTo5DegreesCommand,
-      DriveBackTo5DegreesCommand driveBackTo5DegreesCommand,
-      BalancingCommand balancingInCommunityCommand, BalancingCommand balancingOutCommunityCommand,
+      DriveBackTo5DegreesCommand driveBackTo5DegreesCommand, BalancingCommand balancingCommand,
       DriveOverChargeStationCommand driveOverChargeStationCommand) {
 
     m_swerve = swerve;
@@ -74,18 +72,17 @@ public final class Autos {
     this.clamperCloseCommand = clamperCloseCommand;
     this.driveTo5DegreesCommand = driveTo5DegreesCommand;
     this.driveBackTo5DegreesCommand = driveBackTo5DegreesCommand;
-    this.balancingInCommunityCommand = balancingInCommunityCommand;
-    this.balancingOutCommunityCommand = balancingOutCommunityCommand;
+    this.balancingCommand = balancingCommand;
     this.driveOverChargeStationCommand = driveOverChargeStationCommand;
   }
 
   public Command balance() {
-    return new SequentialCommandGroup(driveTo5DegreesCommand, balancingInCommunityCommand);
+    return new SequentialCommandGroup(driveTo5DegreesCommand, balancingCommand);
   }
 
   public Command moveBalance() {
     return new SequentialCommandGroup(driveOverChargeStationCommand, driveBackTo5DegreesCommand,
-        balancingOutCommunityCommand);
+        balancingCommand);
   }
 
   public Command scoreOne() {

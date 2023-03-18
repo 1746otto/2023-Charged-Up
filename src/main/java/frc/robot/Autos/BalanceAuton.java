@@ -13,7 +13,7 @@ public class BalanceAuton extends SequentialCommandGroup {
   public BalanceAuton(Swerve s_Swerve, BooleanSupplier robotCentricSup) {
     addCommands(new SequentialCommandGroup(new DriveTo5DegreesCommand(s_Swerve),
         new DriveForwardsCommand(s_Swerve), new DriveBackTo5DegreesCommand(s_Swerve),
-        new BalancingCommand(s_Swerve, false)));
+        new BalancingCommand(s_Swerve)));
   }
 
 }

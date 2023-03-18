@@ -137,8 +137,7 @@ public class RobotContainer {
       new PlungerExtendCommand(m_plungerSubsystem), new PlungerRetractCommand(m_plungerSubsystem),
       new ClamperOpenCommand(m_clamperSubsystem), new ClamperCloseCommand(m_clamperSubsystem),
       new DriveTo5DegreesCommand(s_Swerve), new DriveBackTo5DegreesCommand(s_Swerve),
-      new BalancingCommand(s_Swerve, true), new BalancingCommand(s_Swerve, false),
-      new DriveOverChargeStationCommand(s_Swerve));
+      new BalancingCommand(s_Swerve), new DriveOverChargeStationCommand(s_Swerve));
 
   private double elevatorSetPoint;
 
@@ -272,6 +271,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new BalancingCommand(s_Swerve, true);
+    return autos.scoreOne();
   }
 }
