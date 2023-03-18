@@ -25,10 +25,147 @@ import java.util.HashMap;
 public final class Autos {
   Swerve m_swerve;
   ScoringAlignCommand m_scoringAlignCommand;
+  AutomaticIntakeClamperCommand m_automaticIntakeClamperCommand;
+  BalancingCommand m_balancingCommand;
 
-  public Autos(Swerve swerve, ScoringAlignCommand alignCommand) {
+  public Autos(Swerve swerve, ScoringAlignCommand alignCommand,
+      AutomaticIntakeClamperCommand automaticIntakeClamperCommand,
+      BalancingCommand balancingCommand) {
     m_swerve = swerve;
     m_scoringAlignCommand = alignCommand;
+    m_automaticIntakeClamperCommand = automaticIntakeClamperCommand;
+    m_balancingCommand = balancingCommand;
+  }
+
+  public Command AutosHighAutonOneCube() {
+
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("pathplannerHighAutonOneCube",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intake on", m_automaticIntakeClamperCommand);
+
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, m_swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), m_swerve::setModuleStates, true, m_swerve));
+    }
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0), m_scoringAlignCommand,
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+        m_balancingCommand
+
+    );
+
+
+    return autonCommmand;
+  }
+
+  public Command AutosOuterAutonFiveCubeCone() {
+    List<PathPlannerTrajectory> pathGroup =
+        PathPlanner.loadPathGroup("pathplannerOuterAutonFiveCubeCone",
+            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intake on", m_automaticIntakeClamperCommand);
+
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, m_swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), m_swerve::setModuleStates, true, m_swerve));
+    }
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0), m_scoringAlignCommand,
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+        m_scoringAlignCommand
+
+    );
+
+
+    return autonCommmand;
+  }
+
+  public Command AutosLowAutonOneCone() {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("pathplannerLowAutonOneCone",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intakeOn", m_automaticIntakeClamperCommand);
+
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, m_swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), m_swerve::setModuleStates, true, m_swerve));
+    }
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0), m_scoringAlignCommand,
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+        m_balancingCommand
+
+    );
+
+
+    return autonCommmand;
+  }
+
+  public Command AutosInnerAutonFiveConeCube() {
+    List<PathPlannerTrajectory> pathGroup =
+        PathPlanner.loadPathGroup("pathplannerInnerAutonFiveConeCube",
+            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intake on", m_automaticIntakeClamperCommand);
+
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, m_swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), m_swerve::setModuleStates, true, m_swerve));
+    }
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0), m_scoringAlignCommand,
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+        m_scoringAlignCommand
+
+    );
+
+
+    return autonCommmand;
   }
 
   public Command exampleAuto() {
@@ -94,8 +231,6 @@ public final class Autos {
         controllerGroup.get(0),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
         controllerGroup.get(2));
-    // Add the requirments for the command
-    autonCommmand.addRequirements(m_swerve);
 
 
     return autonCommmand;

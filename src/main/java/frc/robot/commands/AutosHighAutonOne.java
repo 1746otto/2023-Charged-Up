@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Swerve;
-import frc.robot.Constants;
+import frc.robot.constants.SwerveConstants;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -21,24 +21,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.AutoConstants;
+import frc.robot.constants.AutoConstants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import frc.robot.subsystems.IntakeRollerSubsystem;
-import frc.robot.subsystems.IntakeExtendSubsystem;
+import frc.robot.subsystems.IntakeExtensionSubsystem;
 
 
 public final class AutosHighAutonOne {
-    Swerve m_swerve;
-   // ScoringAlignCommand m_scoringAlignCommand;
+  Swerve m_swerve;
+  // ScoringAlignCommand m_scoringAlignCommand;
 
-   public AutosHighAutonOne(Swerve swerve) {
-        m_swerve = swerve;
-     //   m_scoringAlignCommand = alignCommand;
-    }
+  public AutosHighAutonOne(Swerve swerve) {
+    m_swerve = swerve;
+    // m_scoringAlignCommand = alignCommand;
+  }
 
-    public Command exampleAuto() {
+  public Command exampleAuto() {
         //This is the combined trajectories of autons we want to use.
         //Each trajectory we want to use is seperated by a stop point.
         //We store each path in the deploy/Path Planner/ folder.
@@ -74,7 +74,7 @@ public final class AutosHighAutonOne {
             new PPSwerveControllerCommand(
                 pathGroup.get(0), 
                 m_swerve::getPose, 
-                Constants.Swerve.swerveKinematics, 
+                SwerveConstants.swerveKinematics, 
                 new PIDController(0, 0, 0), 
                 new PIDController(0, 0, 0), 
                 new PIDController(0, 0, 0), 
@@ -87,7 +87,7 @@ public final class AutosHighAutonOne {
             new PPSwerveControllerCommand(
                 pathGroup.get(1), 
                 m_swerve::getPose, 
-                Constants.Swerve.swerveKinematics, 
+                SwerveConstants.swerveKinematics, 
                 new PIDController(0, 0, 0), 
                 new PIDController(0, 0, 0), 
                 new PIDController(0, 0, 0), 
@@ -101,7 +101,7 @@ public final class AutosHighAutonOne {
             new PPSwerveControllerCommand(
                 pathGroup.get(2), 
                 m_swerve::getPose, 
-                Constants.Swerve.swerveKinematics, 
+                SwerveConstants.swerveKinematics, 
                 new PIDController(0, 0, 0), 
                 new PIDController(0, 0, 0), 
                 new PIDController(0, 0, 0), 
@@ -113,13 +113,9 @@ public final class AutosHighAutonOne {
 
         //Now we create an event map that will hold the name of the marker and the corresponding event.
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("intake on", new InstantCommand(() -> {
-            //do sumthin here
-        }));
-        eventMap.put("Intake Off", new InstantCommand(() -> {
-            //do sumthin else here
-        }));
-
+        eventMap.put("intake on", new AutomaticIntakeClamperCommand);
+        
+        
         //Make the auton command
         SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
             //goToStartCommand,
