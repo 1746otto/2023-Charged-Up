@@ -9,11 +9,15 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class BalancingCommand extends CommandBase {
-  private final double kP = 0.25;
-  // private final double kD = 0.1;
+  private final double kP = 0.22;
+  private final double kD = 0.1;
+  private final double kI = 0.0;
 
   private Swerve s_Swerve;
   private double xError;
+  private double deltaError;
+  private double prevError;
+  private double totalError;
   private double speed;
 
   public BalancingCommand(Swerve s_Swerve) {
@@ -27,15 +31,20 @@ public class BalancingCommand extends CommandBase {
   public void execute() {
     if (s_Swerve.gyro.getRoll() != 0) {
       xError = -(s_Swerve.gyro.getRoll());
+      totalError += xError;
+      deltaError = xError - prevError;
       System.out.println("Roll: " + xError);
 
-      speed = kP * Math.sin(xError * Math.PI / 90);
+      speed = kP * Math.sin(xError * Math.PI / 90) + kI * Math.sin(totalError * Math.PI / 120)
+          + kD * Math.sin(deltaError * Math.PI / 120);
 
       if (speed > SwerveConstants.autonDriveSpeed) {
         speed = SwerveConstants.autonDriveSpeed;
       } else if (speed < -SwerveConstants.autonDriveSpeed) {
         speed = -SwerveConstants.autonDriveSpeed;
       }
+      prevError = xError;
+
     }
 
     s_Swerve.drive(new Translation2d(speed, 0).times(SwerveConstants.maxSpeed).times(1), 0.0, true,
@@ -51,7 +60,10 @@ public class BalancingCommand extends CommandBase {
   public boolean isFinished() {
     double[] velocities = new double[3];
     s_Swerve.gyro.getRawGyro(velocities);
-    System.out.println(velocities);
-    return (Math.floor(s_Swerve.gyro.getRoll()) == 0.0) && (Math.round(velocities[0]) == 0.0);
+    System.out.println(velocities[0]);
+    System.out.println(Math.floor(s_Swerve.gyro.getRoll() / 2.5) == 0.0);
+    System.out.println(Math.floor(velocities[0]) == 0.0);
+    return (Math.floor(s_Swerve.gyro.getRoll() / 2.5) == 0.0)
+        && (Math.floor(velocities[0] / 2.0) == 0.0);
   }
 }

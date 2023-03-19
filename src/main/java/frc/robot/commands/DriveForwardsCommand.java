@@ -36,6 +36,6 @@ public class DriveForwardsCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return (time.hasElapsed(2.0));
+    return (time.hasElapsed(1));
   }
 }

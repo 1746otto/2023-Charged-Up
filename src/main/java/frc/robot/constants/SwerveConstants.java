@@ -93,7 +93,7 @@ public final class SwerveConstants {
   /** Radians per Second */
   public static final double maxAngularVelocity = 5; // TODO: This must be tuned to specific robot
 
-  public static final double autonDriveSpeed = 0.4;
+  public static final double autonDriveSpeed = 0.425;
 
   /* Neutral Modes */
   public static NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -144,7 +144,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 21;
     public static final int angleMotorID = 22;
     public static final int canCoderID = 20;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(42.978516);// 158.378906
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(42.978516 + 180);// 158.378906
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;

@@ -99,7 +99,6 @@ public class TeleopSwerve extends CommandBase {
     // System.out.print("Velocity Vector: ");
     // System.out.println(velocityVector);
     /* Drive */
-    s_Swerve.drive(driveVector, rotationVal * SwerveConstants.maxAngularVelocity * alliance, true,
-        false);
+    s_Swerve.drive(driveVector, rotationVal * SwerveConstants.maxAngularVelocity, true, false);
   }
 }

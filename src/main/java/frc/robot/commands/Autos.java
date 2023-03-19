@@ -113,19 +113,23 @@ public final class Autos {
     // The reason we need these wait commands because the commands end when the solenoid is set to
     // true, not when the solenoid is actually fully in that state.
     return new SequentialCommandGroup(resetGyroCommand, flapOpenCommand, clamperCloseCommand,
-        new ParallelDeadlineGroup(new SequentialCommandGroup(new WaitCommand(2.0),
+        new ParallelDeadlineGroup(new SequentialCommandGroup(new WaitCommand(4.0),
             new ParallelCommandGroup(new WaitCommand(.375), plungerExtendCommand),
             new ParallelCommandGroup(new WaitCommand(.25), clamperOpenCommand),
             plungerRetractCommand, new WaitCommand(.375)), elevatorRunToHigh),
-        elevatorRunToOrigin);
+        elevatorRunToOrigin.withTimeout(.5));
   }
 
   public Command scoreOneBalance() {
-    return new SequentialCommandGroup(resetGyroCommand, scoreOne(), balance());
+    return new SequentialCommandGroup(scoreOne(), driveTo5DegreesCommand, balancingCommand);
   }
 
   public Command scoreOneMove() {
-    return new SequentialCommandGroup(resetGyroCommand, scoreOne(), driveForwardsCommand);
+    return new SequentialCommandGroup(scoreOne(), driveForwardsCommand);
+  }
+
+  public Command correctAlliance() {
+    return resetGyroCommand;
   }
 
   public Command move() {

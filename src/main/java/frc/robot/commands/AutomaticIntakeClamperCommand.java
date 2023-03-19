@@ -40,9 +40,8 @@ public class AutomaticIntakeClamperCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_IntakeRollerSubsystem.setMotorStoppedSpeed();
-    m_IndexerTreadSubsystem.setMotorStoppedSpeed();
     m_indexerSubsystem.setMotorStoppedSpeed();
+    m_IndexerTreadSubsystem.setMotorStoppedSpeed();
     m_ClamperSubsystem.close();
 
   }

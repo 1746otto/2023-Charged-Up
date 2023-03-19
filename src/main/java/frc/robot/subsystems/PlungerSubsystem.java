@@ -28,7 +28,7 @@ public class PlungerSubsystem extends SubsystemBase {
   // Timer starts for 3 seconds to give time for plunger to finish before another command
   // starts
   public void Afterdelay() {
-    time.delay(3);
+    time.delay(0.0);
   }
 
   public boolean isExtended() {
