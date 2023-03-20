@@ -21,11 +21,11 @@ public class IndexerTreadSubsystem extends SubsystemBase {
   }
 
   public void setMotorIntakeSpeed() {
-    setMotorSpeed(IndexerConstants.kTreadIntakeSpeed);
+    setMotorSpeed(IndexerConstants.kTreadScoreSpeed);
   }
 
   public void setMotorOuttakeSpeed() {
-    setMotorSpeed(IndexerConstants.kTreadOuttakeSpeed);
+    setMotorSpeed(IndexerConstants.kTreadOuttakeSpeed * 2);
   }
 
   public void setMotorScoreSpeed() {

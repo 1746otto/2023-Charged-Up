@@ -29,6 +29,8 @@ public class IndexerTreadIntakeCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    if (interrupted)
+      return;
     m_indexerTreadSubsystem.setMotorStoppedSpeed();
   }
 }

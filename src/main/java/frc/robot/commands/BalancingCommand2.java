@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class BalancingCommand extends CommandBase {
-  private final double kP = 0.27;
-  private final double kD = 1;
+public class BalancingCommand2 extends CommandBase {
+  private final double kP = 0.22;
+  private final double kD = 0.025;
   private final double kI = 0.0;
 
   private Swerve s_Swerve;
@@ -20,7 +20,7 @@ public class BalancingCommand extends CommandBase {
   private double totalError;
   private double speed;
 
-  public BalancingCommand(Swerve s_Swerve) {
+  public BalancingCommand2(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
 
     addRequirements(s_Swerve);
@@ -29,14 +29,16 @@ public class BalancingCommand extends CommandBase {
 
   @Override
   public void execute() {
+    double[] velocities = new double[3];
+    s_Swerve.gyro.getRawGyro(velocities);
     if (s_Swerve.gyro.getRoll() != 0) {
       xError = -(s_Swerve.gyro.getRoll());
       totalError += xError;
       deltaError = xError - prevError;
       System.out.println("Roll: " + xError);
 
-      speed = kP * Math.sin(xError * Math.PI / 90.0) + kI * Math.sin(totalError * Math.PI / 120)
-          + kD * Math.sin(deltaError * Math.PI / 180.0);
+      speed = kP * Math.sin(xError * Math.PI / 90) + kI * Math.sin(totalError * Math.PI / 120)
+          + kD * velocities[0];
 
       if (speed > SwerveConstants.autonDriveSpeed) {
         speed = SwerveConstants.autonDriveSpeed;

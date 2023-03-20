@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
-import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class DriveForwardsCommand extends CommandBase {
-  private double kSpeed = SwerveConstants.autonDriveSpeed;
+  private double kSpeed = .8;
   private Swerve s_Swerve;
   private Timer time;
   private int direction = 1;
@@ -36,6 +35,6 @@ public class DriveForwardsCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return (time.hasElapsed(1));
+    return (time.hasElapsed(2));
   }
 }

@@ -54,6 +54,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.ElevatorRunToRequestCommand;
 import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.IndexerRunTreadAndRollers;
 import frc.robot.commands.RetractStopIntakeCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -129,8 +130,11 @@ public class RobotContainer {
   private final BooleanSupplier operatorRightTriggerSupplier = () -> {
     return Math.round(m_operator.getRightTriggerAxis()) > 0.0;
   };
+  private final BooleanSupplier operatorLeftTriggerSupplier = () -> {
+    return Math.round(m_operator.getLeftTriggerAxis()) > 0.0;
+  };
   private final Trigger operatorRightTrigger = new Trigger(operatorRightTriggerSupplier);
-
+  private final Trigger operatorLeftTrigger = new Trigger(operatorLeftTriggerSupplier);
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
   private final IntakeRollerSubsystem m_intakeRollerSubsystem = new IntakeRollerSubsystem();
@@ -157,7 +161,11 @@ public class RobotContainer {
       new ClamperOpenCommand(m_clamperSubsystem), new ClamperCloseCommand(m_clamperSubsystem),
       new DriveTo5DegreesCommand(s_Swerve), new DriveBackTo5DegreesCommand(s_Swerve),
       new BalancingCommand(s_Swerve), new DriveOverChargeStationCommand(s_Swerve),
-      new DriveForwardsCommand(s_Swerve));
+      new DriveForwardsCommand(s_Swerve),
+      new IndexerRunTreadAndRollers(new IndexerRollerIntakeCommand(m_indexerRollerSubsystem),
+          new IndexerTreadIntakeCommand(m_indexerTreadSubsystem)),
+      new IndexerTreadStopCommand(m_indexerTreadSubsystem),
+      new IndexerRollerStopCommand(m_indexerRollerSubsystem));
 
   private double elevatorSetPoint;
 
@@ -248,13 +256,16 @@ public class RobotContainer {
             new IndexerTreadStopCommand(m_indexerTreadSubsystem),
             new ClamperCloseCommand(m_clamperSubsystem)));
     // Elevator goes down to the origin position and then the flap closes
-    operatorA.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new PlungerRetractCommand(m_plungerSubsystem)));
+    operatorA.onTrue(new ParallelCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem),
+        new IndexerRollerStopCommand(m_indexerRollerSubsystem)));
     operatorA.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition));
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition)
+            .withTimeout(1).andThen(new FlapCloseCommand(m_flapSubsystem)));
     // Flap opens and then the elevator moves up to low position
-    operatorB.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new PlungerRetractCommand(m_plungerSubsystem)));
+    operatorB.onTrue(new FlapOpenCommand(m_flapSubsystem)
+        .andThen(new ParallelCommandGroup(new PlungerRetractCommand(m_plungerSubsystem))));
+
     operatorB.onTrue(
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kLowPosition));
     // Flap opens and then the elevator moves up to middle position
@@ -315,6 +326,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.scoreOneMove();
+    return autos.scoreOneBalance();
   }
 }

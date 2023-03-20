@@ -21,4 +21,9 @@ public class IndexerRollerStopCommand extends CommandBase {
   public void initialize() {
     m_indexerRollerSubsystem.setMotorStoppedSpeed();
   }
+
+  @Override
+  public boolean isFinished() {
+    return true;
+  }
 }
