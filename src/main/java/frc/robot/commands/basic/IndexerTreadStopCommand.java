@@ -21,4 +21,9 @@ public class IndexerTreadStopCommand extends CommandBase {
   public void initialize() {
     m_indexerTreadSubsystem.setMotorStoppedSpeed();
   }
+
+  @Override
+  public boolean isFinished() {
+    return true;
+  }
 }

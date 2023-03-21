@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.IndexerRollerSubsystem;
 import frc.robot.subsystems.Swerve;
 
 import com.pathplanner.lib.PathConstraints;
@@ -13,6 +14,9 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -25,6 +29,8 @@ import frc.robot.commands.basic.ClamperCloseCommand;
 import frc.robot.commands.basic.ClamperOpenCommand;
 import frc.robot.commands.basic.FlapCloseCommand;
 import frc.robot.commands.basic.FlapOpenCommand;
+import frc.robot.commands.basic.IndexerRollerStopCommand;
+import frc.robot.commands.basic.IndexerTreadStopCommand;
 import frc.robot.commands.basic.PlungerExtendCommand;
 import frc.robot.commands.basic.PlungerRetractCommand;
 import frc.robot.constants.AutoConstants;
@@ -33,8 +39,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 
+
 public final class Autos {
   Swerve m_swerve;
+  private boolean hasZeroed = false;
   ScoringAlignCommand m_scoringAlignCommand;
   ElevatorRunToRequestCommand elevatorRunToMid;
   ElevatorRunToRequestCommand elevatorRunToHigh;
@@ -49,6 +57,11 @@ public final class Autos {
   DriveBackTo5DegreesCommand driveBackTo5DegreesCommand;
   BalancingCommand balancingCommand;
   DriveOverChargeStationCommand driveOverChargeStationCommand;
+  DriveForwardsCommand driveForwardsCommand;
+  IndexerRunTreadAndRollers indexerRunTreadAndRollers;
+  IndexerRollerStopCommand indexerRollerStopCommand;
+  IndexerTreadStopCommand indexerTreadStopCommand;
+  InstantCommand resetGyroCommand;
 
   public Autos(Swerve swerve, ScoringAlignCommand alignCommand,
       ElevatorRunToRequestCommand elevatorRunToMid, ElevatorRunToRequestCommand elevatorRunToHigh,
@@ -57,7 +70,11 @@ public final class Autos {
       PlungerRetractCommand plungerRetractCommand, ClamperOpenCommand clamperOpenCommand,
       ClamperCloseCommand clamperCloseCommand, DriveTo5DegreesCommand driveTo5DegreesCommand,
       DriveBackTo5DegreesCommand driveBackTo5DegreesCommand, BalancingCommand balancingCommand,
-      DriveOverChargeStationCommand driveOverChargeStationCommand) {
+      DriveOverChargeStationCommand driveOverChargeStationCommand,
+      DriveForwardsCommand driveForwardsCommand,
+      IndexerRunTreadAndRollers indexerRunTreadAndRollers,
+      IndexerTreadStopCommand indexerTreadStopCommand,
+      IndexerRollerStopCommand indexerRollerStopCommand) {
 
     m_swerve = swerve;
     m_scoringAlignCommand = alignCommand;
@@ -74,29 +91,67 @@ public final class Autos {
     this.driveBackTo5DegreesCommand = driveBackTo5DegreesCommand;
     this.balancingCommand = balancingCommand;
     this.driveOverChargeStationCommand = driveOverChargeStationCommand;
+    this.driveForwardsCommand = driveForwardsCommand;
+    this.indexerRunTreadAndRollers = indexerRunTreadAndRollers;
+    this.indexerRollerStopCommand = indexerRollerStopCommand;
+    this.indexerTreadStopCommand = indexerTreadStopCommand;
+    resetGyroCommand = new InstantCommand(() -> {
+      if (DriverStation.getAlliance() == Alliance.Red && !hasZeroed) {
+        m_swerve.gyro.setYaw(180);
+        m_swerve.poseEstimator.resetPosition(m_swerve.gyro.getRotation2d(),
+            m_swerve.getModulePositions(), new Pose2d());
+        hasZeroed = true;
+      } else if (!hasZeroed) {
+        m_swerve.gyro.setYaw(0);
+        m_swerve.poseEstimator.resetPosition(m_swerve.gyro.getRotation2d(),
+            m_swerve.getModulePositions(), new Pose2d());
+        hasZeroed = true;
+      }
+
+    }, m_swerve);
   }
 
+  // We are putting the zeroing before the gyro because we don't want to have the issue of not
+  // zeroing before the match
   public Command balance() {
-    return new SequentialCommandGroup(driveTo5DegreesCommand, balancingCommand);
+    return new SequentialCommandGroup(resetGyroCommand, driveTo5DegreesCommand, balancingCommand);
   }
 
   public Command moveBalance() {
-    return new SequentialCommandGroup(driveOverChargeStationCommand, driveBackTo5DegreesCommand,
-        balancingCommand);
+    return new SequentialCommandGroup(resetGyroCommand, driveOverChargeStationCommand,
+        driveBackTo5DegreesCommand, balancingCommand);
   }
 
   public Command scoreOne() {
     // The reason we need these wait commands because the commands end when the solenoid is set to
     // true, not when the solenoid is actually fully in that state.
-    return new SequentialCommandGroup(flapOpenCommand, clamperCloseCommand, elevatorRunToHigh,
-        new ParallelCommandGroup(new WaitCommand(.375), plungerExtendCommand),
-        new ParallelCommandGroup(new WaitCommand(.25), clamperOpenCommand), plungerRetractCommand,
-        elevatorRunToOrigin, flapCloseCommand);
+    return new SequentialCommandGroup(resetGyroCommand, flapOpenCommand, clamperCloseCommand,
+        new ParallelDeadlineGroup(
+            new SequentialCommandGroup(new WaitCommand(2.0),
+                new ParallelCommandGroup(new WaitCommand(.375), plungerExtendCommand),
+                new ParallelCommandGroup(new WaitCommand(.25), clamperOpenCommand),
+                plungerRetractCommand, new WaitCommand(.375)),
+            elevatorRunToHigh, indexerRunTreadAndRollers),
+        elevatorRunToOrigin.withTimeout(.5), indexerRollerStopCommand.withTimeout(0.01),
+        indexerTreadStopCommand.withTimeout(0.01));
   }
 
   public Command scoreOneBalance() {
-    return scoreOne().andThen(balance());
+    return new SequentialCommandGroup(scoreOne(), driveTo5DegreesCommand, balancingCommand);
   }
+
+  public Command scoreOneMove() {
+    return new SequentialCommandGroup(scoreOne(), driveForwardsCommand);
+  }
+
+  public Command correctAlliance() {
+    return resetGyroCommand;
+  }
+
+  public Command move() {
+    return driveForwardsCommand;
+  }
+
 
   public Command exampleAuto() {
     // This is the combined trajectories of autons we want to use.

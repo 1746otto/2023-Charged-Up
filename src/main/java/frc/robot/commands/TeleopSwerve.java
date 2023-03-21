@@ -61,8 +61,8 @@ public class TeleopSwerve extends CommandBase {
     // translationVal = Math.copySign(translationVal*strafeVal, strafeSup.getAsDouble());
     double rotationVal =
         MathUtil.applyDeadband(rotationSup.getAsDouble(), ControllerConstants.stickDeadband);
-    Translation2d driveVector = new Translation2d(translationVal, strafeVal)
-        .times(Math.sqrt(translationVal * translationVal + strafeVal * strafeVal))
+    Translation2d driveVector = new Translation2d(translationVal, strafeVal);
+    driveVector = new Translation2d(Math.pow(driveVector.getNorm(), 1), driveVector.getAngle())
         .times(SwerveConstants.maxSpeed).times(alliance);
 
     // Slew limiting stuff
@@ -99,7 +99,6 @@ public class TeleopSwerve extends CommandBase {
     // System.out.print("Velocity Vector: ");
     // System.out.println(velocityVector);
     /* Drive */
-    s_Swerve.drive(driveVector, rotationVal * SwerveConstants.maxAngularVelocity * alliance, true,
-        false);
+    s_Swerve.drive(driveVector, rotationVal * SwerveConstants.maxAngularVelocity, true, false);
   }
 }

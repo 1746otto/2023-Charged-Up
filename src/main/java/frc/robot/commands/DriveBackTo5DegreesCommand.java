@@ -4,13 +4,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import java.util.function.BooleanSupplier;
 
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 
 public class DriveBackTo5DegreesCommand extends CommandBase {
-  private double kSpeed = SwerveConstants.autonDriveSpeed;
+  private double kSpeed = SwerveConstants.autonDriveSpeed * 0.5;
 
   private Swerve s_Swerve;
   private double initRoll;
@@ -38,6 +37,6 @@ public class DriveBackTo5DegreesCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(s_Swerve.gyro.getRoll() - initRoll) > 5;
+    return Math.abs(s_Swerve.gyro.getRoll() - initRoll) > 13;
   }
 }

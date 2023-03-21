@@ -6,27 +6,35 @@ import frc.robot.commands.AutomaticIntakeClamperCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.DriveBackTo5DegreesCommand;
+import frc.robot.commands.DriveForwardsCommand;
 import frc.robot.commands.DriveOverChargeStationCommand;
 import frc.robot.commands.DriveTo5DegreesCommand;
 import frc.robot.commands.FourDimensionalBalancingCommand;
+import frc.robot.commands.FullOutakeCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroOutElevatorCommand;
+import frc.robot.commands.basic.BalanceSpeedCommand;
 import frc.robot.commands.basic.ClamperCloseCommand;
 import frc.robot.commands.basic.ClamperOpenCommand;
 import frc.robot.commands.basic.FlapCloseCommand;
 import frc.robot.commands.basic.FlapOpenCommand;
 import frc.robot.commands.basic.IndexerRollerIntakeCommand;
+import frc.robot.commands.basic.IndexerRollerStopCommand;
 import frc.robot.commands.basic.ElevatorRunUpCommand;
 import frc.robot.commands.basic.IndexerTreadIntakeCommand;
 import frc.robot.commands.basic.IndexerTreadScoreCommand;
+import frc.robot.commands.basic.IndexerTreadStopCommand;
 import frc.robot.commands.basic.IntakeExtensionExtendCommand;
 import frc.robot.commands.basic.IntakeExtensionRetractCommand;
 import frc.robot.commands.basic.IntakeRollerIntakeCommand;
+import frc.robot.commands.basic.NormalSpeedCommand;
 import frc.robot.commands.basic.PlungerExtendCommand;
 import frc.robot.commands.basic.PlungerRetractCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,14 +48,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.SwerveConstants;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.ElevatorRunToRequestCommand;
 import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.IndexerRunTreadAndRollers;
 import frc.robot.commands.RetractStopIntakeCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.BalancingCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -89,6 +101,8 @@ public class RobotContainer {
   private final BooleanSupplier driverRTriggerSupplier = () -> {
     return 0 != Math.round(m_driver.getRightTriggerAxis());
   };
+
+
   public Trigger driverLeftTrigger = new Trigger(driverLTriggerSupplier);
   public Trigger driverRightTrigger = new Trigger(driverRTriggerSupplier);
 
@@ -111,7 +125,16 @@ public class RobotContainer {
       new JoystickButton(m_operator, XboxController.Button.kRightBumper.value);
   private final JoystickButton operatorRightJoystick =
       new JoystickButton(m_operator, XboxController.Button.kRightStick.value);
-
+  private final JoystickButton operatorLeftJoystick =
+      new JoystickButton(m_operator, XboxController.Button.kLeftStick.value);
+  private final BooleanSupplier operatorRightTriggerSupplier = () -> {
+    return Math.round(m_operator.getRightTriggerAxis()) > 0.0;
+  };
+  private final BooleanSupplier operatorLeftTriggerSupplier = () -> {
+    return Math.round(m_operator.getLeftTriggerAxis()) > 0.0;
+  };
+  private final Trigger operatorRightTrigger = new Trigger(operatorRightTriggerSupplier);
+  private final Trigger operatorLeftTrigger = new Trigger(operatorLeftTriggerSupplier);
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
   private final IntakeRollerSubsystem m_intakeRollerSubsystem = new IntakeRollerSubsystem();
@@ -137,7 +160,12 @@ public class RobotContainer {
       new PlungerExtendCommand(m_plungerSubsystem), new PlungerRetractCommand(m_plungerSubsystem),
       new ClamperOpenCommand(m_clamperSubsystem), new ClamperCloseCommand(m_clamperSubsystem),
       new DriveTo5DegreesCommand(s_Swerve), new DriveBackTo5DegreesCommand(s_Swerve),
-      new BalancingCommand(s_Swerve), new DriveOverChargeStationCommand(s_Swerve));
+      new BalancingCommand(s_Swerve), new DriveOverChargeStationCommand(s_Swerve),
+      new DriveForwardsCommand(s_Swerve),
+      new IndexerRunTreadAndRollers(new IndexerRollerIntakeCommand(m_indexerRollerSubsystem),
+          new IndexerTreadIntakeCommand(m_indexerTreadSubsystem)),
+      new IndexerTreadStopCommand(m_indexerTreadSubsystem),
+      new IndexerRollerStopCommand(m_indexerRollerSubsystem));
 
   private double elevatorSetPoint;
 
@@ -186,26 +214,44 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    driverX.toggleOnTrue(new XLockCommand(s_Swerve)); // MAKE THIS XLOCK
+    // driverB.toggleOnTrue(new BalanceSpeedCommand());
+    // driverB.toggleOnFalse(new NormalSpeedCommand());
+    /*
+     * driverB.onTrue(new SequentialCommandGroup(new ClamperCloseCommand(m_clamperSubsystem), new
+     * ParallelCommandGroup(new IndexerRollerStopCommand(m_indexerRollerSubsystem), new
+     * IndexerTreadStopCommand(m_indexerTreadSubsystem))));
+     */
     driverLBumper.toggleOnTrue(new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem));
     driverRBumper.toggleOnTrue(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem));
-    driverRightTrigger.toggleOnTrue(new FlapOpenCommand(m_flapSubsystem)
+    driverRightTrigger.toggleOnTrue(new FlapCloseCommand(m_flapSubsystem) // we need to test the
+                                                                          // triggers
         .andThen(new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem)).andThen(
             new AutomaticIntakeClamperCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem,
                 m_intakeRollerSubsystem, m_clamperSubsystem, m_intakeExtensionSubsystem)));
     driverLeftTrigger.toggleOnTrue(
         new RetractStopIntakeCommand(m_intakeRollerSubsystem, m_intakeExtensionSubsystem));
-    operatorRightJoystick.toggleOnTrue(new SequentialCommandGroup(
-        new FlapCloseCommand(m_flapSubsystem),
-        new IndexerCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem, m_clamperSubsystem)));
 
+
+    operatorStart.whileTrue(
+        new ParallelCommandGroup(new IndexerRollerIntakeCommand(m_indexerRollerSubsystem),
+            new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
+            new ClamperOpenCommand(m_clamperSubsystem)));
+    operatorStart
+        .onFalse(new ParallelCommandGroup(new IndexerRollerStopCommand(m_indexerRollerSubsystem),
+            new IndexerTreadStopCommand(m_indexerTreadSubsystem),
+            new ClamperCloseCommand(m_clamperSubsystem)));
     // Elevator goes down to the origin position and then the flap closes
-    operatorA.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new PlungerRetractCommand(m_plungerSubsystem)));
+    operatorA.onTrue(new ParallelCommandGroup(new FlapOpenCommand(m_flapSubsystem),
+        new PlungerRetractCommand(m_plungerSubsystem),
+        new IndexerRollerStopCommand(m_indexerRollerSubsystem)));
     operatorA.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition));
+        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition)
+            .withTimeout(1).andThen(new FlapCloseCommand(m_flapSubsystem)));
     // Flap opens and then the elevator moves up to low position
-    operatorB.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new PlungerRetractCommand(m_plungerSubsystem)));
+    operatorB.onTrue(new FlapOpenCommand(m_flapSubsystem)
+        .andThen(new ParallelCommandGroup(new PlungerRetractCommand(m_plungerSubsystem))));
+
     operatorB.onTrue(
         new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kLowPosition));
     // Flap opens and then the elevator moves up to middle position
@@ -222,9 +268,17 @@ public class RobotContainer {
     operatorLeftBumper.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
         new ZeroOutElevatorCommand(m_elevatorSubsystem), new FlapCloseCommand(m_flapSubsystem)));
     // Plunger extends and then opens the clamper
-    operatorRightBumper.onTrue(new SequentialCommandGroup(
-        new PlungerExtendCommand(m_plungerSubsystem), new ClamperOpenCommand(m_clamperSubsystem)));
-
+    operatorRightBumper
+        .onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_plungerSubsystem),
+            new WaitCommand(.5), new ClamperOpenCommand(m_clamperSubsystem), new WaitCommand(0.25),
+            new PlungerRetractCommand(m_plungerSubsystem)));
+    operatorLeftJoystick
+        .onTrue(new SequentialCommandGroup(new ClamperCloseCommand(m_clamperSubsystem),
+            new ParallelCommandGroup(new IndexerRollerStopCommand(m_indexerRollerSubsystem),
+                new IndexerTreadStopCommand(m_indexerTreadSubsystem))));
+    operatorRightTrigger
+        .whileTrue(new FullOutakeCommand(m_indexerRollerSubsystem, m_intakeRollerSubsystem,
+            m_indexerTreadSubsystem, m_clamperSubsystem, m_intakeExtensionSubsystem));
   }
 
   public void enableCompressor() {
@@ -237,6 +291,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.scoreOne();
+    return autos.scoreOneBalance();
   }
 }
