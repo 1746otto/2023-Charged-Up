@@ -11,10 +11,9 @@ import java.util.function.BooleanSupplier;
 
 public class BalanceAuton extends SequentialCommandGroup {
   public BalanceAuton(Swerve s_Swerve, BooleanSupplier robotCentricSup) {
-    addCommands(new SequentialCommandGroup(new DriveTo5DegreesCommand(s_Swerve, robotCentricSup),
-        new DriveForwardsCommand(s_Swerve, robotCentricSup),
-        new DriveBackTo5DegreesCommand(s_Swerve, robotCentricSup),
-        new BalancingCommand(s_Swerve, robotCentricSup)));
+    addCommands(new SequentialCommandGroup(new DriveTo5DegreesCommand(s_Swerve),
+        new DriveForwardsCommand(s_Swerve), new DriveBackTo5DegreesCommand(s_Swerve),
+        new BalancingCommand(s_Swerve)));
   }
 
 }

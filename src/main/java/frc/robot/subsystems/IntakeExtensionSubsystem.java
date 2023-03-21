@@ -20,7 +20,7 @@ public class IntakeExtensionSubsystem extends SubsystemBase {
     extensionMotor =
         new CANSparkMax(IntakeExtensionConstants.kExtensionMotor, MotorType.kBrushless);
     bottomLimitSwitch =
-        extensionMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        extensionMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     topLimitSwitch = extensionMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     extensionMotor.setInverted(true);
   }
@@ -50,9 +50,6 @@ public class IntakeExtensionSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    System.out.println("Top limit switch: " + topLimitSwitch.isPressed());
-    System.out.println("Bottom limit switch: " + bottomLimitSwitch.isPressed());
-  }
+  public void periodic() {}
 
 }

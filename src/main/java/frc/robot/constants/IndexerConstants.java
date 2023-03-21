@@ -10,12 +10,12 @@ public final class IndexerConstants {
   public static final int kbeamBreak = 1;
 
   // Tunable constants
-  public static final double kRollerIntakeSpeed = 1;
+  public static final double kRollerIntakeSpeed = .3;
   public static final double kRollerOuttakeSpeed = -.4;
   public static final double kRollerStopSpeed = 0;
 
-  public static final double kTreadIntakeSpeed = .5;
-  public static final double kTreadOuttakeSpeed = -.7;
+  public static final double kTreadIntakeSpeed = .35;
+  public static final double kTreadOuttakeSpeed = -.35;
   public static final double kTreadScoreSpeed = 1;
   public static final double kTreadStopSpeed = 0;
 

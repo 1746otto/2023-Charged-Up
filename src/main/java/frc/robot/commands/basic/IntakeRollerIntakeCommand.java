@@ -21,4 +21,9 @@ public class IntakeRollerIntakeCommand extends CommandBase {
   public void initialize() {
     m_intakeRollerSubsystem.setMotorIntakeSpeed();
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_intakeRollerSubsystem.setMotorStoppedSpeed();
+  }
 }

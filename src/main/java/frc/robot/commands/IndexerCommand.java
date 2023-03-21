@@ -8,44 +8,36 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ClamperSubsystem;
 import frc.robot.subsystems.IntakeExtensionSubsystem;
 
-public class AutomaticIntakeClamperCommand extends CommandBase {
+public class IndexerCommand extends CommandBase {
   private final IndexerRollerSubsystem m_indexerSubsystem;
   private final IndexerTreadSubsystem m_IndexerTreadSubsystem;
-  private final IntakeRollerSubsystem m_IntakeRollerSubsystem;
   private final ClamperSubsystem m_ClamperSubsystem;
-  private final IntakeExtensionSubsystem m_IntakeExtensionSubsystem;
 
 
-  public AutomaticIntakeClamperCommand(IndexerRollerSubsystem m_IndexerRollerSubsystem,
-      IndexerTreadSubsystem m_IndexerTreadSubsystem, IntakeRollerSubsystem m_IntakeRollerSubsystem,
-      ClamperSubsystem m_ClamperSubsystem, IntakeExtensionSubsystem m_intakeExtensionSubsystem) {
+
+  public IndexerCommand(IndexerRollerSubsystem m_IndexerRollerSubsystem,
+      IndexerTreadSubsystem m_IndexerTreadSubsystem, ClamperSubsystem m_ClamperSubsystem) {
     this.m_indexerSubsystem = m_IndexerRollerSubsystem;
     this.m_IndexerTreadSubsystem = m_IndexerTreadSubsystem;
-    this.m_IntakeRollerSubsystem = m_IntakeRollerSubsystem;
     this.m_ClamperSubsystem = m_ClamperSubsystem;
-    this.m_IntakeExtensionSubsystem = m_intakeExtensionSubsystem;
 
-    addRequirements();
+
+    addRequirements(m_IndexerRollerSubsystem, m_IndexerTreadSubsystem);
   }
 
   @Override
   public void initialize() {
-    m_IntakeRollerSubsystem.setMotorIntakeSpeed();
     m_indexerSubsystem.setMotorIntakeSpeed();
-    m_IndexerTreadSubsystem.setMotorScoreSpeed();
+    m_IndexerTreadSubsystem.setMotorIntakeSpeed();
     m_ClamperSubsystem.open();
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (interrupted)
-      return;
     m_indexerSubsystem.setMotorStoppedSpeed();
     m_IndexerTreadSubsystem.setMotorStoppedSpeed();
     m_ClamperSubsystem.close();
-
   }
 
   // Returns true when the command should end.

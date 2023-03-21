@@ -13,8 +13,9 @@ public class IntakeRollerSubsystem extends SubsystemBase {
   public IntakeRollerSubsystem() {
     masterMotor = new CANSparkMax(IntakeRollerConstants.kMasterMotor, MotorType.kBrushless);
     slaveMotor = new CANSparkMax(IntakeRollerConstants.kSlaveMotor, MotorType.kBrushless);
-
     slaveMotor.follow(masterMotor, true);
+    masterMotor.setSmartCurrentLimit(40);
+    slaveMotor.setSmartCurrentLimit(40);
   }
 
   public void setMotorSpeed(double speed) {
