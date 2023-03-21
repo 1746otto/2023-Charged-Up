@@ -4,14 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ClamperSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.FlapSubsystem;
-import frc.robot.subsystems.IndexerRollerSubsystem;
-import frc.robot.subsystems.IndexerTreadSubsystem;
-import frc.robot.subsystems.IntakeExtensionSubsystem;
-import frc.robot.subsystems.IntakeRollerSubsystem;
-import frc.robot.subsystems.PlungerSubsystem;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.VisionSubsystem;
 import com.pathplanner.lib.PathConstraints;
@@ -32,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.SwerveConstants;
@@ -42,14 +34,7 @@ import java.util.HashMap;
 
 
 public final class Autos {
-  ClamperSubsystem clamperSubsystem;
   ElevatorSubsystem elevatorSubsystem;
-  FlapSubsystem flapSubsystem;
-  IndexerRollerSubsystem indexerRollerSubsystem;
-  IndexerTreadSubsystem indexerTreadSubsystem;
-  IntakeExtensionSubsystem intakeExtensionSubsystem;
-  IntakeRollerSubsystem intakeRollerSubsystem;
-  PlungerSubsystem plungerSubsystem;
   Swerve swerve;
   VisionSubsystem visionSubsystem;
   InstantCommand resetGyroCommand;
@@ -57,19 +42,9 @@ public final class Autos {
   private boolean hasZeroed = false;
 
 
-  public Autos(ClamperSubsystem clamperSubsystem, ElevatorSubsystem elevatorSubsystem,
-      FlapSubsystem flapSubsystem, IndexerRollerSubsystem indexerRollerSubsystem,
-      IndexerTreadSubsystem indexerTreadSubsystem,
-      IntakeExtensionSubsystem intakeExtensionSubsystem,
-      IntakeRollerSubsystem intakeRollerSubsystem, Swerve swerve, VisionSubsystem visionSubsystem) {
+  public Autos(Swerve swerve, VisionSubsystem visionSubsystem) {
 
-    this.clamperSubsystem = clamperSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
-    this.flapSubsystem = flapSubsystem;
-    this.indexerRollerSubsystem = indexerRollerSubsystem;
-    this.indexerTreadSubsystem = indexerTreadSubsystem;
-    this.intakeExtensionSubsystem = intakeExtensionSubsystem;
-    this.intakeRollerSubsystem = intakeRollerSubsystem;
     this.swerve = swerve;
     this.visionSubsystem = visionSubsystem;
 
@@ -104,15 +79,7 @@ public final class Autos {
   public Command scoreOne() {
     // The reason we need these wait commands because the commands end when the solenoid is set to
     // true, not when the solenoid is actually fully in that state.
-    return new SequentialCommandGroup(resetGyroCommand,
-
-        new ParallelDeadlineGroup(
-            new SequentialCommandGroup(new WaitCommand(4.0),
-                new ParallelCommandGroup(new WaitCommand(.375)),
-                new ParallelCommandGroup(new WaitCommand(.25)), new WaitCommand(.375)),
-            new ElevatorRunToRequestCommand(elevatorSubsystem, ElevatorConstants.kHighPosition)),
-        new ElevatorRunToRequestCommand(elevatorSubsystem, ElevatorConstants.kOriginPosition)
-            .withTimeout(.5));
+    return new SequentialCommandGroup();
   }
 
   public Command scoreOneBalance() {
