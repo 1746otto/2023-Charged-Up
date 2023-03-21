@@ -116,7 +116,7 @@ public final class Autos {
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Example Path",
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("driveforward",
         new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared));
 
@@ -161,19 +161,14 @@ public final class Autos {
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("do sumthin", new InstantCommand(() -> {
-      // do sumthin here
-    }));
-    eventMap.put("do sumthin else", new InstantCommand(() -> {
-      // do sumthin else here
-    }));
+
 
     // Make the auton command
     SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
         controllerGroup.get(0),
-        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        controllerGroup.get(2));
+
+        controllerGroup.get(1));
     // Add the requirments for the command
     autonCommmand.addRequirements(swerve);
 
