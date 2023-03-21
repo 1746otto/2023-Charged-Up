@@ -9,9 +9,7 @@ public class ArmPositionSubsystem {
 
   public ArmPositionSubsystem() {}
 
-  public void armToConeIntake() {}
-
-  public void armToCubeIntake() {}
+  public void armToIntake() {}
 
   public void armToRest() {}
 

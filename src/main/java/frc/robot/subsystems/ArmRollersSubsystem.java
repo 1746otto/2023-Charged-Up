@@ -4,11 +4,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmRollersSubsystem {
   // TODO: Change data types to correct types
-  private int armMotor;
+  private int armRollerMotor;
 
   public ArmRollersSubsystem() {}
 
-  public void armIntake() {}
+  public void armRollerIntake() {}
 
-  public void armOuttake() {}
+  public void armRollerOuttake() {}
+
+  public void armRollerStop() {}
 }
