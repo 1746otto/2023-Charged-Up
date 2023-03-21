@@ -175,21 +175,7 @@ public class RobotContainer {
 
     );
 
-    // This will be interupted if any of the subsystems below are being used, and will continue when
-    // they aren't.
-    // This allows us to not run this if we are actively running indexer, which will turn off when
-    // beam is broken.
-    // m_PlacerSubsystem.setDefaultCommand(new RunCommand(
-    // // TODO: Tune these numbers to be realistic not guesses.
-    // () -> {
-    // if (m_ElevatorSubsystem.getElevatorEncoderValues() < ElevatorConstants.kOriginPosition
-    // + 250
-    // && m_ElevatorSubsystem.getElevatorEncoderValues() > ElevatorConstants.kOriginPosition
-    // - 250
-    // && m_IndexerSubsystem.beambreakBroken()) {
-    // m_PlacerSubsystem.closeClamper();
-    // }
-    // }, m_PlacerSubsystem, m_ElevatorSubsystem, m_IndexerSubsystem));
+
   }
 
   /**
@@ -238,27 +224,7 @@ public class RobotContainer {
     // Plunger extends and then opens the clamper
     operatorRightBumper.onTrue(new SequentialCommandGroup(
         new PlungerExtendCommand(m_plungerSubsystem), new ClamperOpenCommand(m_clamperSubsystem)));
-    // // Intake and indexer run at the same time until the beam break is broken then the clamper
-    // // closes(Used for elevator scoring).
-    // operatorLeftBumper.onTrue(new SequentialCommandGroup(new FlapCloseCommand(m_flapSubsystem),
-    // new ClamperOpenCommand(m_clamperSubsystem),
-    // new ParallelDeadlineGroup(new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
-    // new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
-    // new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
-    // new IndexerRollerIntakeCommand(m_indexerRollerSubsystem)),
-    // new ClamperCloseCommand(m_clamperSubsystem),
-    // new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem)));
-    // // The flap opens and then the intake and indexer run at the same time(Used for low goals)
-    // operatorBack.toggleOnTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-    // new ClamperOpenCommand(m_clamperSubsystem),
-    // new ParallelCommandGroup(new IndexerTreadScoreCommand(m_indexerTreadSubsystem),
-    // new IntakeRollerIntakeCommand(m_intakeRollerSubsystem),
-    // new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem),
-    // new IndexerRollerIntakeCommand(m_indexerRollerSubsystem))));
-    // // Intake retracts and flap closes
-    // operatorBack.toggleOnFalse(
-    // new SequentialCommandGroup(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem),
-    // new ClamperCloseCommand(m_clamperSubsystem), new FlapCloseCommand(m_flapSubsystem)));
+
   }
 
   public void enableCompressor() {
