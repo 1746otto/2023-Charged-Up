@@ -6,7 +6,8 @@ public final class ArmConstants {
   public static final double kArmIntakeAndScorePos = 20.0;
   public static final double kArmP = .01;
   public static final double kRollerOutputSpeed = 0.5;
-  public static final int kArmGearRatio = 0;
+  // TODO: value might be wrong due to lack of knowledge
+  public static final double kArmGearRatio = 30; // 30:1
   // TODO: change ids to real nums
   public static final int kArmPosMotorID = 0;
   public static final int kArmRollerMotorID = 1;
