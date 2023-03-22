@@ -121,6 +121,8 @@ public class RobotContainer {
   private final Swerve s_Swerve = new Swerve();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+  private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
+  private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
 
   private final Compressor m_compressor =
       new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
@@ -157,13 +159,7 @@ public class RobotContainer {
          */
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
-            DriverStation::getAlliance
-
-        )
-
-    );
-
-
+            DriverStation::getAlliance));
   }
 
   /**
