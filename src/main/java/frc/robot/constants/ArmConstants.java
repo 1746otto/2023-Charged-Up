@@ -1,7 +1,7 @@
 package frc.robot.constants;
 
 public final class ArmConstants {
-  // TODO: change values to accurate positions
+  // TODO: change values to accurate positions and values
   public static final double kArmRestPos = 0.0;
   public static final double kArmIntakeAndScorePos = 20.0;
   public static final double kArmP = .01;
