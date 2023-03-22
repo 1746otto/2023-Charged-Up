@@ -12,6 +12,9 @@ import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroOutElevatorCommand;
+import frc.robot.commands.basic.ArmRollerIntakeCommand;
+import frc.robot.commands.basic.ArmRollerStopCommand;
+import frc.robot.commands.basic.ArmRunToRequestCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
 import frc.robot.commands.basic.ElevatorRunUpCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
@@ -28,6 +31,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.RobotConstants;
@@ -179,7 +183,7 @@ public class RobotContainer {
 
     // ----Operator Controls----
 
-    // Elevator goes down to the origin position and arm goes in rest position
+    // Elevator goes down to the origin position
     operatorA.onTrue(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
     // Elevator moves up to low position
@@ -191,6 +195,9 @@ public class RobotContainer {
     // Elevator moves up to high position
     operatorY.onTrue(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
+    // Arm rollers intake or outtake
+    operatorRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    operatorRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
     // Elevator runs down to beam break to get the zero position.
     operatorLeftBumper.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
