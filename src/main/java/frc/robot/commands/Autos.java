@@ -176,4 +176,198 @@ public final class Autos {
     return autonCommmand;
 
   }
+
+  public Command OuterCubeCone() {
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("OuterScoreCubeCone",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+    }
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0),
+
+        controllerGroup.get(1));
+    // Add the requirments for the command
+    autonCommmand.addRequirements(swerve);
+
+
+    return autonCommmand;
+
+  }
+
+  public Command InnerTwoCubesBalance() {
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
+        "2CubespieceBalancefrommiddle", new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+    }
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0),
+
+        controllerGroup.get(1));
+    // Add the requirments for the command
+    autonCommmand.addRequirements(swerve);
+
+
+    return autonCommmand;
+
+  }
+
+  public Command ConeCubeConeInner() {
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("ConeCubeConepieceautonInner",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+    }
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0),
+
+        controllerGroup.get(1));
+    // Add the requirments for the command
+    autonCommmand.addRequirements(swerve);
+
+
+    return autonCommmand;
+
+  }
+
+  public Command ConeBalanceOuter() {
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("ScoreConeBalanceOuter",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+    }
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0),
+
+        controllerGroup.get(1));
+    // Add the requirments for the command
+    autonCommmand.addRequirements(swerve);
+
+
+    return autonCommmand;
+
+  }
+
+  public Command CubeBalanceInner() {
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("ScoreCubeBalance",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+    }
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0),
+
+        controllerGroup.get(1));
+    // Add the requirments for the command
+    autonCommmand.addRequirements(swerve);
+
+
+    return autonCommmand;
+
+  }
 }
