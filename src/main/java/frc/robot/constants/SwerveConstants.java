@@ -83,9 +83,9 @@ public final class SwerveConstants {
    * Drive Motor Characterization Values Divide SYSID values by 12 to convert from volts to percent
    * output for CTRE
    */
-  public static final double driveKS = (0.21583 / 12.0); // TODO: This must be tuned cuz its bad
-  public static final double driveKV = (1.7616 / 12.0);
-  public static final double driveKA = (0.21552 / 12.0);
+  public static final double driveKS = (0.10163 / 12.0); // TODO: This must be tuned cuz its bad
+  public static final double driveKV = (1.8382 / 12.0);
+  public static final double driveKA = (0.14572 / 12.0);
 
   /* Swerve Profiling Values */
   /** Meters per Second */
@@ -109,6 +109,7 @@ public final class SwerveConstants {
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, kS, kV, kA);
   }
@@ -122,6 +123,7 @@ public final class SwerveConstants {
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, kS, kV, kA);
   }
@@ -135,6 +137,8 @@ public final class SwerveConstants {
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
+
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, kS, kV, kA);
   }
@@ -148,6 +152,8 @@ public final class SwerveConstants {
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
+
+
     public static final SwerveModuleConstants constants =
         new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, kS, kV, kA);
   }

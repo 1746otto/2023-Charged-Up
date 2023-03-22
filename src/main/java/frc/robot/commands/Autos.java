@@ -16,6 +16,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -154,10 +155,12 @@ public final class Autos {
     List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
 
     for (PathPlannerTrajectory traj : pathGroup) {
-      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
-          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
-          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(
+          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
+              new PIDController(79.89, 0, 4.1824), new PIDController(79.89, 0, 4.1824),
+              new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
     }
+    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(), pathGroup.get(0).getInitialPose());
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
@@ -166,11 +169,8 @@ public final class Autos {
     // Make the auton command
     SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        controllerGroup.get(0),
+        controllerGroup.get(0));
 
-        controllerGroup.get(1));
-    // Add the requirments for the command
-    autonCommmand.addRequirements(swerve);
 
 
     return autonCommmand;
