@@ -157,10 +157,11 @@ public final class Autos {
     for (PathPlannerTrajectory traj : pathGroup) {
       controllerGroup.add(
           new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(79.89, 0, 4.1824), new PIDController(79.89, 0, 4.1824),
-              new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+              new PIDController(2.2, 0.2, .05), new PIDController(2.2, 0.2, .05),
+              new PIDController(2.95, 0, 0.1325), swerve::setModuleStates, true, swerve));
     }
-    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(), pathGroup.get(0).getInitialPose());
+    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+        pathGroup.get(0).getInitialPose());
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
