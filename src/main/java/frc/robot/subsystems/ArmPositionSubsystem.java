@@ -21,7 +21,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armMotor.config_kD(0, 0);
     // armMotor.configMotionAcceleration(1000);
     armEncoder = new WPI_CANCoder(ArmConstants.kCANCoderID);
-    armEncoder.setPosition(0);
+    // armEncoder.setPosition(0);
   }
 
   public void armToCustom(double reqPosition) {
