@@ -26,8 +26,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   public void armToCustom(double reqPosition) {
     armMotor.set(TalonFXControlMode.Position,
-        Conversions.degreesToFalcon(Conversions
-            .CANcoderToDegrees(ArmConstants.kArmIntakeAndScorePos, ArmConstants.kArmGearRatio),
+        Conversions.degreesToFalcon(
+            Conversions.CANcoderToDegrees(reqPosition, ArmConstants.kArmGearRatio),
             ArmConstants.kArmGearRatio));
   }
 
