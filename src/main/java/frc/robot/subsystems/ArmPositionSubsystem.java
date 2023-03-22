@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import frc.robot.constants.ArmConstants;
 
 public class ArmPositionSubsystem extends SubsystemBase {
-  // TODO: Change data types to correct types
   private TalonFX armMotor;
   private double armEncoder;
 
@@ -15,20 +14,17 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armMotor.configStatorCurrentLimit(null);
   }
 
-  public void armToIntakeOrScore() {
-    armMotor.set(TalonFXControlMode.Position, ArmConstants.kArmIntakeAndScorePos);
+  public void armToCustom(double reqPosition) {
+    armMotor.set(TalonFXControlMode.Position, reqPosition);
   }
 
-  public void armToRest() {
-    armMotor.set(TalonFXControlMode.Position, ArmConstants.kArmRestPos);
-  }
-
-  public double getArmEncoderValues() {
-    return armEncoder;
+  public void armStop() {
+    armMotor.set(TalonFXControlMode.PercentOutput, 0);
   }
 
   @Override
   public void periodic() {
     armEncoder = armMotor.getSelectedSensorPosition();
+    System.out.println(armEncoder);
   }
 }

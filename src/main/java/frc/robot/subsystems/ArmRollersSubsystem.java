@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import frc.robot.constants.ArmConstants;
 
 public class ArmRollersSubsystem extends SubsystemBase {
-  // TODO: Change data types to correct types
   private TalonFX armRollerMotor;
 
   public ArmRollersSubsystem() {
