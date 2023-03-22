@@ -10,6 +10,7 @@ public class ArmRollersSubsystem extends SubsystemBase {
 
   public ArmRollersSubsystem() {
     armRollerMotor = new TalonFX(ArmConstants.kArmRollerMotorID);
+    armRollerMotor.configStatorCurrentLimit(null);
   }
 
   public void armRollerIntake() {

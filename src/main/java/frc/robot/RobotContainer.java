@@ -1,6 +1,5 @@
 package frc.robot;
 
-
 import frc.robot.Autos.BalanceAuton;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
@@ -180,10 +179,9 @@ public class RobotContainer {
 
     // ----Operator Controls----
 
-    // Elevator goes down to the origin position
+    // Elevator goes down to the origin position and arm goes in rest position
     operatorA.onTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)
-            .withTimeout(1));
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
     // Elevator moves up to low position
     operatorB.onTrue(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kLowPosition));
