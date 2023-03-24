@@ -7,20 +7,21 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import frc.lib.math.Conversions;
 import frc.robot.constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenix.sensors.CANCoder;
 
 public class ArmPositionSubsystem extends SubsystemBase {
   private TalonFX armMotor;
-  private WPI_CANCoder armEncoder;
+  private CANCoder armEncoder;
   private BaseTalonPIDSetConfiguration armPIDController;
 
   public ArmPositionSubsystem() {
     armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
     armPIDController = new BaseTalonPIDSetConfiguration(FeedbackDevice.Analog);
-    armMotor.config_kP(0, 0);
+    armMotor.config_kP(0, ArmConstants.kArmP);
+    armMotor.config_kD(0, 0);
     armMotor.config_kD(0, 0);
     // armMotor.configMotionAcceleration(1000);
-    armEncoder = new WPI_CANCoder(ArmConstants.kCANCoderID);
+    armEncoder = new CANCoder(ArmConstants.kCANCoderID);
     // armEncoder.setPosition(0);
   }
 

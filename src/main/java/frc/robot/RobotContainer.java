@@ -12,7 +12,9 @@ import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroOutElevatorCommand;
+import frc.robot.commands.basic.ArmPositionStopCommand;
 import frc.robot.commands.basic.ArmRollerIntakeCommand;
+import frc.robot.commands.basic.ArmRollerOuttakeCommand;
 import frc.robot.commands.basic.ArmRollerStopCommand;
 import frc.robot.commands.basic.ArmRunToRequestCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
@@ -198,8 +200,27 @@ public class RobotContainer {
     // Arm rollers intake or outtake
     operatorRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
     operatorRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
+    // Arm goes in rest position
+    operatorBack.onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
+    // Arm goes to score and intake position
+    operatorLeftBumper
+        .onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
+    operatorRightTrigger.toggleOnTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
+    operatorRightTrigger.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
     // Elevator runs down to beam break to get the zero position.
-    operatorLeftBumper.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+    operatorStart.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+
+    operatorLeftTrigger.toggleOnTrue(new ParallelCommandGroup(
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos),
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
+    operatorLeftTrigger.toggleOnTrue(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kConeIntakePos));
+
+    operatorLeftTrigger
+        .toggleOnFalse(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
+    operatorLeftTrigger.toggleOnFalse(new ParallelCommandGroup(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition),
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
   }
 
   public void enableCompressor() {
