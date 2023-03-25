@@ -1,8 +1,6 @@
 package frc.robot;
 
-
 import frc.robot.Autos.BalanceAuton;
-import frc.robot.commands.AutomaticIntakeClamperCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.DriveBackTo5DegreesCommand;
@@ -10,28 +8,18 @@ import frc.robot.commands.DriveForwardsCommand;
 import frc.robot.commands.DriveOverChargeStationCommand;
 import frc.robot.commands.DriveTo5DegreesCommand;
 import frc.robot.commands.FourDimensionalBalancingCommand;
-import frc.robot.commands.FullOutakeCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroOutElevatorCommand;
+import frc.robot.commands.basic.ArmPositionStopCommand;
+import frc.robot.commands.basic.ArmRollerIntakeCommand;
+import frc.robot.commands.basic.ArmRollerOuttakeCommand;
+import frc.robot.commands.basic.ArmRollerStopCommand;
+import frc.robot.commands.basic.ArmRunToRequestCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
-import frc.robot.commands.basic.ClamperCloseCommand;
-import frc.robot.commands.basic.ClamperOpenCommand;
-import frc.robot.commands.basic.FlapCloseCommand;
-import frc.robot.commands.basic.FlapOpenCommand;
-import frc.robot.commands.basic.IndexerRollerIntakeCommand;
-import frc.robot.commands.basic.IndexerRollerStopCommand;
 import frc.robot.commands.basic.ElevatorRunUpCommand;
-import frc.robot.commands.basic.IndexerTreadIntakeCommand;
-import frc.robot.commands.basic.IndexerTreadScoreCommand;
-import frc.robot.commands.basic.IndexerTreadStopCommand;
-import frc.robot.commands.basic.IntakeExtensionExtendCommand;
-import frc.robot.commands.basic.IntakeExtensionRetractCommand;
-import frc.robot.commands.basic.IntakeRollerIntakeCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
-import frc.robot.commands.basic.PlungerExtendCommand;
-import frc.robot.commands.basic.PlungerRetractCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -40,11 +28,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.RobotConstants;
@@ -53,9 +41,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.ElevatorRunToRequestCommand;
-import frc.robot.commands.IndexerCommand;
-import frc.robot.commands.IndexerRunTreadAndRollers;
-import frc.robot.commands.RetractStopIntakeCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -68,7 +53,7 @@ import frc.robot.commands.BalancingCommand;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  public final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /* Controllers */
   private final XboxController m_driver = new XboxController(ControllerConstants.kDriverPort);
@@ -82,7 +67,8 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton driverStart =
       new JoystickButton(m_driver, XboxController.Button.kStart.value);
-
+  private final JoystickButton driverBack =
+      new JoystickButton(m_driver, XboxController.Button.kBack.value);
   private final JoystickButton driverY =
       new JoystickButton(m_driver, XboxController.Button.kY.value);
   private final JoystickButton driverB =
@@ -91,9 +77,9 @@ public class RobotContainer {
       new JoystickButton(m_driver, XboxController.Button.kA.value);
   private final JoystickButton driverX =
       new JoystickButton(m_driver, XboxController.Button.kX.value);
-  private final JoystickButton driverLBumper =
+  private final JoystickButton driverLeftBumper =
       new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton driverRBumper =
+  private final JoystickButton driverRightBumper =
       new JoystickButton(m_driver, XboxController.Button.kRightBumper.value);
   private final BooleanSupplier driverLTriggerSupplier = () -> {
     return 0 != Math.round(m_driver.getLeftTriggerAxis());
@@ -135,48 +121,32 @@ public class RobotContainer {
   };
   private final Trigger operatorRightTrigger = new Trigger(operatorRightTriggerSupplier);
   private final Trigger operatorLeftTrigger = new Trigger(operatorLeftTriggerSupplier);
+
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
-  private final IntakeRollerSubsystem m_intakeRollerSubsystem = new IntakeRollerSubsystem();
-  private final IntakeExtensionSubsystem m_intakeExtensionSubsystem =
-      new IntakeExtensionSubsystem();
-  private final IndexerTreadSubsystem m_indexerTreadSubsystem = new IndexerTreadSubsystem();
-  private final IndexerRollerSubsystem m_indexerRollerSubsystem = new IndexerRollerSubsystem();
-  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-  private final PlungerSubsystem m_plungerSubsystem = new PlungerSubsystem();
-  private final ClamperSubsystem m_clamperSubsystem = new ClamperSubsystem();
-  private final FlapSubsystem m_flapSubsystem = new FlapSubsystem();
+  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
+  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+  private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
+  private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
 
-  private final Compressor m_compressor =
-      new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
-  private final Autos autos = new Autos(s_Swerve, m_scoringAlignCommand,
-      new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition),
-      new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition),
-      new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition),
-      new FlapOpenCommand(m_flapSubsystem), new FlapCloseCommand(m_flapSubsystem),
-      new PlungerExtendCommand(m_plungerSubsystem), new PlungerRetractCommand(m_plungerSubsystem),
-      new ClamperOpenCommand(m_clamperSubsystem), new ClamperCloseCommand(m_clamperSubsystem),
-      new DriveTo5DegreesCommand(s_Swerve), new DriveBackTo5DegreesCommand(s_Swerve),
-      new BalancingCommand(s_Swerve), new DriveOverChargeStationCommand(s_Swerve),
-      new DriveForwardsCommand(s_Swerve),
-      new IndexerRunTreadAndRollers(new IndexerRollerIntakeCommand(m_indexerRollerSubsystem),
-          new IndexerTreadIntakeCommand(m_indexerTreadSubsystem)),
-      new IndexerTreadStopCommand(m_indexerTreadSubsystem),
-      new IndexerRollerStopCommand(m_indexerRollerSubsystem));
-
-  private double elevatorSetPoint;
+  private final Autos autos = new Autos(s_Swerve, m_VisionSubsystem, m_ElevatorSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    disableCompressor();
 
-    m_chooser.setDefaultOption("Auton1", "Auton1");
-    m_chooser.addOption("Auton2", "Auton2");
-    SmartDashboard.putData(m_chooser);
-    disableCompressor();
+
+    // Auton Selector
+    m_chooser.setDefaultOption("Score only", autos.scoreOne());
+    m_chooser.addOption("Cone,Cube,Cone Top", autos.Bruh());
+    m_chooser.addOption("Bottom Cube Cone", autos.PathPlannerInnerAuton5SquareTriangle());
+    m_chooser.addOption("Top Cube,Balance ", autos.PathPlannerOuterAutonCubeBalance());
+    m_chooser.addOption("Bottom Cone,Balance ", autos.PathPlannerOuterAutonConeBalance());
+    m_chooser.addOption("Top Cube Cone Balance ", autos.pathplannerOuterAuton2ConeCubeBalance());
+    SmartDashboard.putData("Auton Selector: ", m_chooser);
+
 
     // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
     configureDefaultCommands();
@@ -197,13 +167,7 @@ public class RobotContainer {
          */
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
-            DriverStation::getAlliance
-
-        )
-
-    );
-
-
+            DriverStation::getAlliance));
   }
 
   /**
@@ -213,84 +177,59 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    driverX.toggleOnTrue(new XLockCommand(s_Swerve)); // MAKE THIS XLOCK
-    // driverB.toggleOnTrue(new BalanceSpeedCommand());
-    // driverB.toggleOnFalse(new NormalSpeedCommand());
-    /*
-     * driverB.onTrue(new SequentialCommandGroup(new ClamperCloseCommand(m_clamperSubsystem), new
-     * ParallelCommandGroup(new IndexerRollerStopCommand(m_indexerRollerSubsystem), new
-     * IndexerTreadStopCommand(m_indexerTreadSubsystem))));
-     */
-    driverLBumper.toggleOnTrue(new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem));
-    driverRBumper.toggleOnTrue(new IntakeExtensionRetractCommand(m_intakeExtensionSubsystem));
-    driverRightTrigger.toggleOnTrue(new FlapCloseCommand(m_flapSubsystem) // we need to test the
-                                                                          // triggers
-        .andThen(new IntakeExtensionExtendCommand(m_intakeExtensionSubsystem)).andThen(
-            new AutomaticIntakeClamperCommand(m_indexerRollerSubsystem, m_indexerTreadSubsystem,
-                m_intakeRollerSubsystem, m_clamperSubsystem, m_intakeExtensionSubsystem)));
-    driverLeftTrigger.toggleOnTrue(
-        new RetractStopIntakeCommand(m_intakeRollerSubsystem, m_intakeExtensionSubsystem));
+    // ----Driver Controls----
+
+    // Elevator goes down to the origin position
+    driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
+    driverA.whileFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
+    // Elevator moves up to mid position
+    driverB.onTrue(new SequentialCommandGroup(new WaitCommand(0.3),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+    driverB.onTrue(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
+    // Elevator moves up to origin position
+    driverX.onTrue(new ParallelCommandGroup(
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new SequentialCommandGroup(new WaitCommand(0.4), new ElevatorRunToRequestCommand(
+            m_ElevatorSubsystem, ElevatorConstants.kOriginPosition))));
+    // Elevator moves up to high position
+    driverY.onTrue(new SequentialCommandGroup(new WaitCommand(0.3),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+    driverY.onTrue(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
+    // Arm rollers intake or outtake
+    // driverRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    // driverRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
+    // Robots x locks for balancing
+    driverBack.onTrue(new XLockCommand(s_Swerve));
+    // Low Scoring
+    driverLeftBumper.onTrue(new SequentialCommandGroup());
+    // Cube intaking
+
+    // Cone intaking
+    driverRightBumper
+        .onTrue(
+            new SequentialCommandGroup(
+                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+                    new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
+                        ElevatorConstants.kConeIntakePos),
+                    new SequentialCommandGroup(new WaitCommand(0.4),
+                        new ArmRunToRequestCommand(m_ArmPosSubystem,
+                            ArmConstants.kArmIntakeAndScorePos))),
+                new ParallelCommandGroup(
+                    new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+                    new SequentialCommandGroup(new WaitCommand(0.2),
+                        new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
+                            ElevatorConstants.kOriginPosition)))));
 
 
-    operatorStart.whileTrue(
-        new ParallelCommandGroup(new IndexerRollerIntakeCommand(m_indexerRollerSubsystem),
-            new IndexerTreadIntakeCommand(m_indexerTreadSubsystem),
-            new ClamperOpenCommand(m_clamperSubsystem)));
-    operatorStart
-        .onFalse(new ParallelCommandGroup(new IndexerRollerStopCommand(m_indexerRollerSubsystem),
-            new IndexerTreadStopCommand(m_indexerTreadSubsystem),
-            new ClamperCloseCommand(m_clamperSubsystem)));
-    // Elevator goes down to the origin position and then the flap closes
-    operatorA.onTrue(new ParallelCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new PlungerRetractCommand(m_plungerSubsystem),
-        new IndexerRollerStopCommand(m_indexerRollerSubsystem)));
-    operatorA.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kOriginPosition)
-            .withTimeout(1).andThen(new FlapCloseCommand(m_flapSubsystem)));
-    // Flap opens and then the elevator moves up to low position
-    operatorB.onTrue(new FlapOpenCommand(m_flapSubsystem)
-        .andThen(new ParallelCommandGroup(new PlungerRetractCommand(m_plungerSubsystem))));
-
-    operatorB.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kLowPosition));
-    // Flap opens and then the elevator moves up to middle position
-    operatorX.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new PlungerRetractCommand(m_plungerSubsystem)));
-    operatorX.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kMidPosition));
-    // Flap opens and then the elevator moves up to high position
-    operatorY.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new PlungerRetractCommand(m_plungerSubsystem)));
-    operatorY.onTrue(
-        new ElevatorRunToRequestCommand(m_elevatorSubsystem, ElevatorConstants.kHighPosition));
-    // Elevator runs up and goes back down to beam break to get the zero position.
-    operatorLeftBumper.onTrue(new SequentialCommandGroup(new FlapOpenCommand(m_flapSubsystem),
-        new ZeroOutElevatorCommand(m_elevatorSubsystem), new FlapCloseCommand(m_flapSubsystem)));
-    // Plunger extends and then opens the clamper
-    operatorRightBumper
-        .onTrue(new SequentialCommandGroup(new PlungerExtendCommand(m_plungerSubsystem),
-            new WaitCommand(.5), new ClamperOpenCommand(m_clamperSubsystem), new WaitCommand(0.25),
-            new PlungerRetractCommand(m_plungerSubsystem)));
-    operatorLeftJoystick
-        .onTrue(new SequentialCommandGroup(new ClamperCloseCommand(m_clamperSubsystem),
-            new ParallelCommandGroup(new IndexerRollerStopCommand(m_indexerRollerSubsystem),
-                new IndexerTreadStopCommand(m_indexerTreadSubsystem))));
-    operatorRightTrigger
-        .whileTrue(new FullOutakeCommand(m_indexerRollerSubsystem, m_intakeRollerSubsystem,
-            m_indexerTreadSubsystem, m_clamperSubsystem, m_intakeExtensionSubsystem));
+    // Elevator runs down to beam break to get the zero position.
+    operatorStart.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
 
-  public void enableCompressor() {
-    m_compressor.enableDigital();
-  }
-
-  public void disableCompressor() {
-    m_compressor.disable();
-  }
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.scoreOneBalance();
+    return m_chooser.getSelected();
   }
 }
