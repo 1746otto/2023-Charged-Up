@@ -35,6 +35,14 @@ public class VisionSubsystem extends SubsystemBase {
     } else {
       alliance = 0;
     }
+    llResults = LimeLightHelpers.getLatestResults(kLimeLightName);
+    validTarget = false;
+    xOffset = 0;
+    yOffset = 0;
+    pipeLatency = 0;
+    captureLatency = 0;
+    getpipe = 0;
+    tagID = 0;
   }
 
   public void fetchvision() {
@@ -51,7 +59,6 @@ public class VisionSubsystem extends SubsystemBase {
       tagID = (int) NetworkTableInstance.getDefault().getTable(kLimeLightName).getEntry("tid")
           .getDouble(0.0);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
     }
   }
 
@@ -93,6 +100,10 @@ public class VisionSubsystem extends SubsystemBase {
 
   public int getAlliance() {
     return alliance;
+  }
+
+  public double getTotalLatency() {
+    return (captureLatency + pipeLatency);
   }
 
   public pipelineStates getPipline() {

@@ -2,20 +2,21 @@ package frc.robot;
 
 
 import frc.robot.Autos.BalanceAuton;
+import frc.robot.commands.AutomaticResetOdometryCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.DriveBackTo5DegreesCommand;
 import frc.robot.commands.DriveForwardsCommand;
-import frc.robot.commands.DriveOverChargeStationCommand;
+// import frc.robot.commands.DriveOverChargeStationCommand;
 import frc.robot.commands.DriveTo5DegreesCommand;
-import frc.robot.commands.FourDimensionalBalancingCommand;
+// import frc.robot.commands.FourDimensionalBalancingCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.commands.XLockCommand;
+// import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroOutElevatorCommand;
-import frc.robot.commands.basic.BalanceSpeedCommand;
-import frc.robot.commands.basic.ElevatorRunUpCommand;
-import frc.robot.commands.basic.NormalSpeedCommand;
+// import frc.robot.commands.basic.BalanceSpeedCommand;
+// import frc.robot.commands.basic.ElevatorRunUpCommand;
+// import frc.robot.commands.basic.NormalSpeedCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -50,6 +51,12 @@ import frc.robot.commands.BalancingCommand;
  */
 public class RobotContainer {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  public AutomaticResetOdometryCommand getResetOdometryCommand() {
+    return (new AutomaticResetOdometryCommand(() -> m_VisionSubsystem.getNumTags(),
+        s_Swerve::getPose, m_VisionSubsystem::getPose2d, m_VisionSubsystem::getTotalLatency,
+        (pose, latency) -> s_Swerve.addVisionMeasurement(pose, latency)));
+  }
 
   /* Controllers */
   private final XboxController m_driver = new XboxController(ControllerConstants.kDriverPort);
@@ -118,7 +125,7 @@ public class RobotContainer {
   private final Trigger operatorLeftTrigger = new Trigger(operatorLeftTriggerSupplier);
 
   /* Subsystems */
-  private final Swerve s_Swerve = new Swerve();
+  public final Swerve s_Swerve = new Swerve();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
@@ -137,6 +144,7 @@ public class RobotContainer {
     m_chooser.addOption("Auton2", "Auton2");
     SmartDashboard.putData(m_chooser);
     disableCompressor();
+
 
     // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
     configureDefaultCommands();
@@ -176,7 +184,7 @@ public class RobotContainer {
     // ----Driver Controls----
 
     driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    driverX.toggleOnTrue(new XLockCommand(s_Swerve));
+    // driverX.toggleOnTrue(new XLockCommand(s_Swerve));
     // driverLBumper.toggleOnTrue();
     // driverRBumper.toggleOnTrue();
     // driverRightTrigger.toggleOnTrue();

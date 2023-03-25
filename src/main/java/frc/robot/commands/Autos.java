@@ -74,10 +74,10 @@ public final class Autos {
         new BalancingCommand(swerve));
   }
 
-  public Command moveBalance() {
-    return new SequentialCommandGroup(resetGyroCommand, new DriveOverChargeStationCommand(swerve),
-        new DriveBackTo5DegreesCommand(swerve), new BalancingCommand(swerve));
-  }
+  // public Command moveBalance() {
+  // return new SequentialCommandGroup(resetGyroCommand, new DriveOverChargeStationCommand(swerve),
+  // new DriveBackTo5DegreesCommand(swerve), new BalancingCommand(swerve));
+  // }
 
   public Command scoreOne() {
     // The reason we need these wait commands because the commands end when the solenoid is set to
