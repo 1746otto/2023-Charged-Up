@@ -53,6 +53,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotor.stopMotor();
   }
 
+  public boolean isElevatorAtReq(double reqPosition) {
+    return (getElevatorEncoderValues() == reqPosition);
+  }
+
   public boolean beamBreakBroken() {
     return beamBreakLastState;
   }

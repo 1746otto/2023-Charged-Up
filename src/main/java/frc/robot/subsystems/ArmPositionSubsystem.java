@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.BooleanSupplier;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -38,6 +39,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   public boolean isAtOrigin() {
     return (armEncoder.getPosition() == 0);
+  }
+
+  public boolean armAtReq(double reqPosition) {
+    return (armEncoder.getPosition() == reqPosition);
   }
 
   @Override

@@ -211,12 +211,16 @@ public class RobotContainer {
                 new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
                     new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
                         ElevatorConstants.kConeIntakePos),
-                    new SequentialCommandGroup(new WaitCommand(0.4),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
+                            .isElevatorAtReq(ElevatorConstants.kConeIntakePos)),
                         new ArmRunToRequestCommand(m_ArmPosSubystem,
                             ArmConstants.kArmIntakeAndScorePos))),
                 new ParallelCommandGroup(
                     new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-                    new SequentialCommandGroup(new WaitCommand(0.2),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.2)
+                            .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
                         new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
                             ElevatorConstants.kOriginPosition)))));
 
