@@ -137,8 +137,7 @@ public final class Autos {
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           pathGroup.get(0).getInitialHolonomicPose());
     }
-    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        pathGroup.get(0).getInitialPose());
+
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
     List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
@@ -172,6 +171,90 @@ public final class Autos {
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Example Path",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    swerve.gyro.setYaw(0);
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+          new Pose2d(
+              pathGroup.get(0).getInitialHolonomicPose().getTranslation()
+                  .plus(new Translation2d(3.8544499898, 0)),
+              pathGroup.get(0).getInitialHolonomicPose().getRotation()
+                  .plus(Rotation2d.fromDegrees(180))));
+    } else {
+      swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+          pathGroup.get(0).getInitialHolonomicPose());
+    }
+
+    // Then we use the position we got from vision to get our actual initial pose and make a
+    // trajectory to go to it.
+    // PathPlannerTrajectory goToStart = PathPlanner.generatePath(
+    // new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+    // AutoConstants.kMaxAccelerationMetersPerSecondSquared),
+    // new PathPoint(new Translation2d(m_swerve.getPose().getX(), m_swerve.getPose().getY()),
+    // Rotation2d.fromDegrees(0), m_swerve.getPose().getRotation()),
+    // new PathPoint(
+    // new Translation2d(pathGroup.get(0).getInitialState().poseMeters.getX(),
+    // pathGroup.get(0).getInitialState().poseMeters.getY()),
+    // pathGroup.get(0).getInitialState().poseMeters.getRotation(),
+    // pathGroup.get(0).getInitialState().holonomicRotation));
+
+    // Next we must pass the trajectory into a command that follows it.
+    // Currently this commmand is commented out because we don't have a limelight.
+    // PPSwerveControllerCommand goToStartCommand =
+    // new PPSwerveControllerCommand(
+    // goToStart,
+    // m_swerve::getPose,
+    // SwerveConstants.swerveKinematics,
+    // new PIDController(0, 0, 0),
+    // new PIDController(0, 0, 0),
+    // new PIDController(0, 0, 0),
+    // m_swerve::setModuleStates,
+    // true,
+    // m_swerve
+    // )
+    // ;
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+    }
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("do sumthin", new InstantCommand(() -> {
+      // do sumthin here
+    }));
+    eventMap.put("do sumthin else", new InstantCommand(() -> {
+      // do sumthin else here
+    }));
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0),
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+        controllerGroup.get(2));
+    // Add the requirments for the command
+    autonCommmand.addRequirements(swerve);
+
+
+    return autonCommmand;
+
+  }
+
+
+  public Command driveForwards() {
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
 
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("driveforwardtesting",
         new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
@@ -188,8 +271,7 @@ public final class Autos {
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           pathGroup.get(0).getInitialHolonomicPose());
     }
-    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        pathGroup.get(0).getInitialPose());
+
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
     // Then we use the position we got from vision to get our actual initial pose and make a
@@ -273,8 +355,7 @@ public final class Autos {
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           pathGroup.get(0).getInitialHolonomicPose());
     }
-    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        pathGroup.get(0).getInitialPose());
+
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
     List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
@@ -327,8 +408,7 @@ public final class Autos {
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           pathGroup.get(0).getInitialHolonomicPose());
     }
-    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        pathGroup.get(0).getInitialPose());
+
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
     List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
@@ -381,8 +461,7 @@ public final class Autos {
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           pathGroup.get(0).getInitialHolonomicPose());
     }
-    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        pathGroup.get(0).getInitialPose());
+
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
     List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
@@ -435,8 +514,7 @@ public final class Autos {
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           pathGroup.get(0).getInitialHolonomicPose());
     }
-    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        pathGroup.get(0).getInitialPose());
+
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
     List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
