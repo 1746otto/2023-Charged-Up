@@ -192,6 +192,7 @@ public final class Autos {
     SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
         controllerGroup.get(0));
+    controllerGroup.get(1);
 
 
 
