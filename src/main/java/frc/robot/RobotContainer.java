@@ -196,26 +196,29 @@ public class RobotContainer {
     driverY.onTrue(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
     // Arm rollers intake or outtake
-    driverRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
-    driverRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
+    // driverRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    // driverRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
     // Robots x locks for balancing
     driverBack.onTrue(new XLockCommand(s_Swerve));
-    // Arm goes to score and intake position
-    driverLeftBumper
-        .onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
+    // Low Scoring
+    driverLeftBumper.onTrue(new SequentialCommandGroup());
+    // Cube intaking
 
-    driverLeftTrigger.toggleOnTrue(new ParallelCommandGroup(
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos),
-        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
-    driverLeftTrigger.toggleOnTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kConeIntakePos));
-
-    driverLeftTrigger.toggleOnFalse(new ParallelCommandGroup(
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
-    driverLeftTrigger.toggleOnFalse(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
-
+    // Cone intaking
+    driverRightBumper
+        .onTrue(
+            new SequentialCommandGroup(
+                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+                    new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
+                        ElevatorConstants.kConeIntakePos),
+                    new SequentialCommandGroup(new WaitCommand(0.4),
+                        new ArmRunToRequestCommand(m_ArmPosSubystem,
+                            ArmConstants.kArmIntakeAndScorePos))),
+                new ParallelCommandGroup(
+                    new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+                    new SequentialCommandGroup(new WaitCommand(0.2),
+                        new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
+                            ElevatorConstants.kOriginPosition)))));
 
 
     // Elevator runs down to beam break to get the zero position.
