@@ -131,8 +131,12 @@ public class RobotContainer {
 
 
     // Auton Selector
-    m_chooser.setDefaultOption("scoringAlignCommand", m_scoringAlignCommand);
-    m_chooser.addOption("Simple Auto", autos.exampleAuto());
+    m_chooser.setDefaultOption("DriveForward", autos.exampleAuto());
+    m_chooser.addOption("Cone,Cube,Cone Top", autos.Bruh());
+    m_chooser.addOption("Bottom Cube Cone", autos.PathPlannerInnerAuton5SquareTriangle());
+    m_chooser.addOption("Top Cube,Balance ", autos.PathPlannerOuterAutonCubeBalance());
+    m_chooser.addOption("Bottom Cone,Balance ", autos.PathPlannerOuterAutonConeBalance());
+    m_chooser.addOption("Top Cube Cone Balance ", autos.pathplannerOuterAuton2ConeCubeBalance());
 
 
 
