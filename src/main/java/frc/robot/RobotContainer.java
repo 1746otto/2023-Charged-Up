@@ -133,9 +133,11 @@ public class RobotContainer {
   public RobotContainer() {
     disableCompressor();
 
-    m_chooser.setDefaultOption("Auton1", "Auton1");
-    m_chooser.addOption("Auton2", "Auton2");
-    SmartDashboard.putData(m_chooser);
+    // Auton Selector
+    m_chooser.setDefaultOption("Simple Auto", Autos.exampleAuto);
+    m_chooser.addOption("Complex Auto", m_complexAuto);
+
+
     disableCompressor();
 
     // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);

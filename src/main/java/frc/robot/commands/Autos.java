@@ -114,6 +114,59 @@ public final class Autos {
     return new DriveForwardsCommand(swerve).beforeStarting(resetGyroCommand);
   }
 
+  public Command exampleAuto0() {
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+
+    List<PathPlannerTrajectory> pathGroup =
+        // Change "4" to valid path planner program
+        PathPlanner.loadPathGroup("4", true,
+            new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    swerve.gyro.setYaw(0);
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+          new Pose2d(
+              pathGroup.get(0).getInitialHolonomicPose().getTranslation()
+                  .plus(new Translation2d(3.8544499898, 0)),
+              pathGroup.get(0).getInitialHolonomicPose().getRotation()
+                  .plus(Rotation2d.fromDegrees(180))));
+    } else {
+      swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+          pathGroup.get(0).getInitialHolonomicPose());
+    }
+    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+        pathGroup.get(0).getInitialPose());
+    SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
+
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    int i = 0;
+    for (PathPlannerTrajectory traj : pathGroup) {
+      System.out.println(i);
+      i++;
+      controllerGroup.add(
+          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
+              new PIDController(2.2, 0.2, .05), new PIDController(2.2, 0.2, .05),
+              new PIDController(2.95, 0, 0.1325), swerve::setModuleStates, true, swerve));
+    }
+
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        controllerGroup.get(0));
+    controllerGroup.get(1);
+
+
+
+    return autonCommmand;
+  }
 
   public Command exampleAuto() {
     // This is the combined trajectories of autons we want to use.
