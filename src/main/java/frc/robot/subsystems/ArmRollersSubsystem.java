@@ -7,6 +7,7 @@ import frc.robot.constants.ArmConstants;
 
 public class ArmRollersSubsystem extends SubsystemBase {
   private CANSparkMax armRollerMotor;
+  private double current;
 
   public ArmRollersSubsystem() {
     armRollerMotor = new CANSparkMax(ArmConstants.kArmRollerMotorID, MotorType.kBrushless);
@@ -23,5 +24,14 @@ public class ArmRollersSubsystem extends SubsystemBase {
 
   public void armRollerStop() {
     armRollerMotor.stopMotor();
+  }
+
+  public boolean currentBroken() {
+    return (current >= ArmConstants.kArmCurrentMax);
+  }
+
+  @Override
+  public void periodic() {
+    current = armRollerMotor.getOutputCurrent();
   }
 }

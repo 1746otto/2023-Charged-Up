@@ -36,6 +36,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armMotor.set(TalonFXControlMode.PercentOutput, 0);
   }
 
+  public boolean isAtOrigin() {
+    return (armEncoder.getPosition() == 0);
+  }
+
   @Override
   public void periodic() {
     System.out.println(armEncoder.getPosition());

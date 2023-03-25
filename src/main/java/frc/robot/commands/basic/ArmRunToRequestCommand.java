@@ -20,4 +20,9 @@ public class ArmRunToRequestCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {}
+
+  // @Override
+  // public boolean isFinished() {
+  // return m_Arm.isAtOrigin();
+  // }
 }

@@ -68,7 +68,8 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton driverStart =
       new JoystickButton(m_driver, XboxController.Button.kStart.value);
-
+  private final JoystickButton driverBack =
+      new JoystickButton(m_driver, XboxController.Button.kBack.value);
   private final JoystickButton driverY =
       new JoystickButton(m_driver, XboxController.Button.kY.value);
   private final JoystickButton driverB =
@@ -77,9 +78,9 @@ public class RobotContainer {
       new JoystickButton(m_driver, XboxController.Button.kA.value);
   private final JoystickButton driverX =
       new JoystickButton(m_driver, XboxController.Button.kX.value);
-  private final JoystickButton driverLBumper =
+  private final JoystickButton driverLeftBumper =
       new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton driverRBumper =
+  private final JoystickButton driverRightBumper =
       new JoystickButton(m_driver, XboxController.Button.kRightBumper.value);
   private final BooleanSupplier driverLTriggerSupplier = () -> {
     return 0 != Math.round(m_driver.getLeftTriggerAxis());
@@ -176,57 +177,50 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // ----Driver Controls----
 
-    driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    driverX.toggleOnTrue(new XLockCommand(s_Swerve));
-    // driverLBumper.toggleOnTrue();
-    // driverRBumper.toggleOnTrue();
-    // driverRightTrigger.toggleOnTrue();
-    // driverLeftTrigger.toggleOnTrue();
-
-    // ----Operator Controls----
-
     // Elevator goes down to the origin position
-    operatorA.onTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
-    operatorA.onFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
+    driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
+    driverA.whileFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
     // Elevator moves up to mid position
-    operatorB
-        .onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
-    operatorB.onTrue(
+    driverB.onTrue(new SequentialCommandGroup(new WaitCommand(0.3),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+    driverB.onTrue(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
     // Elevator moves up to origin position
-    operatorX.onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
-    operatorX.onTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
+    driverX.onTrue(new ParallelCommandGroup(
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new SequentialCommandGroup(new WaitCommand(0.4), new ElevatorRunToRequestCommand(
+            m_ElevatorSubsystem, ElevatorConstants.kOriginPosition))));
     // Elevator moves up to high position
-    operatorY
-        .onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
-    operatorY.onTrue(
+    driverY.onTrue(new SequentialCommandGroup(new WaitCommand(0.3),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+    driverY.onTrue(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
     // Arm rollers intake or outtake
-    operatorRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
-    operatorRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
-    // Arm goes in rest position
-    operatorBack.onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
+    driverRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    driverRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
+    // Robots x locks for balancing
+    driverBack.onTrue(new XLockCommand(s_Swerve));
     // Arm goes to score and intake position
-    operatorLeftBumper
+    driverLeftBumper
         .onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
-    // Elevator runs down to beam break to get the zero position.
-    operatorStart.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
 
-    operatorLeftTrigger.toggleOnTrue(new ParallelCommandGroup(
+    driverLeftTrigger.toggleOnTrue(new ParallelCommandGroup(
         new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos),
         new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
-    operatorLeftTrigger.toggleOnTrue(
+    driverLeftTrigger.toggleOnTrue(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kConeIntakePos));
 
-    operatorLeftTrigger.toggleOnFalse(new ParallelCommandGroup(
+    driverLeftTrigger.toggleOnFalse(new ParallelCommandGroup(
         new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
         new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
-    operatorLeftTrigger.toggleOnFalse(
+    driverLeftTrigger.toggleOnFalse(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
+
+
+
+    // Elevator runs down to beam break to get the zero position.
+    operatorStart.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
-
-
 
   public void enableCompressor() {
     m_compressor.enableDigital();

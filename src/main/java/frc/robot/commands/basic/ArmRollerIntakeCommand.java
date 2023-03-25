@@ -20,4 +20,9 @@ public class ArmRollerIntakeCommand extends CommandBase {
   public void end(boolean interrupted) {
     m_Arm.armRollerStop();
   }
+
+  @Override
+  public boolean isFinished() {
+    return m_Arm.currentBroken();
+  }
 }
