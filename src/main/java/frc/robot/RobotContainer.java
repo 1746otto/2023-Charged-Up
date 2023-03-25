@@ -186,17 +186,20 @@ public class RobotContainer {
     // ----Operator Controls----
 
     // Elevator goes down to the origin position
-    operatorA.onTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
+    operatorA.onTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
+    operatorA.onFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
     // Elevator moves up to low position
-    operatorB.onTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kLowPosition));
+    operatorB.onTrue(new SequentialCommandGroup(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
     // Elevator moves up to middle position
-    operatorX.onTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
+    operatorX.onTrue(new SequentialCommandGroup(
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
     // Elevator moves up to high position
-    operatorY.onTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
+    operatorY.onTrue(new SequentialCommandGroup(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
     // Arm rollers intake or outtake
     operatorRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
     operatorRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
@@ -222,6 +225,8 @@ public class RobotContainer {
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition),
         new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
   }
+
+
 
   public void enableCompressor() {
     m_compressor.enableDigital();
