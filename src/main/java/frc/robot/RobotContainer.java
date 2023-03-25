@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -49,7 +48,7 @@ import frc.robot.commands.BalancingCommand;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /* Controllers */
   private final XboxController m_driver = new XboxController(ControllerConstants.kDriverPort);
@@ -122,8 +121,6 @@ public class RobotContainer {
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
-  private final Compressor m_compressor =
-      new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
@@ -131,14 +128,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    disableCompressor();
+
 
     // Auton Selector
-    m_chooser.setDefaultOption("Simple Auto", Autos.exampleAuto);
-    m_chooser.addOption("Complex Auto", m_complexAuto);
+    m_chooser.setDefaultOption("scoringAlignCommand", m_scoringAlignCommand);
+    m_chooser.addOption("Simple Auto", autos.exampleAuto());
 
 
-    disableCompressor();
 
     // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
     configureDefaultCommands();
@@ -203,16 +199,9 @@ public class RobotContainer {
     operatorLeftBumper.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
 
-  public void enableCompressor() {
-    m_compressor.enableDigital();
-  }
-
-  public void disableCompressor() {
-    m_compressor.disable();
-  }
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.exampleAuto();
+    return m_chooser.getSelected();
   }
 }
