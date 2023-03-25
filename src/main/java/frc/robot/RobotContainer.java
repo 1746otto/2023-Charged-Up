@@ -188,18 +188,20 @@ public class RobotContainer {
     // Elevator goes down to the origin position
     operatorA.onTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
     operatorA.onFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
-    // Elevator moves up to low position
-    operatorB.onTrue(new SequentialCommandGroup(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
-    // Elevator moves up to middle position
-    operatorX.onTrue(new SequentialCommandGroup(
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
+    // Elevator moves up to mid position
+    operatorB
+        .onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
+    operatorB.onTrue(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
+    // Elevator moves up to origin position
+    operatorX.onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
+    operatorX.onTrue(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
     // Elevator moves up to high position
-    operatorY.onTrue(new SequentialCommandGroup(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition),
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+    operatorY
+        .onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
+    operatorY.onTrue(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
     // Arm rollers intake or outtake
     operatorRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
     operatorRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
@@ -208,8 +210,6 @@ public class RobotContainer {
     // Arm goes to score and intake position
     operatorLeftBumper
         .onTrue(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
-    operatorRightTrigger.toggleOnTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
-    operatorRightTrigger.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
     // Elevator runs down to beam break to get the zero position.
     operatorStart.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
 
@@ -219,11 +219,11 @@ public class RobotContainer {
     operatorLeftTrigger.toggleOnTrue(
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kConeIntakePos));
 
-    operatorLeftTrigger
-        .toggleOnFalse(new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
     operatorLeftTrigger.toggleOnFalse(new ParallelCommandGroup(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
         new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
+    operatorLeftTrigger.toggleOnFalse(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
   }
 
 
