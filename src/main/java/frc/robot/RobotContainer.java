@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -54,7 +53,7 @@ import frc.robot.commands.BalancingCommand;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  public final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /* Controllers */
   private final XboxController m_driver = new XboxController(ControllerConstants.kDriverPort);
@@ -130,8 +129,6 @@ public class RobotContainer {
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
 
-  private final Compressor m_compressor =
-      new Compressor(RobotConstants.kREVPH, PneumaticsModuleType.REVPH);
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
@@ -139,12 +136,17 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    disableCompressor();
 
-    m_chooser.setDefaultOption("Auton1", "Auton1");
-    m_chooser.addOption("Auton2", "Auton2");
-    SmartDashboard.putData(m_chooser);
-    disableCompressor();
+
+    // Auton Selector
+    m_chooser.setDefaultOption("Score only", autos.scoreOne());
+    m_chooser.addOption("Cone,Cube,Cone Top", autos.Bruh());
+    m_chooser.addOption("Bottom Cube Cone", autos.PathPlannerInnerAuton5SquareTriangle());
+    m_chooser.addOption("Top Cube,Balance ", autos.PathPlannerOuterAutonCubeBalance());
+    m_chooser.addOption("Bottom Cone,Balance ", autos.PathPlannerOuterAutonConeBalance());
+    m_chooser.addOption("Top Cube Cone Balance ", autos.pathplannerOuterAuton2ConeCubeBalance());
+    SmartDashboard.putData("Auton Selector: ", m_chooser);
+
 
     // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
     configureDefaultCommands();
@@ -229,16 +231,9 @@ public class RobotContainer {
     operatorStart.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
 
-  public void enableCompressor() {
-    m_compressor.enableDigital();
-  }
-
-  public void disableCompressor() {
-    m_compressor.disable();
-  }
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.scoreOneBalance();
+    return m_chooser.getSelected();
   }
 }
