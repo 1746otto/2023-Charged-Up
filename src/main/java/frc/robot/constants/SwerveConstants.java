@@ -93,7 +93,7 @@ public final class SwerveConstants {
   /** Radians per Second */
   public static final double maxAngularVelocity = 10; // TODO: This must be tuned to specific robot
 
-  public static final double autonDriveSpeed = 0.425;
+  public static final double autonDriveSpeed = 0.250;
 
   /* Neutral Modes */
   public static NeutralMode angleNeutralMode = NeutralMode.Coast;

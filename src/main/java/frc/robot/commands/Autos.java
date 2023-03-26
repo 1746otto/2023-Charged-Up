@@ -74,8 +74,8 @@ public final class Autos {
   // We are putting the zeroing before the gyro because we don't want to have the issue of not
   // zeroing before the match
   public Command balance() {
-    return new SequentialCommandGroup(resetGyroCommand, new DriveTo5DegreesCommand(swerve),
-        new BalancingCommand(swerve));
+    return new SequentialCommandGroup(new DriveTo5DegreesCommand(swerve),
+        new BalancingCommand2(swerve));
   }
 
   public Command moveBalance() {
