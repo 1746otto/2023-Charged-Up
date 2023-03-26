@@ -207,24 +207,19 @@ public class RobotContainer {
     // Cube intaking
 
     // Cone intaking
-    driverRightBumper
-        .onTrue(
+    driverRightBumper.onTrue(new SequentialCommandGroup(
+        new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kConeIntakePos),
             new SequentialCommandGroup(
-                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                    new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
-                        ElevatorConstants.kConeIntakePos),
-                    new SequentialCommandGroup(
-                        new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
-                            .isElevatorAtReq(ElevatorConstants.kConeIntakePos)),
-                        new ArmRunToRequestCommand(m_ArmPosSubystem,
-                            ArmConstants.kArmIntakeAndScorePos))),
-                new ParallelCommandGroup(
-                    new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-                    new SequentialCommandGroup(
-                        new WaitCommand(0.2)
-                            .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
-                        new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
-                            ElevatorConstants.kOriginPosition)))));
+                new WaitCommand(0.4).until(
+                    () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kConeIntakePos)),
+                new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))),
+        new ParallelDeadlineGroup(new SequentialCommandGroup(
+            new WaitCommand(0.2).until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
+            new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)
+                .until(
+                    () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kOriginPosition)))),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
 
     // Elevator runs down to beam break to get the zero position.

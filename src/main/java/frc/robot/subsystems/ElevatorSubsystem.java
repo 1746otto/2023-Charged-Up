@@ -28,6 +28,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private boolean beamBreakLastState;
   private double currState;
 
+  // Make a vacation home for the elevator
   public ElevatorSubsystem() {
     elevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotor1ID, MotorType.kBrushless);
     beamBreak = new AnalogInput(ElevatorConstants.kElevatorAnalogInputChannel);
