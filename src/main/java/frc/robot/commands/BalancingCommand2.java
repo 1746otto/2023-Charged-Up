@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class BalancingCommand2 extends CommandBase {
-  private final double kP = 0.22;
-  private final double kD = 0.025;
+  private final double kP = (1 / 300.0);
+  private final double kD = (1 / 4000.0);
   private final double kI = 0.0;
 
   private Swerve s_Swerve;
@@ -37,8 +37,7 @@ public class BalancingCommand2 extends CommandBase {
       deltaError = xError - prevError;
       System.out.println("Roll: " + xError);
 
-      speed = kP * Math.sin(xError * Math.PI / 90) + kI * Math.sin(totalError * Math.PI / 120)
-          + kD * velocities[0];
+      speed = kP * xError + kI * totalError + (-kD) * velocities[0];
 
       if (speed > SwerveConstants.autonDriveSpeed) {
         speed = SwerveConstants.autonDriveSpeed;
@@ -65,7 +64,6 @@ public class BalancingCommand2 extends CommandBase {
     System.out.println(velocities[0]);
     System.out.println(Math.floor(s_Swerve.gyro.getRoll() / 2.5) == 0.0);
     System.out.println(Math.floor(velocities[0]) == 0.0);
-    return (Math.floor(s_Swerve.gyro.getRoll() / 2.5) == 0.0)
-        && (Math.floor(velocities[0] / 2.0) == 0.0);
+    return (Math.floor(s_Swerve.gyro.getRoll() / 7.5) == 0.0);
   }
 }

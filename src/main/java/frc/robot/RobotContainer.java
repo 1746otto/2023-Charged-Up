@@ -8,6 +8,7 @@ import frc.robot.commands.DriveForwardsCommand;
 import frc.robot.commands.DriveOverChargeStationCommand;
 import frc.robot.commands.DriveTo5DegreesCommand;
 import frc.robot.commands.FourDimensionalBalancingCommand;
+import frc.robot.commands.OuttakingSequentialCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.XLockCommand;
@@ -179,31 +180,26 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // ----Driver Controls----
 
-    // Elevator goes down to the origin position
-    driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
-    driverA.whileFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
-    // Elevator moves up to mid position
-    driverB.onTrue(new SequentialCommandGroup(new WaitCommand(0.3),
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
-    driverB.onTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
-    // Elevator moves up to origin position
-    driverX.onTrue(new ParallelCommandGroup(
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-        new SequentialCommandGroup(new WaitCommand(0.4), new ElevatorRunToRequestCommand(
-            m_ElevatorSubsystem, ElevatorConstants.kOriginPosition))));
-    // Elevator moves up to high position
-    driverY.onTrue(new SequentialCommandGroup(new WaitCommand(0.3),
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
-    driverY.onTrue(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition));
-    // Arm rollers intake or outtake
-    // driverRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
-    // driverRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem));
-    // Robots x locks for balancing
-    driverBack.onTrue(new XLockCommand(s_Swerve));
-    // Low Scoring
-    driverLeftBumper.onTrue(new SequentialCommandGroup());
+    /*
+     * // Elevator goes down to the origin position driverA.whileTrue(new
+     * ArmRollerOuttakeCommand(m_ArmRollersSubsystem)); driverA.whileFalse(new
+     * ArmRollerStopCommand(m_ArmRollersSubsystem)); // Elevator moves up to mid position
+     * driverB.onTrue(new SequentialCommandGroup(new WaitCommand(0.3), new
+     * ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+     * driverB.onTrue( new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
+     * ElevatorConstants.kMidPosition)); // Elevator moves up to origin position driverX.onTrue(new
+     * ParallelCommandGroup( new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+     * new SequentialCommandGroup(new WaitCommand(0.4), new ElevatorRunToRequestCommand(
+     * m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)))); // Elevator moves up to high
+     * position driverY.onTrue(new SequentialCommandGroup(new WaitCommand(0.3), new
+     * ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+     * driverY.onTrue( new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
+     * ElevatorConstants.kHighPosition)); // Arm rollers intake or outtake //
+     * driverRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem)); //
+     * driverRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem)); // Robots x
+     * locks for balancing driverBack.onTrue(new XLockCommand(s_Swerve)); // Low Scoring
+     * driverLeftBumper.onTrue(new SequentialCommandGroup());
+     */
     // Cube intaking
 
     // Cone intaking
@@ -221,6 +217,14 @@ public class RobotContainer {
                     () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kOriginPosition)))),
         new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
+    /*
+     * driverA.onTrue(new OuttakingSequentialCommand(ElevatorConstants.kLowPosition,
+     * m_ElevatorSubsystem, m_ArmRollersSubsystem, m_ArmPosSubystem)); driverB.onTrue(new
+     * OuttakingSequentialCommand(ElevatorConstants.kMidPosition, m_ElevatorSubsystem,
+     * m_ArmRollersSubsystem, m_ArmPosSubystem)); driverX.onTrue(new
+     * OuttakingSequentialCommand(ElevatorConstants.kHighPosition, m_ElevatorSubsystem,
+     * m_ArmRollersSubsystem, m_ArmPosSubystem));
+     */
 
     // Elevator runs down to beam break to get the zero position.
     operatorStart.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
@@ -229,6 +233,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_chooser.getSelected();
+    return autos.balance();
   }
 }
