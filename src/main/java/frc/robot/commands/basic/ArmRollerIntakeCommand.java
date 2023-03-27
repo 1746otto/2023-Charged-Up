@@ -5,6 +5,7 @@ import frc.robot.subsystems.ArmRollersSubsystem;
 
 public class ArmRollerIntakeCommand extends CommandBase {
   private ArmRollersSubsystem m_Arm;
+  private boolean current;
 
   public ArmRollerIntakeCommand(ArmRollersSubsystem subsystem) {
     m_Arm = subsystem;
@@ -18,11 +19,14 @@ public class ArmRollerIntakeCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_Arm.armRollerStop();
+    if (current) {
+      m_Arm.armRollerStow();
+    }
   }
 
   @Override
   public boolean isFinished() {
-    return m_Arm.currentBroken();
+    current = m_Arm.currentBroken();
+    return current;
   }
 }

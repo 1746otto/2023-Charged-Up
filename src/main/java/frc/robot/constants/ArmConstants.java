@@ -2,14 +2,14 @@ package frc.robot.constants;
 
 public final class ArmConstants {
   // TODO: change values to accurate positions and values
-  public static final double kArmRestPos = 0.0;
-  public static final double kArmIntakeAndScorePos = 332.65;
-  public static final double kArmP = .15;
+  public static final double kArmRestPos = 411.0; // 0.0;
+  public static final double kArmIntakeAndScorePos = 19451; // 332.65;
+  public static final double kArmP = .25;
   public static final double kRollerSpeed = 0.5;
-  public static final double kArmCurrentMax = 70.0;
+  public static final double kRollerStowSpeed = 0.1;
+  public static final double kArmCurrentMax = 70; // 70.0;
   public static final double kArmGearRatio = 3; // 3:1 Previously 9.0
   public static final double kCANTickToFalConversion = .5;
-  // TODO: change ids to real nums
   public static final int kArmPosMotorID = 51;
   public static final int kArmRollerMotorID = 31;
   public static final int kCANCoderID = 0;
