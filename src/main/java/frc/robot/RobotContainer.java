@@ -17,9 +17,8 @@ import frc.robot.commands.basic.ArmPositionStopCommand;
 import frc.robot.commands.basic.ArmRollerIntakeCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
 import frc.robot.commands.basic.ArmRollerStopCommand;
-import frc.robot.commands.basic.ArmRunToRequestCommand;
+import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
-import frc.robot.commands.basic.ElevatorRunUpCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -41,7 +40,7 @@ import frc.robot.constants.SwerveConstants;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import frc.robot.commands.ElevatorRunToRequestCommand;
+import frc.robot.commands.ElevatorRequestSelectorCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -203,19 +202,19 @@ public class RobotContainer {
     // Cube intaking
 
     // Cone intaking
-    driverRightBumper.onTrue(new SequentialCommandGroup(
-        new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-            new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kConeIntakePos),
-            new SequentialCommandGroup(
-                new WaitCommand(0.4).until(
-                    () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kConeIntakePos)),
-                new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))),
+    driverRightBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kConeIntakePos),
+        new SequentialCommandGroup(
+            new WaitCommand(0.4)
+                .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kConeIntakePos)),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))),
         new ParallelDeadlineGroup(new SequentialCommandGroup(
             new WaitCommand(0.2).until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
-            new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)
-                .until(
+            new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+                ElevatorConstants.kOriginPosition).until(
                     () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kOriginPosition)))),
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     /*
      * driverA.onTrue(new OuttakingSequentialCommand(ElevatorConstants.kLowPosition,

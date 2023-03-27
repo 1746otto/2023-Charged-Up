@@ -15,37 +15,38 @@ public class ArmPositionSubsystem extends SubsystemBase {
   private TalonFX armMotor;
   private CANCoder armEncoder;
   private BaseTalonPIDSetConfiguration armPIDController;
+  private double requestPos;
 
   public ArmPositionSubsystem() {
     armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
     armMotor.setNeutralMode(NeutralMode.Brake);
-    armMotor.setSelectedSensorPosition(0);
     armEncoder = new CANCoder(ArmConstants.kCANCoderID);
-    armEncoder.setPosition(0);
     armPIDController = new BaseTalonPIDSetConfiguration(FeedbackDevice.Analog);
     armMotor.config_kP(0, ArmConstants.kArmP);
     armMotor.config_kD(0, 0);
-    armMotor.config_kD(0, 0);
+    armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
+        * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
+                                                                                // Falcon: 20
+    requestPos = ArmConstants.kArmRestPos;
     // armMotor.configMotionAcceleration(1000)
     // armMotor.setInverted(true);
 
   }
 
-  public void armToCustom(double reqPosition) {
-    armMotor.set(TalonFXControlMode.Position,
-        Conversions.degreesToFalcon(reqPosition, ArmConstants.kArmGearRatio));
+  public void armToRequest(double requestedPosition) {
+    armMotor.set(TalonFXControlMode.Position, requestedPosition);
   }
 
   public void armStop() {
     armMotor.set(TalonFXControlMode.PercentOutput, 0);
   }
 
-  public boolean isAtOrigin() {
-    return (armEncoder.getPosition() == 0);
-  }
-
   public boolean armAtReq(double reqPosition) {
     return (armEncoder.getPosition() == reqPosition);
+  }
+
+  public void setRequest(double request) {
+    requestPos = request;
   }
 
   public void armRun() {
@@ -55,5 +56,6 @@ public class ArmPositionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     System.out.println(armEncoder.getPosition());
+    armToRequest(requestPos);
   }
 }

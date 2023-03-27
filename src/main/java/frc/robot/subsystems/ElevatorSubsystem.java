@@ -27,6 +27,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private SparkMaxLimitSwitch limitSwitch;
   private boolean beamBreakLastState;
   private double currState;
+  private double reqPosition;
 
   // Make a vacation home for the elevator
   public ElevatorSubsystem() {
@@ -40,6 +41,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     pidController.setOutputRange(-0.7, 0.7);
     elevatorMotor.setIdleMode(IdleMode.kBrake);
     // elevatorMotor.getEncoder().setPosition(0);
+    reqPosition = ElevatorConstants.kOriginPosition;
   }
 
   public void elevatorRunUp() {
@@ -74,8 +76,19 @@ public class ElevatorSubsystem extends SubsystemBase {
     return currState;
   }
 
-  public void runToRequest(double reqPosition) {
-    pidController.setReference(reqPosition, ControlType.kPosition);
+  public void setElevatorReq(double req) {
+    reqPosition = req;
+  }
+
+  public void runToRequest(double requestPos) {
+    if (limitSwitchActivated() || beamBreakBroken()) {
+      stopElevator();
+      if (beamBreakBroken()) {
+        setPositionTo0();
+      }
+    } else {
+      pidController.setReference(reqPosition, ControlType.kPosition);
+    }
   }
 
   @Override
@@ -83,5 +96,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     beamBreakLastState = (Math.floor(beamBreak.getVoltage()) > 0 && (elevatorMotor.get() < 0));
     // System.out.println("Beam break: " + beamBreakLastState);
     currState = elevatorMotor.getEncoder().getPosition();
+    runToRequest(reqPosition);
   }
 }
