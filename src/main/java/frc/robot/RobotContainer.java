@@ -202,67 +202,73 @@ public class RobotContainer {
     // Cube intaking
 
     // Cone intaking
-    driverRightBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
-        new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kConeIntakePos),
-        new SequentialCommandGroup(
-            new WaitCommand(0.4)
-                .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kConeIntakePos)),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))),
-        new ParallelDeadlineGroup(new SequentialCommandGroup(
-            new WaitCommand(0.2).until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
-            new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-                ElevatorConstants.kOriginPosition).until(
-                    () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kOriginPosition)))),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
-
-    driverLeftBumper
+    driverRightBumper
         .onTrue(
             new SequentialCommandGroup(
                 new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                    new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
+                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+                        ElevatorConstants.kConeIntakePos),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
+                            .isElevatorAtReq(ElevatorConstants.kConeIntakePos)),
+                        new ArmRequestSelectorCommand(m_ArmPosSubystem,
+                            ArmConstants.kArmIntakeAndScorePos))),
+                new ParallelCommandGroup(new SequentialCommandGroup(
+                    new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+                    new WaitCommand(0.2)
+                        .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
+                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+                        ElevatorConstants.kOriginPosition)))));
+
+    driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kCubeIntakePos),
+        new WaitCommand(0.4)
+            .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))));
+
+    driverRightTrigger
+        .onTrue(
+            new SequentialCommandGroup(
+                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
                         ElevatorConstants.kCubeIntakePos),
                     new SequentialCommandGroup(
                         new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
                             .isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
-                        new ArmRunToRequestCommand(m_ArmPosSubystem,
+                        new ArmRequestSelectorCommand(m_ArmPosSubystem,
                             ArmConstants.kArmIntakeAndScorePos))),
-                new ParallelDeadlineGroup(new SequentialCommandGroup(new WaitCommand(0.2)
-                    .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos))))));
+                new ParallelCommandGroup(new SequentialCommandGroup(
+                    new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+                    new WaitCommand(0.2)
+                        .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
+                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+                        ElevatorConstants.kOriginPosition)))));
 
-    driverRightTrigger.onTrue(new SequentialCommandGroup(
-        new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-            new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kCubeIntakePos),
-            new SequentialCommandGroup(
-                new WaitCommand(0.4).until(
-                    () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
-                new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))),
-        new ParallelDeadlineGroup(new SequentialCommandGroup(
-            new WaitCommand(0.2).until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
-            new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)
-                .until(
-                    () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kOriginPosition)))),
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
-
-    driverLeftTrigger
-        .onTrue(new SequentialCommandGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-            new SequentialCommandGroup(
-                new WaitCommand(0.4).until((() -> m_ArmRollersSubsystem.currentBroken())),
-                new ArmRollerStopCommand(m_ArmRollersSubsystem))));
+    driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
 
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
 
     driverB.onTrue(new SequentialCommandGroup(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
+        new WaitCommand(0.5)
+            .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kMidPosition)),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
 
     driverX.onTrue(new SequentialCommandGroup(
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new WaitCommand(0.5).until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kOriginPosition)));
 
     driverY.onTrue(new SequentialCommandGroup(
-        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition),
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition),
+        new WaitCommand(0.5)
+            .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+
+    driverBack.onTrue(new XLockCommand(s_Swerve));
+    driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
 
 
