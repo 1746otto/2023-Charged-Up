@@ -231,6 +231,14 @@ public class RobotContainer {
                     () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kOriginPosition)))),
         new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
+    driverX.onTrue(new SequentialCommandGroup(
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos),
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
+
+    driverY.onTrue(new SequentialCommandGroup(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+
     /*
      * driverA.onTrue(new OuttakingSequentialCommand(ElevatorConstants.kLowPosition,
      * m_ElevatorSubsystem, m_ArmRollersSubsystem, m_ArmPosSubystem)); driverB.onTrue(new
