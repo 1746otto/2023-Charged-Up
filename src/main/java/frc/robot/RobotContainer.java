@@ -232,7 +232,7 @@ public class RobotContainer {
         new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     driverX.onTrue(new SequentialCommandGroup(
-        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
         new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
 
     driverY.onTrue(new SequentialCommandGroup(
