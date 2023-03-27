@@ -92,8 +92,8 @@ public final class Autos {
             new SequentialCommandGroup(new WaitCommand(4.0),
                 new ParallelCommandGroup(new WaitCommand(.375)),
                 new ParallelCommandGroup(new WaitCommand(.25)), new WaitCommand(.375)),
-            new ElevatorRunToRequestCommand(elevatorSubsystem, ElevatorConstants.kHighPosition)),
-        new ElevatorRunToRequestCommand(elevatorSubsystem, ElevatorConstants.kOriginPosition)
+            new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kHighPosition)),
+        new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kOriginPosition)
             .withTimeout(.5));
   }
 
