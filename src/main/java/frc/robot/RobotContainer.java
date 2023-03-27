@@ -216,6 +216,56 @@ public class RobotContainer {
                     () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kOriginPosition)))),
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
+    driverLeftBumper
+        .onTrue(
+            new SequentialCommandGroup(
+                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+                    new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
+                        ElevatorConstants.kCubeIntakePos),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
+                            .isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
+                        new ArmRunToRequestCommand(m_ArmPosSubystem,
+                            ArmConstants.kArmIntakeAndScorePos))),
+                new ParallelDeadlineGroup(new SequentialCommandGroup(new WaitCommand(0.2)
+                    .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos))))));
+
+    driverRightTrigger.onTrue(new SequentialCommandGroup(
+        new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kCubeIntakePos),
+            new SequentialCommandGroup(
+                new WaitCommand(0.4).until(
+                    () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
+                new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))),
+        new ParallelDeadlineGroup(new SequentialCommandGroup(
+            new WaitCommand(0.2).until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
+            new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)
+                .until(
+                    () -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kOriginPosition)))),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+
+    driverLeftTrigger
+        .onTrue(new SequentialCommandGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new SequentialCommandGroup(
+                new WaitCommand(0.4).until((() -> m_ArmRollersSubsystem.currentBroken())),
+                new ArmRollerStopCommand(m_ArmRollersSubsystem))));
+
+    driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
+
+    driverB.onTrue(new SequentialCommandGroup(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
+
+    driverX.onTrue(new SequentialCommandGroup(
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)));
+
+    driverY.onTrue(new SequentialCommandGroup(
+        new ElevatorRunToRequestCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition),
+        new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+
+
+
     /*
      * driverA.onTrue(new OuttakingSequentialCommand(ElevatorConstants.kLowPosition,
      * m_ElevatorSubsystem, m_ArmRollersSubsystem, m_ArmPosSubystem)); driverB.onTrue(new
@@ -234,4 +284,5 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return autos.Bruh();
   }
+
 }
