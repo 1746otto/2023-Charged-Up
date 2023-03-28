@@ -46,6 +46,9 @@ public final class Autos {
   ElevatorSubsystem elevatorSubsystem;
 
   private boolean hasZeroed = false;
+  String[] pathNames = {"PathPlannerOuterAutonFiveTriangleSquareTriangle"};
+
+
 
 
   public Autos(Swerve swerve, VisionSubsystem visionSubsystem,
