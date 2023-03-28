@@ -245,7 +245,9 @@ public class RobotContainer {
                     new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
                         ElevatorConstants.kOriginPosition)))));
 
-    driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    // driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    driverLeftTrigger.onTrue(
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
 
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
 
