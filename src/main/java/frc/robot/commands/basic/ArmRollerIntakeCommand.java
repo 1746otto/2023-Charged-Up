@@ -19,9 +19,8 @@ public class ArmRollerIntakeCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    if (current) {
-      m_Arm.armRollerStow();
-    }
+    m_Arm.armRollerStow();
+
   }
 
   @Override

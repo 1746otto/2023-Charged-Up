@@ -40,7 +40,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // pidController.setFF(.005, 0);
     pidController.setOutputRange(-0.7, 0.7);
     elevatorMotor.setIdleMode(IdleMode.kBrake);
-    // elevatorMotor.getEncoder().setPosition(0);
+    elevatorMotor.getEncoder().setPosition(0);
     reqPosition = ElevatorConstants.kOriginPosition;
   }
 
