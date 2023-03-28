@@ -55,8 +55,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println("CANCoder: " + armEncoder.getPosition());
-    // System.out.println("Relative Encoder: " + armMotor.getSelectedSensorPosition());
+    // System.out.println("CANCoder: " + armEncoder.getPosition());
+    System.out.println("Relative Encoder: " + armMotor.getSelectedSensorPosition());
     armToRequest(requestPos);
   }
 }
