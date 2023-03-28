@@ -139,13 +139,16 @@ public class RobotContainer {
 
 
     // Auton Selector
-    m_chooser.setDefaultOption("Score only", autos.scoreOne());
-    m_chooser.addOption("Cone,Cube,Cone Top", autos.Bruh());
+    m_chooser.setDefaultOption("Score only", autos.driveForwards());
+    m_chooser.addOption("Top Cone Cube Cone ", autos.PseudoBruh());
+    m_chooser.addOption("Top Cone Cube Cone Balance ", autos.Bruh());
     m_chooser.addOption("Bottom Cube Cone", autos.PathPlannerInnerAuton5SquareTriangle());
-    m_chooser.addOption("Top Cube,Balance ", autos.PathPlannerOuterAutonCubeBalance());
-    m_chooser.addOption("Bottom Cone,Balance ", autos.PathPlannerOuterAutonConeBalance());
+    m_chooser.addOption("Top Cube Balance ", autos.PathPlannerOuterAutonCubeBalance());
+    m_chooser.addOption("Bottom Cone Balance ", autos.PathPlannerOuterAutonConeBalance());
     m_chooser.addOption("Top Cube Cone Balance ", autos.pathplannerOuterAuton2ConeCubeBalance());
+    m_chooser.addOption("Testings ", autos.driveForwards());
     SmartDashboard.putData("Auton Selector: ", m_chooser);
+
 
 
     // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
