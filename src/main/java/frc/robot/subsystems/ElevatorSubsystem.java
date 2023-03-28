@@ -96,7 +96,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     beamBreakLastState = (Math.floor(beamBreak.getVoltage()) > 0 && (elevatorMotor.get() < 0));
     // System.out.println("Beam break: " + beamBreakLastState);
     currState = elevatorMotor.getEncoder().getPosition();
-    System.out.println("Elevator: " + currState);
+    // System.out.println("Elevator: " + currState);
     runToRequest(reqPosition);
   }
 }
