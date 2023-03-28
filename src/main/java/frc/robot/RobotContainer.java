@@ -220,16 +220,16 @@ public class RobotContainer {
                     new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
                         ElevatorConstants.kOriginPosition)))));
 
-    // driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
-    // new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kCubeIntakePos),
-    // new WaitCommand(0.4)
-    // .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
-    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))));
-    driverLeftBumper.onTrue(
-        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
-    driverLeftBumper.onFalse(
-        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
+    driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kCubeIntakePos),
+        new WaitCommand(0.4)
+            .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))));
+    // driverLeftBumper.onTrue(
+    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
+    // driverLeftBumper.onFalse(
+    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
 
     driverRightTrigger
         .onTrue(
@@ -249,11 +249,11 @@ public class RobotContainer {
                     new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
                         ElevatorConstants.kOriginPosition)))));
 
-    // driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
-    driverLeftTrigger.onTrue(
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
-    driverLeftTrigger
-        .onFalse(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
+    driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    // driverLeftTrigger.onTrue(
+    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
+    // driverLeftTrigger
+    // .onFalse(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
 
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
 
