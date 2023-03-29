@@ -641,18 +641,27 @@ public final class Autos {
     switch (autonToLoad) {
       case 0:
         drivebackwards();
+        break;
       case 1:
         driveForwards();
+        break;
       case 2:
         PathPlannerInnerAuton5SquareTriangle();
+        break;
       case 3:
         pathplannerOuterAuton2ConeCubeBalance();
+        break;
       case 4:
         PathPlannerOuterAutonConeBalance();
+        break;
       case 5:
         PathPlannerOuterAutonCubeBalance();
+        break;
       case 6:
         Bruh();
+        break;
+      default:
+        SmartDashboard.putString("did something go wrong: ", "yes");
     }
 
   }
