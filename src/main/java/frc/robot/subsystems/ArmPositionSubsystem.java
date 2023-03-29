@@ -10,6 +10,7 @@ import frc.lib.math.Conversions;
 import frc.robot.constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmPositionSubsystem extends SubsystemBase {
   private TalonFX armMotor;
@@ -46,6 +47,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
     return (armEncoder.getPosition() == reqPosition);
   }
 
+  public boolean armReqisCorrect(double req) {
+    return (requestPos == req);
+  }
+
   public void setRequest(double request) {
     requestPos = request;
   }
@@ -58,6 +63,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
   public void periodic() {
     // System.out.println("CANCoder: " + armEncoder.getPosition());
     // System.out.println("Relative Encoder: " + armMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Arm Encoder: ", armMotor.getSelectedSensorPosition());
     armToRequest(requestPos);
   }
 }

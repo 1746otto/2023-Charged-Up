@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
 import frc.robot.constants.ElevatorConstants;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private final double kP = ElevatorConstants.kElevatorP;
@@ -80,6 +81,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     reqPosition = req;
   }
 
+  public boolean reqIsCorrect(double req) {
+    return (reqPosition == req);
+  }
+
   public void runToRequest(double requestPos) {
     if (limitSwitchActivated() || beamBreakBroken()) {
       stopElevator();
@@ -93,11 +98,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    beamBreakLastState = (Math.floor(beamBreak.getVoltage()) > 0 && (elevatorMotor.get() < 0));
-    System.out.println("Beam break: " + beamBreakLastState);
-    System.out.println("Limit switch " + limitSwitchActivated());
     currState = elevatorMotor.getEncoder().getPosition();
-    System.out.println("Elevator: " + currState);
+    beamBreakLastState =
+        ((Math.floor(beamBreak.getVoltage()) > 0) && (elevatorMotor.get() < 0) && (currState < 10));
     runToRequest(reqPosition);
+    SmartDashboard.putNumber("Elevator: ", currState);
+    SmartDashboard.putBoolean("Beambreak: ", beamBreakBroken());
+    SmartDashboard.putBoolean("LimitSwitch: ", limitSwitchActivated());
   }
 }

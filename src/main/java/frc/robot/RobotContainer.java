@@ -178,28 +178,31 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // ----Driver Controls----
+    // Pushing
+    driverLeftBumper
+        .onTrue(new ParallelCommandGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmCubeIntakePos)));
+    driverLeftBumper
+        .onFalse(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
 
-    /*
-     * // Elevator goes down to the origin position driverA.whileTrue(new
-     * ArmRollerOuttakeCommand(m_ArmRollersSubsystem)); driverA.whileFalse(new
-     * ArmRollerStopCommand(m_ArmRollersSubsystem)); // Elevator moves up to mid position
-     * driverB.onTrue(new SequentialCommandGroup(new WaitCommand(0.3), new
-     * ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
-     * driverB.onTrue( new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
-     * ElevatorConstants.kMidPosition)); // Elevator moves up to origin position driverX.onTrue(new
-     * ParallelCommandGroup( new ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-     * new SequentialCommandGroup(new WaitCommand(0.4), new ElevatorRunToRequestCommand(
-     * m_ElevatorSubsystem, ElevatorConstants.kOriginPosition)))); // Elevator moves up to high
-     * position driverY.onTrue(new SequentialCommandGroup(new WaitCommand(0.3), new
-     * ArmRunToRequestCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
-     * driverY.onTrue( new ElevatorRunToRequestCommand(m_ElevatorSubsystem,
-     * ElevatorConstants.kHighPosition)); // Arm rollers intake or outtake //
-     * driverRightBumper.toggleOnTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem)); //
-     * driverRightBumper.toggleOnFalse(new ArmRollerStopCommand(m_ArmRollersSubsystem)); // Robots x
-     * locks for balancing driverBack.onTrue(new XLockCommand(s_Swerve)); // Low Scoring
-     * driverLeftBumper.onTrue(new SequentialCommandGroup());
-     */
     // Cube intaking
+    driverRightTrigger
+        .onTrue(
+            new SequentialCommandGroup(
+                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+                        ElevatorConstants.kCubeIntakePos),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
+                            .isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
+                        new ArmRequestSelectorCommand(m_ArmPosSubystem,
+                            ArmConstants.kArmIntakeAndScorePos))),
+                new ParallelCommandGroup(new SequentialCommandGroup(
+                    new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+                    new WaitCommand(0.2)
+                        .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
+                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+                        ElevatorConstants.kOriginPosition)))));
 
     // Cone intaking
     driverRightBumper
@@ -220,40 +223,19 @@ public class RobotContainer {
                     new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
                         ElevatorConstants.kOriginPosition)))));
 
-    driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
-        new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kCubeIntakePos),
-        new WaitCommand(0.4)
-            .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))));
+    // driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
+    // new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kCubeIntakePos),
+    // new WaitCommand(0.4)
+    // .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
+    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos))));
+
     // driverLeftBumper.onTrue(
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
     // driverLeftBumper.onFalse(
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
 
-    driverRightTrigger
-        .onTrue(
-            new SequentialCommandGroup(
-                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-                        ElevatorConstants.kCubeIntakePos),
-                    new SequentialCommandGroup(
-                        new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
-                            .isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
-                        new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                            ArmConstants.kArmIntakeAndScorePos))),
-                new ParallelCommandGroup(new SequentialCommandGroup(
-                    new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-                    new WaitCommand(0.2)
-                        .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
-                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-                        ElevatorConstants.kOriginPosition)))));
-
     driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
-    // driverLeftTrigger.onTrue(
-    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos));
-    // driverLeftTrigger
-    // .onFalse(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
 
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
 
@@ -278,19 +260,8 @@ public class RobotContainer {
     driverBack.onTrue(new XLockCommand(s_Swerve));
     driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
-
-
-    /*
-     * driverA.onTrue(new OuttakingSequentialCommand(ElevatorConstants.kLowPosition,
-     * m_ElevatorSubsystem, m_ArmRollersSubsystem, m_ArmPosSubystem)); driverB.onTrue(new
-     * OuttakingSequentialCommand(ElevatorConstants.kMidPosition, m_ElevatorSubsystem,
-     * m_ArmRollersSubsystem, m_ArmPosSubystem)); driverX.onTrue(new
-     * OuttakingSequentialCommand(ElevatorConstants.kHighPosition, m_ElevatorSubsystem,
-     * m_ArmRollersSubsystem, m_ArmPosSubystem));
-     */
-
     // Elevator runs down to beam break to get the zero position.
-    operatorStart.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+    operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
 
 
