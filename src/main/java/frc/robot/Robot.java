@@ -31,6 +31,8 @@ public class Robot extends TimedRobot {
 
   private ZeroOutElevatorCommand m_ZeroOutElevator;
 
+  private int previousOption = -1;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -64,6 +66,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    updateCurrentOption();
+
 
   }
 
@@ -114,5 +118,14 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  public void updateCurrentOption() {
+    int currentOption = m_robotContainer.getChosenOption();
+    if (currentOption != previousOption) {
+      m_robotContainer.loadAuton(currentOption);
+      previousOption = currentOption;
+    }
+
+  }
 }
 

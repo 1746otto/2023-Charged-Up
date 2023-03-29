@@ -53,7 +53,7 @@ import frc.robot.commands.BalancingCommand;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  public final SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private final SendableChooser<Integer> m_chooser = new SendableChooser<>();
 
   /* Controllers */
   private final XboxController m_driver = new XboxController(ControllerConstants.kDriverPort);
@@ -139,12 +139,12 @@ public class RobotContainer {
 
 
     // Auton Selector
-    m_chooser.setDefaultOption("Score only", autos.scoreOne());
-    m_chooser.addOption("Cone,Cube,Cone Top", autos.Bruh());
-    m_chooser.addOption("Bottom Cube Cone", autos.PathPlannerInnerAuton5SquareTriangle());
-    m_chooser.addOption("Top Cube,Balance ", autos.PathPlannerOuterAutonCubeBalance());
-    m_chooser.addOption("Bottom Cone,Balance ", autos.PathPlannerOuterAutonConeBalance());
-    m_chooser.addOption("Top Cube Cone Balance ", autos.pathplannerOuterAuton2ConeCubeBalance());
+    m_chooser.setDefaultOption("drivebackwards", 0);
+    m_chooser.addOption("Cone,Cube,Cone Top", 6);
+    m_chooser.addOption("Bottom Cube Cone", 2);
+    m_chooser.addOption("Top Cube,Balance ", 5);
+    m_chooser.addOption("Bottom Cone,Balance ", 4);
+    m_chooser.addOption("Top Cube Cone Balance ", 3);
     SmartDashboard.putData("Auton Selector: ", m_chooser);
 
 
@@ -230,6 +230,14 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
+    return autos.returnLoadedAutonCommand();
+  }
+
+  public int getChosenOption() {
     return m_chooser.getSelected();
+  }
+
+  public void loadAuton(int autonToLoad) {
+    autos.loadAuton(autonToLoad);
   }
 }
