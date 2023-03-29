@@ -24,6 +24,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armPIDController = new BaseTalonPIDSetConfiguration(FeedbackDevice.Analog);
     armMotor.config_kP(0, ArmConstants.kArmP);
     armMotor.config_kD(0, 0);
+    armMotor.configClosedLoopPeakOutput(0, 0.2, 0);
     armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
         * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
                                                                                 // Falcon: 20
@@ -56,7 +57,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // System.out.println("CANCoder: " + armEncoder.getPosition());
-    System.out.println("Relative Encoder: " + armMotor.getSelectedSensorPosition());
+    // System.out.println("Relative Encoder: " + armMotor.getSelectedSensorPosition());
     armToRequest(requestPos);
   }
 }

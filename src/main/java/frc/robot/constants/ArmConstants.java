@@ -6,7 +6,7 @@ public final class ArmConstants {
   public static final double kArmIntakeAndScorePos = 18850;
   public static final double kArmP = .4;
   public static final double kRollerSpeed = 0.5;
-  public static final double kRollerStowSpeed = 0.1;
+  public static final double kRollerStowSpeed = 0.08;
   public static final double kArmCurrentMax = 70; // 70.0;
   public static final double kArmGearRatio = 3; // 3:1 Previously 9.0
   public static final double kCANTickToFalConversion = .5;
