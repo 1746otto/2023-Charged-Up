@@ -8,6 +8,8 @@ package frc.robot.commands;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ArmPositionSubsystem;
+import frc.robot.subsystems.ArmRollersSubsystem;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -30,7 +32,9 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-
+import frc.robot.commands.basic.ArmRequestSelectorCommand;
+import frc.robot.commands.basic.ArmRollerOuttakeCommand;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.SwerveConstants;
@@ -44,16 +48,20 @@ public final class Autos {
   VisionSubsystem visionSubsystem;
   InstantCommand resetGyroCommand;
   ElevatorSubsystem elevatorSubsystem;
+  ArmPositionSubsystem armPosSubsystem;
+  ArmRollersSubsystem armRollerSubsystem;
 
   private boolean hasZeroed = false;
 
 
-  public Autos(Swerve swerve, VisionSubsystem visionSubsystem,
-      ElevatorSubsystem elevatorSubsystem) {
+  public Autos(Swerve swerve, VisionSubsystem visionSubsystem, ElevatorSubsystem elevatorSubsystem,
+      ArmPositionSubsystem armPosSubsystem, ArmRollersSubsystem armRollerSubsystem) {
 
     this.elevatorSubsystem = elevatorSubsystem;
     this.swerve = swerve;
     this.visionSubsystem = visionSubsystem;
+    this.armPosSubsystem = armPosSubsystem;
+    this.armRollerSubsystem = armRollerSubsystem;
 
     resetGyroCommand = new InstantCommand(() -> {
       if (DriverStation.getAlliance() == Alliance.Red && !hasZeroed) {
@@ -74,7 +82,7 @@ public final class Autos {
   // We are putting the zeroing before the gyro because we don't want to have the issue of not
   // zeroing before the match
   public Command balance() {
-    return new SequentialCommandGroup(new DriveTo5DegreesCommand(swerve),
+    return new SequentialCommandGroup(resetGyroCommand, new DriveTo5DegreesCommand(swerve),
         new BalancingCommand2(swerve));
   }
 
@@ -86,24 +94,28 @@ public final class Autos {
   public Command scoreOne() {
     // The reason we need these wait commands because the commands end when the solenoid is set to
     // true, not when the solenoid is actually fully in that state.
-    return new SequentialCommandGroup(resetGyroCommand,
-
+    return new SequentialCommandGroup(
         new ParallelDeadlineGroup(
-            new SequentialCommandGroup(new WaitCommand(4.0),
-                new ParallelCommandGroup(new WaitCommand(.375)),
-                new ParallelCommandGroup(new WaitCommand(.25)), new WaitCommand(.375)),
+            new SequentialCommandGroup(
+                new WaitCommand(1.5).until(
+                    () -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
+                new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos)),
             new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kHighPosition)),
-        new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kOriginPosition)
-            .withTimeout(.5));
+        new SequentialCommandGroup(
+            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos),
+            new WaitCommand(0.8).until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
+            new ElevatorRequestSelectorCommand(elevatorSubsystem,
+                ElevatorConstants.kOriginPosition)));
   }
 
   public Command scoreOneBalance() {
     return new SequentialCommandGroup(scoreOne(), new DriveTo5DegreesCommand(swerve),
-        new BalancingCommand(swerve));
+        new BalancingCommand2(swerve));
   }
 
   public Command scoreOneMove() {
-    return new SequentialCommandGroup(scoreOne(), new DriveForwardsCommand(swerve));
+    return new SequentialCommandGroup(resetGyroCommand, scoreOne(),
+        new DriveForwardsCommand(swerve));
   }
 
   public Command correctAlliance() {

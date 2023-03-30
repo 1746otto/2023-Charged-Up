@@ -22,16 +22,14 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
     armMotor.setNeutralMode(NeutralMode.Brake);
     armEncoder = new CANCoder(ArmConstants.kCANCoderID);
+    armMotor.setSelectedSensorPosition(0.0);
     armPIDController = new BaseTalonPIDSetConfiguration(FeedbackDevice.Analog);
     armMotor.config_kP(0, ArmConstants.kArmP);
     armMotor.config_kD(0, 0);
     armMotor.configClosedLoopPeakOutput(0, 0.2, 0);
-    armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
-        * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
-                                                                                // Falcon: 20
     requestPos = ArmConstants.kArmRestPos;
     // armMotor.configMotionAcceleration(1000)
-    // armMotor.setInverted(true);
+    armMotor.setInverted(true);
 
   }
 
@@ -63,6 +61,9 @@ public class ArmPositionSubsystem extends SubsystemBase {
   public void periodic() {
     // System.out.println("CANCoder: " + armEncoder.getPosition());
     // System.out.println("Relative Encoder: " + armMotor.getSelectedSensorPosition());
+    // armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
+    // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
+    // // Falcon: 20
     SmartDashboard.putNumber("Arm Encoder: ", armMotor.getSelectedSensorPosition());
     armToRequest(requestPos);
   }

@@ -7,7 +7,7 @@ public final class ElevatorConstants {
   public static final double kOriginPosition = 0.0;
   // change positions to accurate nums for redesign
   public static final double kConeIntakePos = 9.0;
-  public static final double kCubeIntakePos = 7.4;
+  public static final double kCubeIntakePos = 6.75;
   public static final double kLowPosition = 20.0;
   public static final double kMidPosition = 40.0; // 35.0;
   public static final double kHighPosition = 55.0; // 51.0;

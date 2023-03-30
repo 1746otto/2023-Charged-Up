@@ -39,7 +39,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     pidController.setP(kP, 0);
     // pidController.setD(kD, 0);
     // pidController.setFF(.005, 0);
-    pidController.setOutputRange(-0.7, 0.7);
+    pidController.setOutputRange(-0.5, 0.5);
     elevatorMotor.setIdleMode(IdleMode.kBrake);
     elevatorMotor.getEncoder().setPosition(0);
     reqPosition = ElevatorConstants.kOriginPosition;
@@ -99,8 +99,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     currState = elevatorMotor.getEncoder().getPosition();
-    beamBreakLastState =
-        ((Math.floor(beamBreak.getVoltage()) > 0) && (elevatorMotor.get() < 0) && (currState < 10));
+    beamBreakLastState = ((Math.floor(beamBreak.getVoltage()) > 0) && (elevatorMotor.get() < 0));
     runToRequest(reqPosition);
     SmartDashboard.putNumber("Elevator: ", currState);
     SmartDashboard.putBoolean("Beambreak: ", beamBreakBroken());

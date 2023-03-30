@@ -132,7 +132,8 @@ public class RobotContainer {
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
-  private final Autos autos = new Autos(s_Swerve, m_VisionSubsystem, m_ElevatorSubsystem);
+  private final Autos autos = new Autos(s_Swerve, m_VisionSubsystem, m_ElevatorSubsystem,
+      m_ArmPosSubystem, m_ArmRollersSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -181,7 +182,7 @@ public class RobotContainer {
     // Pushing
     driverLeftBumper
         .onTrue(new ParallelCommandGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmCubeIntakePos)));
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos)));
     driverLeftBumper
         .onFalse(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
 
@@ -190,38 +191,17 @@ public class RobotContainer {
         .onTrue(
             new SequentialCommandGroup(
                 new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-                        ElevatorConstants.kCubeIntakePos),
-                    new SequentialCommandGroup(
-                        new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
-                            .isElevatorAtReq(ElevatorConstants.kCubeIntakePos)),
-                        new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                            ArmConstants.kArmIntakeAndScorePos))),
-                new ParallelCommandGroup(new SequentialCommandGroup(
-                    new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-                    new WaitCommand(0.2)
-                        .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
-                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-                        ElevatorConstants.kOriginPosition)))));
+                    new ArmRequestSelectorCommand(m_ArmPosSubystem,
+                        ArmConstants.kArmConeIntakePos)),
+                new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // Cone intaking
     driverRightBumper
-        .onTrue(
-            new SequentialCommandGroup(
-                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-                        ElevatorConstants.kConeIntakePos),
-                    new SequentialCommandGroup(
-                        new WaitCommand(0.4).until(() -> m_ElevatorSubsystem
-                            .isElevatorAtReq(ElevatorConstants.kConeIntakePos)),
-                        new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                            ArmConstants.kArmIntakeAndScorePos))),
-                new ParallelCommandGroup(new SequentialCommandGroup(
-                    new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-                    new WaitCommand(0.2)
-                        .until(() -> m_ArmPosSubystem.armAtReq(ArmConstants.kArmRestPos)),
-                    new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-                        ElevatorConstants.kOriginPosition)))));
+        .onTrue(new SequentialCommandGroup(
+            new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+                new ArmRequestSelectorCommand(m_ArmPosSubystem,
+                    ArmConstants.kArmIntakeAndScorePos)),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
     // new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
@@ -267,7 +247,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.Bruh();
+    return autos.scoreOneMove();
   }
 
 }

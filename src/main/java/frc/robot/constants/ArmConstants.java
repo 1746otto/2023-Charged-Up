@@ -2,10 +2,11 @@ package frc.robot.constants;
 
 public final class ArmConstants {
   // TODO: change values to accurate positions and values
-  public static final double kArmRestPos = 376.0;
-  public static final double kArmIntakeAndScorePos = 18850;
+  public static final double kArmRestPos = 0.0;
+  public static final double kArmIntakeAndScorePos = -18640.0;
   // TODO: change cube intake pos
-  public static final double kArmCubeIntakePos = 16000;
+  public static final double kArmConeIntakePos = -18640.0;
+  public static final double kArmHighScoringPos = -18640.0;
   public static final double kArmP = .4;
   public static final double kRollerSpeed = 0.5;
   public static final double kRollerStowSpeed = 0.08;
