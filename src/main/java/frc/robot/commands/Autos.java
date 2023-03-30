@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
+import frc.robot.commands.basic.TrajectoryDirectionTesting;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -84,6 +85,10 @@ public final class Autos {
   public Command balance() {
     return new SequentialCommandGroup(resetGyroCommand, new DriveTo5DegreesCommand(swerve),
         new BalancingCommand2(swerve));
+  }
+
+  public Command directionTesting() {
+    return new TrajectoryDirectionTesting(swerve);
   }
 
   public Command moveBalance() {
