@@ -95,17 +95,20 @@ public final class Autos {
     // The reason we need these wait commands because the commands end when the solenoid is set to
     // true, not when the solenoid is actually fully in that state.
     return new SequentialCommandGroup(
-        new ParallelDeadlineGroup(
-            new SequentialCommandGroup(
-                new WaitCommand(1.5).until(
-                    () -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
-                new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos)),
-            new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kHighPosition)),
-        new SequentialCommandGroup(
+        new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kHighPosition), // Change
+                                                                                                // this
+                                                                                                // to
+                                                                                                // 43
+        new WaitCommand(1.2)
+            .until(() -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
+        new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos),
+        new ParallelDeadlineGroup(new SequentialCommandGroup(new WaitCommand(0.8),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos),
             new WaitCommand(0.8).until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
             new ElevatorRequestSelectorCommand(elevatorSubsystem,
-                ElevatorConstants.kOriginPosition)));
+                ElevatorConstants.kOriginPosition)),
+            new ArmRollerOuttakeCommand(armRollerSubsystem)),
+        new WaitCommand(1.2));
   }
 
   public Command scoreOneBalance() {
