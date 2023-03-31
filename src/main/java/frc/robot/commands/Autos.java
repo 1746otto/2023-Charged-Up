@@ -46,7 +46,6 @@ import java.util.HashMap;
 public final class Autos {
   Swerve swerve;
   VisionSubsystem visionSubsystem;
-  InstantCommand resetGyroCommand;
   ElevatorSubsystem elevatorSubsystem;
   ArmPositionSubsystem armPosSubsystem;
   ArmRollersSubsystem armRollerSubsystem;
@@ -62,8 +61,10 @@ public final class Autos {
     this.visionSubsystem = visionSubsystem;
     this.armPosSubsystem = armPosSubsystem;
     this.armRollerSubsystem = armRollerSubsystem;
+  }
 
-    resetGyroCommand = new InstantCommand(() -> {
+  public Command resetGyroCommand() {
+    return new InstantCommand(() -> {
       SmartDashboard.putString("Driverstation", DriverStation.getAlliance().toString());
       if (DriverStation.getAlliance() == Alliance.Red && !hasZeroed) {
 
@@ -77,19 +78,18 @@ public final class Autos {
             new Pose2d());
         hasZeroed = true;
       }
-
-    }, this.swerve);
+    }, swerve);
   }
 
   // We are putting the zeroing before the gyro because we don't want to have the issue of not
   // zeroing before the match
   public Command balance() {
-    return new SequentialCommandGroup(resetGyroCommand, new DriveTo5DegreesCommand(swerve),
+    return new SequentialCommandGroup(resetGyroCommand(), new DriveTo5DegreesCommand(swerve),
         new BalancingCommand2(swerve));
   }
 
   public Command moveBalance() {
-    return new SequentialCommandGroup(resetGyroCommand, new DriveOverChargeStationCommand(swerve),
+    return new SequentialCommandGroup(resetGyroCommand(), new DriveOverChargeStationCommand(swerve),
         new DriveBackTo5DegreesCommand(swerve), new BalancingCommand(swerve));
   }
 
@@ -113,21 +113,21 @@ public final class Autos {
   }
 
   public Command scoreOneBalance() {
-    return new SequentialCommandGroup(resetGyroCommand, scoreOne(),
+    return new SequentialCommandGroup(resetGyroCommand(), scoreOne(),
         new DriveTo5DegreesCommand(swerve), new BalancingCommand2(swerve));
   }
 
   public Command scoreOneMove() {
-    return new SequentialCommandGroup(resetGyroCommand, scoreOne(),
+    return new SequentialCommandGroup(resetGyroCommand(), scoreOne(),
         new DriveForwardsCommand(swerve));
   }
 
   public Command correctAlliance() {
-    return resetGyroCommand;
+    return resetGyroCommand();
   }
 
   public Command move() {
-    return new DriveForwardsCommand(swerve).beforeStarting(resetGyroCommand);
+    return new DriveForwardsCommand(swerve).beforeStarting(resetGyroCommand());
   }
 
   public Command Bruh() {
