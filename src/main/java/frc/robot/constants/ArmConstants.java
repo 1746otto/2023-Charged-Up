@@ -6,7 +6,7 @@ public final class ArmConstants {
   public static final double kArmIntakeAndScorePos = -18640.0;
   // TODO: change cube intake pos
   public static final double kArmConeIntakePos = -18640.0;
-  public static final double kArmHighScoringPos = -12000.0;
+  public static final double kArmHighScoringPos = -14776.0;
   public static final double kArmP = .4;
   public static final double kRollerSpeed = 0.5;
   public static final double kRollerStowSpeed = 0.08;
