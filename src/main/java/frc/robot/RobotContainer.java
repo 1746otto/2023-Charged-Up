@@ -221,7 +221,7 @@ public class RobotContainer {
 
     driverB.onTrue(new SequentialCommandGroup(
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
-        new WaitCommand(0.5)
+        new WaitCommand(0.8)
             .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kMidPosition)),
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
 
@@ -233,9 +233,9 @@ public class RobotContainer {
 
     driverY.onTrue(new SequentialCommandGroup(
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kHighPosition),
-        new WaitCommand(0.5)
+        new WaitCommand(1.2)
             .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmHighScoringPos)));
 
     driverBack.onTrue(new XLockCommand(s_Swerve));
     driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
