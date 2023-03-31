@@ -19,11 +19,20 @@ public class BalancingCommand2 extends CommandBase {
   private double prevError;
   private double totalError;
   private double speed;
+  private double driveDirection;
 
   public BalancingCommand2(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
 
     addRequirements(s_Swerve);
+
+  
+    if(DriverStation.getAlliance() == Alliance.Blue){
+      driveDirection = -1;
+
+    }else{
+      driveDirection = 1;
+    }
 
   }
 
@@ -48,8 +57,9 @@ public class BalancingCommand2 extends CommandBase {
 
     }
 
-    s_Swerve.drive(new Translation2d(speed, 0).times(SwerveConstants.maxSpeed).times(1), 0.0, true,
-        false);
+    s_Swerve.drive(
+        new Translation2d(speed * driveDirection, 0).times(SwerveConstants.maxSpeed).times(1), 0.0,
+        true, false);
   }
 
   @Override

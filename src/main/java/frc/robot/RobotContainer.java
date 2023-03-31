@@ -215,7 +215,9 @@ public class RobotContainer {
     // driverLeftBumper.onFalse(
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
 
-    driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    driverLeftTrigger
+        .onTrue(new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.ksubstationPosition)));
 
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
 
@@ -237,9 +239,9 @@ public class RobotContainer {
             .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmHighScoringPos)));
 
-    driverBack.onTrue(new XLockCommand(s_Swerve));
+    operatorX.onTrue(new XLockCommand(s_Swerve));
     driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-
+    operatorRightTrigger.whileTrue(new BalanceSpeedCommand());
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
@@ -247,7 +249,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.scoreOneMove();
+    return autos.scoreOneBalance();
   }
 
 }

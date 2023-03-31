@@ -9,6 +9,11 @@ public class BalanceSpeedCommand extends CommandBase {
   @Override
   public void initialize() {
     SwerveConstants.maxSpeed *= .5;
-    SwerveConstants.driveNeutralMode = NeutralMode.Brake;
+
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    SwerveConstants.maxSpeed *= 2.0;
   }
 }

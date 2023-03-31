@@ -15,4 +15,9 @@ public class XLockCommand extends CommandBase {
   public void initialize() {
     s_Swerve.XLock();
   }
+
+  @Override
+  public boolean isFinished() {
+    return true;
+  }
 }

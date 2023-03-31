@@ -64,13 +64,15 @@ public final class Autos {
     this.armRollerSubsystem = armRollerSubsystem;
 
     resetGyroCommand = new InstantCommand(() -> {
+      SmartDashboard.putString("Driverstation", DriverStation.getAlliance().toString());
       if (DriverStation.getAlliance() == Alliance.Red && !hasZeroed) {
-        swerve.gyro.setYaw(180);
+
+        swerve.gyro.setYaw(0);
         swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
             new Pose2d());
         hasZeroed = true;
       } else if (!hasZeroed) {
-        swerve.gyro.setYaw(0);
+        swerve.gyro.setYaw(180);
         swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
             new Pose2d());
         hasZeroed = true;
@@ -99,6 +101,7 @@ public final class Autos {
         new WaitCommand(1.2)
             .until(() -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
         new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos),
+        new WaitCommand(1.2),
         new ParallelDeadlineGroup(new SequentialCommandGroup(new WaitCommand(0.8),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos),
             new WaitCommand(0.8).until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
@@ -110,8 +113,8 @@ public final class Autos {
   }
 
   public Command scoreOneBalance() {
-    return new SequentialCommandGroup(scoreOne(), new DriveTo5DegreesCommand(swerve),
-        new BalancingCommand2(swerve));
+    return new SequentialCommandGroup(resetGyroCommand, scoreOne(),
+        new DriveTo5DegreesCommand(swerve), new BalancingCommand2(swerve));
   }
 
   public Command scoreOneMove() {
