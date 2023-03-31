@@ -130,6 +130,36 @@ public final class Autos {
     return new DriveForwardsCommand(swerve).beforeStarting(resetGyroCommand());
   }
 
+  // Not sure if have to create duplicate keys for same event label
+
+  public HashMap<String, Command> create3PieceEventMap() {
+    HashMap<String, Command> threePieceEventMap = new HashMap<String, Command>();
+    threePieceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    threePieceEventMap.put("intakeCubeCommand",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    threePieceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    threePieceEventMap.put("intakeCubeCommand",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    threePieceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    return (threePieceEventMap);
+  }
+
+  public HashMap<String, Command> create2PieceAndBalanceEventMap() {
+    HashMap<String, Command> twoPieceAndBalanceEventMap = new HashMap<String, Command>();
+    twoPieceAndBalanceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    twoPieceAndBalanceEventMap.put("intakeCubeCommand",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    twoPieceAndBalanceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    twoPieceAndBalanceEventMap.put("balanceCommand", new BalancingCommand2(swerve));
+    return twoPieceAndBalanceEventMap;
+  }
+
+
   public Command Bruh() {
     // This is the combined trajectories of autons we want to use.
     // Each trajectory we want to use is seperated by a stop point.
