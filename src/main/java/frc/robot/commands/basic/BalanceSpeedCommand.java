@@ -8,12 +8,14 @@ public class BalanceSpeedCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    SwerveConstants.maxSpeed *= .5;
+    SwerveConstants.maxSpeed *= .25;
+    SwerveConstants.maxAngularVelocity *= 0.25;
 
   }
 
   @Override
   public void end(boolean interrupted) {
-    SwerveConstants.maxSpeed *= 2.0;
+    SwerveConstants.maxSpeed *= 4.0;
+    SwerveConstants.maxAngularVelocity *= 4.0;
   }
 }

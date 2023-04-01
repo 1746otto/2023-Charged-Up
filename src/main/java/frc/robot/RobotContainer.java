@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -240,8 +241,21 @@ public class RobotContainer {
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmHighScoringPos)));
 
     operatorX.onTrue(new XLockCommand(s_Swerve));
-    driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    driverStart.onTrue(new InstantCommand(() -> {
+      s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
+    }));
+
     operatorRightTrigger.whileTrue(new BalanceSpeedCommand());
+    operatorRightTrigger.onTrue(new InstantCommand(() -> {
+      for (SwerveModule mod : s_Swerve.mSwerveMods) {
+        mod.setModuleNeutralMode(NeutralMode.Brake);
+      }
+    }));
+    operatorRightTrigger.onFalse(new InstantCommand(() -> {
+      for (SwerveModule mod : s_Swerve.mSwerveMods) {
+        mod.setModuleNeutralMode(NeutralMode.Coast);
+      }
+    }));
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
@@ -249,7 +263,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.scoreOneBalance();
+    return autos.scoreOne();
   }
 
 }
