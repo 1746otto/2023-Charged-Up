@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Autos.BalanceAuton;
+import frc.robot.commands.ArmHomeCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.DriveBackTo5DegreesCommand;
@@ -124,7 +125,7 @@ public class RobotContainer {
   private final Trigger operatorLeftTrigger = new Trigger(operatorLeftTriggerSupplier);
 
   /* Subsystems */
-  private final Swerve s_Swerve = new Swerve();
+  public final Swerve s_Swerve = new Swerve();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
@@ -245,25 +246,26 @@ public class RobotContainer {
       s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
     }));
 
-    operatorRightTrigger.whileTrue(new BalanceSpeedCommand());
-    operatorRightTrigger.onTrue(new InstantCommand(() -> {
+    operatorRightBumper.whileTrue(new BalanceSpeedCommand());
+    operatorRightBumper.onTrue(new InstantCommand(() -> {
       for (SwerveModule mod : s_Swerve.mSwerveMods) {
         mod.setModuleNeutralMode(NeutralMode.Brake);
       }
     }));
-    operatorRightTrigger.onFalse(new InstantCommand(() -> {
+    operatorRightBumper.onFalse(new InstantCommand(() -> {
       for (SwerveModule mod : s_Swerve.mSwerveMods) {
         mod.setModuleNeutralMode(NeutralMode.Coast);
       }
     }));
+    operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
 
 
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return autos.scoreOne();
+    // An Exammple Command will run in autonomous
+    return autos.scoreOneBalance();
   }
 
 }

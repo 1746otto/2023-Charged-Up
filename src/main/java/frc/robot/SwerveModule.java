@@ -23,7 +23,7 @@ public class SwerveModule {
 
   private TalonFX mAngleMotor;
   private TalonFX mDriveMotor;
-  private CANCoder angleEncoder;
+  public CANCoder angleEncoder;
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SwerveConstants.driveKS,
       SwerveConstants.driveKV, SwerveConstants.driveKA);

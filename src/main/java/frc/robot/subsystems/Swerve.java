@@ -6,7 +6,7 @@ import frc.robot.constants.SwerveConstants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -22,6 +22,7 @@ public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
   public WPI_Pigeon2 gyro;
   public final SwerveDrivePoseEstimator poseEstimator;
+  private boolean spamRestart = false;
 
 
   public Swerve() {
@@ -40,6 +41,10 @@ public class Swerve extends SubsystemBase {
      */
     Timer.delay(5.0);
     resetModulesToAbsolute();
+    for (SwerveModule mod : mSwerveMods)
+      if (mod.angleEncoder.getLastError() != ErrorCode.OK)
+        spamRestart = true;
+
     poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, getYaw(),
         getModulePositions(), new Pose2d());
   }
@@ -140,5 +145,7 @@ public class Swerve extends SubsystemBase {
           mod.getPosition().distanceMeters);
 
     }
+    if (spamRestart)
+      System.out.println("Restart the robot or it will suck!");
   }
 }
