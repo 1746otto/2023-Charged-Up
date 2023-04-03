@@ -17,7 +17,10 @@ import frc.robot.commands.ZeroOutElevatorCommand;
 import frc.robot.commands.basic.ArmPositionStopCommand;
 import frc.robot.commands.basic.ArmRollerIntakeCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
+import frc.robot.commands.basic.ArmRollerRunInCommand;
+import frc.robot.commands.basic.ArmRollerShootCommand;
 import frc.robot.commands.basic.ArmRollerStopCommand;
+import frc.robot.commands.basic.ArmToSmartDashboardCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
@@ -42,11 +45,13 @@ import frc.robot.constants.SwerveConstants;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.commands.ElevatorRequestSelectorCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.BalancingCommand;
+import frc.robot.commands.ShootCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -180,11 +185,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // ----Driver Controls----
     // Pushing
-    driverLeftBumper
-        .onTrue(new ParallelCommandGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos)));
-    driverLeftBumper
-        .onFalse(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
 
     // Cube intaking
     driverRightTrigger
@@ -244,6 +244,8 @@ public class RobotContainer {
       s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
     }));
 
+    driverLeftBumper.toggleOnTrue(new BalanceSpeedCommand());
+
     operatorRightBumper.whileTrue(new BalanceSpeedCommand());
     operatorRightBumper.onTrue(new InstantCommand(() -> {
       for (SwerveModule mod : s_Swerve.mSwerveMods) {
@@ -258,12 +260,18 @@ public class RobotContainer {
     operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+    operatorB
+        .onTrue(new ParallelCommandGroup(new ArmRequestSelectorCommand(m_ArmPosSubystem, -3000),
+            new ArmRollerRunInCommand(m_ArmRollersSubsystem)).andThen(new WaitCommand(0.25))
+                .andThen(new ArmRollerShootCommand(m_ArmRollersSubsystem)).withTimeout(.5).andThen(
+                    new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+    // operatorY.whileTrue(new ArmToSmartDashboardCommand(m_ArmPosSubystem));
   }
 
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.scoreOneBalance();
+    return autos.driveForwards();
   }
 
 }
