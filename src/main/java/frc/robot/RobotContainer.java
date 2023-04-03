@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Autos.BalanceAuton;
+import frc.robot.commands.ArmHomeCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.DriveBackTo5DegreesCommand;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -123,7 +125,7 @@ public class RobotContainer {
   private final Trigger operatorLeftTrigger = new Trigger(operatorLeftTriggerSupplier);
 
   /* Subsystems */
-  private final Swerve s_Swerve = new Swerve();
+  public final Swerve s_Swerve = new Swerve();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
@@ -238,16 +240,29 @@ public class RobotContainer {
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmHighScoringPos)));
 
     operatorX.onTrue(new XLockCommand(s_Swerve));
-    driverStart.onTrue(new InstantCommand(() -> s_Swerve.gyro
-        .setYaw((DriverStation.getAlliance() == Alliance.Red) ? (double) 180 : (double) 0)));
-    operatorRightTrigger.whileTrue(new BalanceSpeedCommand());
+    driverStart.onTrue(new InstantCommand(() -> {
+      s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
+    }));
+
+    operatorRightBumper.whileTrue(new BalanceSpeedCommand());
+    operatorRightBumper.onTrue(new InstantCommand(() -> {
+      for (SwerveModule mod : s_Swerve.mSwerveMods) {
+        mod.setModuleNeutralMode(NeutralMode.Brake);
+      }
+    }));
+    operatorRightBumper.onFalse(new InstantCommand(() -> {
+      for (SwerveModule mod : s_Swerve.mSwerveMods) {
+        mod.setModuleNeutralMode(NeutralMode.Coast);
+      }
+    }));
+    operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
   }
 
 
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+    // An Exammple Command will run in autonomous
     return autos.scoreOneBalance();
   }
 

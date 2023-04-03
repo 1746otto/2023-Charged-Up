@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
+import frc.robot.commands.basic.ArmRollerIntakeCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
@@ -74,12 +75,6 @@ public final class Autos {
     this.armRollerSubsystem = armRollerSubsystem;
   }
 
-  public void loadPaths() {
-    examplePaths = PathPlanner.loadPathGroup("Example Path",
-        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
-  }
-
   public Command resetGyroCommand() {
     return new InstantCommand(() -> {
       SmartDashboard.putString("Driverstation", DriverStation.getAlliance().toString());
@@ -114,16 +109,21 @@ public final class Autos {
     // The reason we need these wait commands because the commands end when the solenoid is set to
     // true, not when the solenoid is actually fully in that state.
     return new SequentialCommandGroup(
-        new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kHighPosition),
-        new WaitCommand(1.2)
-            .until(() -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
-        new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos),
+        new ParallelDeadlineGroup(new SequentialCommandGroup(
+            new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kHighPosition),
+            new WaitCommand(1.2)
+                .until(() -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
+            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos)),
+            new ArmRollerIntakeCommand(armRollerSubsystem)),
         new WaitCommand(1.2),
-        new ParallelDeadlineGroup(new SequentialCommandGroup(new WaitCommand(0.8),
-            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos),
-            new WaitCommand(0.8).until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
-            new ElevatorRequestSelectorCommand(elevatorSubsystem,
-                ElevatorConstants.kOriginPosition)),
+        new ParallelDeadlineGroup(
+            new SequentialCommandGroup(new WaitCommand(0.8),
+                new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos),
+                new WaitCommand(2.0)
+                    .until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
+                new WaitCommand(1.0),
+                new ElevatorRequestSelectorCommand(elevatorSubsystem,
+                    ElevatorConstants.kOriginPosition)),
             new ArmRollerOuttakeCommand(armRollerSubsystem)),
         new WaitCommand(1.2));
 

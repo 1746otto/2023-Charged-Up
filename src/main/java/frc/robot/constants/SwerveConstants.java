@@ -91,7 +91,7 @@ public final class SwerveConstants {
   /** Meters per Second */
   public static double maxSpeed = 12; // TODO: This must be tuned to specific robot
   /** Radians per Second */
-  public static final double maxAngularVelocity = 12; // TODO: This must be tuned to specific robot
+  public static double maxAngularVelocity = 12; // TODO: This must be tuned to specific robot
 
   public static final double autonDriveSpeed = 0.250;
 

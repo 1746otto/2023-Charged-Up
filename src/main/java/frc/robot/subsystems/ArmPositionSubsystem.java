@@ -31,8 +31,24 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   }
 
+  public void zeroEncoder() {
+    armMotor.setSelectedSensorPosition(600);
+  }
+
+  public void disablePID() {
+    armMotor.configClosedLoopPeakOutput(0, 0, 0);
+  }
+
+  public void enablePID() {
+    armMotor.configClosedLoopPeakOutput(0, 0.2, 0);
+  }
+
   public void armToRequest(double requestedPosition) {
     armMotor.set(TalonFXControlMode.Position, requestedPosition);
+  }
+
+  public void setHomeSpeed() {
+    armMotor.set(TalonFXControlMode.PercentOutput, .2);
   }
 
   public void armStop() {
