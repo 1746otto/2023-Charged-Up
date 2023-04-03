@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.ArmRollerIntakeCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
+import frc.robot.commands.basic.ArmRollerRunInCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -149,7 +150,7 @@ public final class Autos {
 
   // Not sure if have to create duplicate keys for same event label
 
-  public HashMap<String, Command> create3PieceEventMap() {
+  private HashMap<String, Command> create3PieceEventMap() {
     HashMap<String, Command> threePieceEventMap = new HashMap<String, Command>();
     threePieceEventMap.put("lowGoalCommand",
         new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
@@ -167,7 +168,7 @@ public final class Autos {
 
   // This is a bit unnecessary, the event maps don't take that long to generate so they should be
   // put in the auton function itself.
-  public HashMap<String, Command> create2PieceAndBalanceEventMap() {
+  private HashMap<String, Command> create2PieceAndBalanceEventMap() {
     HashMap<String, Command> twoPieceAndBalanceEventMap = new HashMap<String, Command>();
     twoPieceAndBalanceEventMap.put("lowGoalCommand",
         new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
@@ -527,6 +528,90 @@ public final class Autos {
 
 
     return autonCommmand;
+
+
+  }
+
+  public Command FINALPSUEDOBRUHPLS() {
+
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("FINAL PSUEDOBRUH PLS",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    // if (DriverStation.getAlliance() == Alliance.Blue) {
+    // swerve.gyro.setYaw(180);
+    // } else {
+    // swerve.gyro.setYaw(0);
+    // }
+    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+        pathGroup.get(0).getInitialHolonomicPose());
+
+    SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
+
+    // Then we use the position we got from vision to get our actual initial pose and make a
+    // trajectory to go to it.
+    // PathPlannerTrajectory goToStart = PathPlanner.generatePath(
+    // new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+    // AutoConstants.kMaxAccelerationMetersPerSecondSquared),
+    // new PathPoint(new Translation2d(m_swerve.getPose().getX(), m_swerve.getPose().getY()),
+    // Rotation2d.fromDegrees(0), m_swerve.getPose().getRotation()),
+    // new PathPoint(
+    // new Translation2d(pathGroup.get(0).getInitialState().poseMeters.getX(),
+    // pathGroup.get(0).getInitialState().poseMeters.getY()),
+    // pathGroup.get(0).getInitialState().poseMeters.getRotation(),
+    // pathGroup.get(0).getInitialState().holonomicRotation));
+
+    // Next we must pass the trajectory into a command that follows it.
+    // Currently this commmand is commented out because we don't have a limelight.
+    // PPSwerveControllerCommand goToStartCommand =
+    // new PPSwerveControllerCommand(
+    // goToStart,
+    // m_swerve::getPose,
+    // SwerveConstants.swerveKinematics,
+    // new PIDController(0, 0, 0),
+    // new PIDController(0, 0, 0),
+    // new PIDController(0, 0, 0),
+    // m_swerve::setModuleStates,
+    // true,
+    // m_swerve
+    // )
+    // ;
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    int i = 0;
+    for (PathPlannerTrajectory traj : pathGroup) {
+      System.out.println(i);
+      i++;
+      controllerGroup.add(
+          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
+              new PIDController(7.5, 0, 0), new PIDController(7.5, 0, 0),
+              new PIDController(4.5, 0, 0), swerve::setModuleStates, true, swerve));
+    }
+
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intake out", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+
+
+    // Make the auton command
+    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
+        new ShootCommand(armPosSubsystem, armRollerSubsystem),
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+        new ShootCommand(armPosSubsystem, armRollerSubsystem));
+
+
+
+    return autonCommmand;
+
 
 
   }
