@@ -240,7 +240,8 @@ public class RobotContainer {
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmHighScoringPos)));
 
     operatorX.onTrue(new XLockCommand(s_Swerve));
-    driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    driverStart.onTrue(new InstantCommand(() -> s_Swerve.gyro
+        .setYaw((DriverStation.getAlliance() == Alliance.Red) ? (double) 180 : (double) 0)));
     operatorRightTrigger.whileTrue(new BalanceSpeedCommand());
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));

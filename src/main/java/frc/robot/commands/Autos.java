@@ -44,11 +44,22 @@ import java.util.HashMap;
 
 
 public final class Autos {
+
+  // Subsystems
   Swerve swerve;
   VisionSubsystem visionSubsystem;
   ElevatorSubsystem elevatorSubsystem;
   ArmPositionSubsystem armPosSubsystem;
   ArmRollersSubsystem armRollerSubsystem;
+
+  // Paths
+  List<PathPlannerTrajectory> examplePaths;
+  List<PathPlannerTrajectory> BruhPaths;
+  List<PathPlannerTrajectory> scoreOneIntakeBalancePaths;
+  List<PathPlannerTrajectory> driveForwardsPaths;
+  List<PathPlannerTrajectory> innerAuton5SquareTrianglePaths;
+  List<PathPlannerTrajectory> outerAuton2ConeCubeBalancePaths;
+
 
   private boolean hasZeroed = false;
 
@@ -61,6 +72,12 @@ public final class Autos {
     this.visionSubsystem = visionSubsystem;
     this.armPosSubsystem = armPosSubsystem;
     this.armRollerSubsystem = armRollerSubsystem;
+  }
+
+  public void loadPaths() {
+    examplePaths = PathPlanner.loadPathGroup("Example Path",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
   }
 
   public Command resetGyroCommand() {
@@ -130,6 +147,39 @@ public final class Autos {
     return new DriveForwardsCommand(swerve).beforeStarting(resetGyroCommand());
   }
 
+  // Not sure if have to create duplicate keys for same event label
+
+  public HashMap<String, Command> create3PieceEventMap() {
+    HashMap<String, Command> threePieceEventMap = new HashMap<String, Command>();
+    threePieceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    threePieceEventMap.put("intakeCubeCommand",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    threePieceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    threePieceEventMap.put("intakeCubeCommand",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    threePieceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    return (threePieceEventMap);
+  }
+
+
+  // This is a bit unnecessary, the event maps don't take that long to generate so they should be
+  // put in the auton function itself.
+  public HashMap<String, Command> create2PieceAndBalanceEventMap() {
+    HashMap<String, Command> twoPieceAndBalanceEventMap = new HashMap<String, Command>();
+    twoPieceAndBalanceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    twoPieceAndBalanceEventMap.put("intakeCubeCommand",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    twoPieceAndBalanceEventMap.put("lowGoalCommand",
+        new LowGoalCommand(armPosSubsystem, armRollerSubsystem));
+    twoPieceAndBalanceEventMap.put("balanceCommand", new BalancingCommand2(swerve));
+    return twoPieceAndBalanceEventMap;
+  }
+
+  // Camel case is nice
   public Command Bruh() {
     // This is the combined trajectories of autons we want to use.
     // Each trajectory we want to use is seperated by a stop point.
@@ -138,6 +188,7 @@ public final class Autos {
 
     List<PathPlannerTrajectory> pathGroup =
         // Change "4" to valid path planner program
+        // This shouldn't be reversed!!!
         PathPlanner.loadPathGroup("PathPlannerOuterAutonFiveTriangleSquareTriangle", true,
             new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared));
@@ -187,11 +238,13 @@ public final class Autos {
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
+    
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Example Path",
         new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared));
-    swerve.gyro.setYaw(0);
+    // This color might need to be swapped, I am not sure.
     if (DriverStation.getAlliance() == Alliance.Red) {
+      swerve.gyro.setYaw(pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180);
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           new Pose2d(
               pathGroup.get(0).getInitialHolonomicPose().getTranslation()
@@ -199,6 +252,7 @@ public final class Autos {
               pathGroup.get(0).getInitialHolonomicPose().getRotation()
                   .plus(Rotation2d.fromDegrees(180))));
     } else {
+      swerve.gyro.setYaw(pathGroup.get(0))
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           pathGroup.get(0).getInitialHolonomicPose());
     }
@@ -264,7 +318,7 @@ public final class Autos {
   }
 
 
-  public Command ScoreOneIntakeBalance() {
+  public Command scoreOneIntakeBalance() {
     // This is the combined trajectories of autons we want to use.
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
@@ -427,13 +481,14 @@ public final class Autos {
 
   }
 
-  public Command PathPlannerInnerAuton5SquareTriangle() {
+  public Command innerAuton5SquareTriangle() {
     // This is the combined trajectories of autons we want to use.
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
 
     List<PathPlannerTrajectory> pathGroup =
+        // Why is this reversed???
         PathPlanner.loadPathGroup("PathPlannerInnerAuton5SquareTriangle", true,
             new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared));
@@ -480,12 +535,12 @@ public final class Autos {
 
   }
 
-  public Command pathplannerOuterAuton2ConeCubeBalance() {
+  public Command outerAuton2ConeCubeBalance() {
     // This is the combined trajectories of autons we want to use.
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
-
+    // Please stop reversing things.
     List<PathPlannerTrajectory> pathGroup =
         PathPlanner.loadPathGroup("pathplannerOuterAuton2ConeCubeBalance", true,
             new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
@@ -540,6 +595,7 @@ public final class Autos {
     // You can have multiple constraints for each path, but for our purposes it is not required.
 
     List<PathPlannerTrajectory> pathGroup =
+        // Nooooooo!
         PathPlanner.loadPathGroup("PathPlannerOuterAutonConeBalance", true,
             new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared));
@@ -591,7 +647,7 @@ public final class Autos {
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
-
+    // It don't work like that, please stop, I can't take it any more.
     List<PathPlannerTrajectory> pathGroup =
         PathPlanner.loadPathGroup("PathPlannerOuterAutonCubeBalance", true,
             new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
