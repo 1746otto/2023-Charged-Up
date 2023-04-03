@@ -41,9 +41,6 @@ public class Swerve extends SubsystemBase {
      */
     Timer.delay(5.0);
     resetModulesToAbsolute();
-    for (SwerveModule mod : mSwerveMods)
-      if (mod.angleEncoder.getLastError() != ErrorCode.OK)
-        spamRestart = true;
 
     poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, getYaw(),
         getModulePositions(), new Pose2d());

@@ -31,6 +31,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   }
 
+  public double getRequestedPosition() {
+    return requestPos;
+  }
+
   public void zeroEncoder() {
     armMotor.setSelectedSensorPosition(600);
   }
@@ -79,11 +83,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
     SmartDashboard.putNumber("Arm Encoder: ", armMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Target Position", requestPos);
-    if (SmartDashboard.getNumber("Target Position", requestPos) != requestPos)
-      requestPos =
-          Math.max(Math.min(SmartDashboard.getNumber("Target Position", requestPos), 0), -18000);
     armToRequest(requestPos);
+    SmartDashboard.putNumber("Target Position", getRequestedPosition());
 
   }
 }

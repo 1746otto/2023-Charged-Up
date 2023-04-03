@@ -46,9 +46,9 @@ public class ArmRollersSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     current = armRollerMotor.getOutputCurrent();
-    SmartDashboard.putNumber("Shoot speed", shootSpeed);
-    if (SmartDashboard.getNumber("Shoot speed", shootSpeed) != shootSpeed) {
-      shootSpeed = -Math.abs(SmartDashboard.getNumber("Shoot speed", shootSpeed));
-    }
+    // SmartDashboard.putNumber("Shoot speed", shootSpeed);
+    // if (SmartDashboard.getNumber("Shoot speed", shootSpeed) != shootSpeed) {
+    // shootSpeed = -Math.abs(SmartDashboard.getNumber("Shoot speed", shootSpeed));
+    // }
   }
 }
