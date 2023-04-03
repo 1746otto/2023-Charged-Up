@@ -238,13 +238,14 @@ public final class Autos {
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
-    
+
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Example Path",
         new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared));
     // This color might need to be swapped, I am not sure.
     if (DriverStation.getAlliance() == Alliance.Red) {
-      swerve.gyro.setYaw(pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180);
+      swerve.gyro
+          .setYaw(pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180);
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           new Pose2d(
               pathGroup.get(0).getInitialHolonomicPose().getTranslation()
@@ -252,7 +253,7 @@ public final class Autos {
               pathGroup.get(0).getInitialHolonomicPose().getRotation()
                   .plus(Rotation2d.fromDegrees(180))));
     } else {
-      swerve.gyro.setYaw(pathGroup.get(0))
+      swerve.gyro.setYaw(pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees());
       swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
           pathGroup.get(0).getInitialHolonomicPose());
     }

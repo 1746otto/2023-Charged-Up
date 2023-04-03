@@ -1,12 +1,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.BooleanSupplier;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import frc.lib.math.Conversions;
 import frc.robot.constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -16,7 +14,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
   private TalonFX armMotor;
   private CANCoder armEncoder;
   private BaseTalonPIDSetConfiguration armPIDController;
-  private double requestPos;
+  private double requestPos = 0;
 
   public ArmPositionSubsystem() {
     armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
@@ -65,6 +63,11 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
     SmartDashboard.putNumber("Arm Encoder: ", armMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Target Position", requestPos);
+    if (SmartDashboard.getNumber("Target Position", requestPos) != requestPos)
+      requestPos =
+          Math.max(Math.min(SmartDashboard.getNumber("Target Position", requestPos), 0), -18000);
     armToRequest(requestPos);
+
   }
 }
