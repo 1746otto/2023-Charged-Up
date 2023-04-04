@@ -38,6 +38,7 @@ import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.ArmRollerIntakeCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
 import frc.robot.commands.basic.ArmRollerRunInCommand;
+import frc.robot.commands.basic.ArmRollerStopCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -628,18 +629,15 @@ public final class Autos {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("FINAL PSUEDOBRUH HOPEFULLY",
         new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared));
-    // if (DriverStation.getAlliance() == Alliance.Blue) {
-    // swerve.gyro.setYaw(180);
-    // } else {
-    // swerve.gyro.setYaw(0);
-    // }
     PathPlannerState allianceState = PathPlannerTrajectory
         .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
+
+    // swerve.gyro.setYaw(allianceState.holonomicRotation.getDegrees());
 
     swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
         new Pose2d(allianceState.poseMeters.getTranslation(), allianceState.holonomicRotation));
 
-    SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
+    SmartDashboard.putString("Initial Pose", allianceState.holonomicRotation.toString());
 
     // Then we use the position we got from vision to get our actual initial pose and make a
     // trajectory to go to it.
@@ -679,26 +677,38 @@ public final class Autos {
       i++;
       controllerGroup.add(
           new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(7.875, 0, 0), new PIDController(7.875, 0, 0),
+              new PIDController(8.25, 0, 0), new PIDController(8.25, 0, 0),
               new PIDController(4.5, 0, 0), swerve::setModuleStates, true, swerve));
     }
 
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intake out", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("intake out",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.5));
+    eventMap.put("bring in intake",
+        new SequentialCommandGroup(new ArmRollerStopCommand(armRollerSubsystem),
+            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
+    eventMap.put("shoot", new ShootCommand(armPosSubsystem, armRollerSubsystem));
 
 
     // Make the auton command
-    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
+    Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
         new ShootCommand(armPosSubsystem, armRollerSubsystem),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-        new ShootCommand(armPosSubsystem, armRollerSubsystem),
+        // new ShootCommand(armPosSubsystem, armRollerSubsystem),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ShootCommand(armPosSubsystem, armRollerSubsystem), controllerGroup.get(2),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve));
+        // new ShootCommand(armPosSubsystem, armRollerSubsystem), controllerGroup.get(2),
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
+            .raceWith(
+                new AutonGyroReset(
+                    (DriverStation.getAlliance() == Alliance.Red)
+                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                            + 180
+                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 

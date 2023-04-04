@@ -52,6 +52,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShootCubeHighCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -261,7 +262,11 @@ public class RobotContainer {
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
     operatorB.onTrue(new ShootCommand(m_ArmPosSubystem, m_ArmRollersSubsystem));
-    // operatorY.whileTrue(new ArmToSmartDashboardCommand(m_ArmPosSubystem));
+    operatorLeftTrigger
+        .onTrue(new SequentialCommandGroup(new ArmRollerStopCommand(m_ArmRollersSubsystem),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+    operatorY.onTrue(
+        new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
   }
 
 
