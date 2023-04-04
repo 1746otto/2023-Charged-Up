@@ -31,6 +31,10 @@ public final class Autos {
     m_scoringAlignCommand = alignCommand;
   }
 
+  public Command moveAndPark() {
+    return new SequentialCommandGroup();
+  }
+
   public Command exampleAuto() {
     // This is the combined trajectories of autons we want to use.
     // Each trajectory we want to use is seperated by a stop point.
