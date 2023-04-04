@@ -220,8 +220,8 @@
       }
     }
   ],
-  "maxVelocity": 3.8,
-  "maxAcceleration": 3.25,
+  "maxVelocity": 3.625,
+  "maxAcceleration": 3.390625,
   "isReversed": null,
   "markers": [
     {
@@ -234,6 +234,18 @@
       "position": 4.87,
       "names": [
         "intake out"
+      ]
+    },
+    {
+      "position": 2.472727272727273,
+      "names": [
+        "bring in intake"
+      ]
+    },
+    {
+      "position": 5.163636363636358,
+      "names": [
+        "bring in intake"
       ]
     }
   ]

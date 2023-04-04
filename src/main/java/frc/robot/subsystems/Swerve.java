@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -44,6 +45,12 @@ public class Swerve extends SubsystemBase {
 
     poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, getYaw(),
         getModulePositions(), new Pose2d());
+  }
+
+  public void setDriveNeutralMode(NeutralMode mode) {
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setModuleNeutralMode(mode);
+    }
   }
 
   public double getMagnitude(Translation2d translation) {

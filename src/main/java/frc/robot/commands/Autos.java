@@ -10,9 +10,11 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ArmPositionSubsystem;
 import frc.robot.subsystems.ArmRollersSubsystem;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -631,8 +633,11 @@ public final class Autos {
     // } else {
     // swerve.gyro.setYaw(0);
     // }
+    PathPlannerState allianceState = PathPlannerTrajectory
+        .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
+
     swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        pathGroup.get(0).getInitialHolonomicPose());
+        new Pose2d(allianceState.poseMeters.getTranslation(), allianceState.holonomicRotation));
 
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
@@ -687,11 +692,13 @@ public final class Autos {
     // Make the auton command
     SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
         new ShootCommand(armPosSubsystem, armRollerSubsystem),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ShootCommand(armPosSubsystem, armRollerSubsystem),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ShootCommand(armPosSubsystem, armRollerSubsystem), controllerGroup.get(2));
+        new ShootCommand(armPosSubsystem, armRollerSubsystem), controllerGroup.get(2),
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve));
 
 
 
