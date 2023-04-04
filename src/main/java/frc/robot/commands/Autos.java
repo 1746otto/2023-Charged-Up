@@ -674,7 +674,7 @@ public final class Autos {
       i++;
       controllerGroup.add(
           new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(7.5, 0, 0), new PIDController(7.5, 0, 0),
+              new PIDController(7.875, 0, 0), new PIDController(7.875, 0, 0),
               new PIDController(4.5, 0, 0), swerve::setModuleStates, true, swerve));
     }
 
