@@ -38,7 +38,9 @@ import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.ArmRollerIntakeCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
 import frc.robot.commands.basic.ArmRollerRunInCommand;
+import frc.robot.commands.basic.ArmRollerShootCommand;
 import frc.robot.commands.basic.ArmRollerStopCommand;
+import frc.robot.commands.basic.RaiseIntakeAutonCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -677,30 +679,32 @@ public final class Autos {
       i++;
       controllerGroup.add(
           new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(8.25, 0, 0), new PIDController(8.25, 0, 0),
-              new PIDController(4.5, 0, 0), swerve::setModuleStates, true, swerve));
+              new PIDController(9.25, 0, .4), new PIDController(9.25, 0, .4),
+              new PIDController(5.75, 0, 0.2), swerve::setModuleStates, true, swerve));
     }
 
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("intake out",
-        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.5));
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.875));
     eventMap.put("bring in intake",
         new SequentialCommandGroup(new ArmRollerStopCommand(armRollerSubsystem),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
-    eventMap.put("shoot", new ShootCommand(armPosSubsystem, armRollerSubsystem));
-
+    // eventMap.put("shoot", new ShootPieceComeHomeAuton(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("raise intake", new RaiseIntakeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("Bring home",
+        new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(0.25));
 
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
-        new ShootCommand(armPosSubsystem, armRollerSubsystem),
+        new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-        // new ShootCommand(armPosSubsystem, armRollerSubsystem),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        // new ShootCommand(armPosSubsystem, armRollerSubsystem), controllerGroup.get(2),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5), controllerGroup.get(2),
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
             .raceWith(
                 new AutonGyroReset(

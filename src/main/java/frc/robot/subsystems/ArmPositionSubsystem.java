@@ -77,7 +77,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // System.out.println("CANCoder: " + armEncoder.getPosition());
+    SmartDashboard.putNumber("CANCoder: ", armEncoder.getAbsolutePosition());
     // System.out.println("Relative Encoder: " + armMotor.getSelectedSensorPosition());
     // armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
