@@ -687,7 +687,7 @@ public final class Autos {
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("intake out",
-        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.875));
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(1));
     eventMap.put("bring in intake",
         new SequentialCommandGroup(new ArmRollerStopCommand(armRollerSubsystem),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
