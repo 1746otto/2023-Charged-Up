@@ -35,6 +35,9 @@ public class VisionSubsystem extends SubsystemBase {
     } else {
       alliance = 0;
     }
+    new Thread(() -> {
+      fetchvision();
+    });
   }
 
   public void fetchvision() {
@@ -118,7 +121,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    fetchvision();
+    // fetchvision();
   }
 }
 
