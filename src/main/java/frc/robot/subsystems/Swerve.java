@@ -40,8 +40,18 @@ public class Swerve extends SubsystemBase {
      * By pausing init for a second before setting module offsets, we avoid a bug with inverting
      * motors. See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
      */
-    Timer.delay(5.0);
+    Timer.delay(1.0);
     resetModulesToAbsolute();
+
+    // for (int i = 0; i < 10; i++) {
+    // Timer.delay(.2);
+    // resetModulesToAbsolute();
+    // for (SwerveModule mod : mSwerveMods) {
+    // if (mod.angleEncoder.getLastError() != ErrorCode.OK)
+    // spamRestart = true;
+    // }
+    // }
+
 
     poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, getYaw(),
         getModulePositions(), new Pose2d());
@@ -118,6 +128,8 @@ public class Swerve extends SubsystemBase {
   public void resetModulesToAbsolute() {
     for (SwerveModule mod : mSwerveMods) {
       mod.resetToAbsolute();
+      if (mod.angleEncoder.getLastError() != ErrorCode.OK)
+        spamRestart = true;
     }
   }
 

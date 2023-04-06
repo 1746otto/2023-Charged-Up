@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ZeroOutElevatorCommand;
@@ -90,7 +91,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.s_Swerve.resetModulesToAbsolute();
+    // m_robotContainer.s_Swerve.resetModulesToAbsolute();
+    // Timer.delay(0.5);
   }
 
   /** This function is called periodically during operator control. */

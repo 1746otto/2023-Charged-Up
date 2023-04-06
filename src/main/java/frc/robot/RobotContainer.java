@@ -258,6 +258,9 @@ public class RobotContainer {
         mod.setModuleNeutralMode(NeutralMode.Coast);
       }
     }));
+    operatorStart.onTrue(new InstantCommand(() -> {
+      s_Swerve.resetModulesToAbsolute();
+    }).andThen(new WaitCommand(.5)));
     operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
@@ -272,7 +275,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.BConeCubeHigh();
+    return autos.scoreOneBalance();
   }
 
 }
