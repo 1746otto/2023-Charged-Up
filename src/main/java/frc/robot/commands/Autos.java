@@ -717,7 +717,8 @@ public final class Autos {
     eventMap.put("intake out",
         new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(1));
     eventMap.put("bring in intake",
-        new SequentialCommandGroup(new ArmRollerStopCommand(armRollerSubsystem),
+        new SequentialCommandGroup(
+            new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
     // eventMap.put("shoot", new ShootPieceComeHomeAuton(armPosSubsystem, armRollerSubsystem));
     eventMap.put("raise intake", new RaiseIntakeAutonCommand(armPosSubsystem, armRollerSubsystem));
@@ -818,9 +819,10 @@ public final class Autos {
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("intake out",
-        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(1));
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(2));
     eventMap.put("bring in intake",
-        new SequentialCommandGroup(new ArmRollerStopCommand(armRollerSubsystem),
+        new SequentialCommandGroup(
+            new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
     // eventMap.put("shoot", new ShootPieceComeHomeAuton(armPosSubsystem, armRollerSubsystem));
     eventMap.put("raise intake", new RaiseIntakeAutonCommand(armPosSubsystem, armRollerSubsystem));
@@ -920,10 +922,10 @@ public final class Autos {
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intake out",
-        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(1.25));
+    eventMap.put("intake out", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
     eventMap.put("bring in intake",
-        new SequentialCommandGroup(new ArmRollerStopCommand(armRollerSubsystem),
+        new SequentialCommandGroup(
+            new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
@@ -933,6 +935,9 @@ public final class Autos {
         scoreOne(),
         new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(.75),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
+        new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
+        new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(0.5),
+        new WaitCommand(1), controllerGroup.get(1),
         new ShootCubeHighCommand(elevatorSubsystem, armPosSubsystem, armRollerSubsystem),
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
             // new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5)
@@ -1010,14 +1015,20 @@ public final class Autos {
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intake out", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
-    eventMap.put("intake in", new RaiseIntakeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("intake out",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(1.5));
+    eventMap.put("intake in",
+        new SequentialCommandGroup(
+            new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
+            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos))
+                .withTimeout(0.5));
 
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve), scoreOne(),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
+        new ShootCubeHighCommand(elevatorSubsystem, armPosSubsystem, armRollerSubsystem),
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
             .raceWith(
                 new AutonGyroReset(
@@ -1192,5 +1203,106 @@ public final class Autos {
 
 
   }
+
+  public Command ArchiveBLThreeCubeLow() {
+
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+
+    List<PathPlannerTrajectory> pathGroup =
+        PathPlanner.loadPathGroup("ArchiveBLThreeCubeLow", new PathConstraints(2.875, 2.5));
+    PathPlannerState allianceState = PathPlannerTrajectory
+        .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
+
+    // swerve.gyro.setYaw(allianceState.holonomicRotation.getDegrees());
+
+    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+        new Pose2d(allianceState.poseMeters.getTranslation(), allianceState.holonomicRotation));
+
+    SmartDashboard.putString("Initial Pose", allianceState.holonomicRotation.toString());
+
+    // Then we use the position we got from vision to get our actual initial pose and make a
+    // trajectory to go to it.
+    // PathPlannerTrajectory goToStart = PathPlanner.generatePath(
+    // new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+    // AutoConstants.kMaxAccelerationMetersPerSecondSquared),
+    // new PathPoint(new Translation2d(m_swerve.getPose().getX(), m_swerve.getPose().getY()),
+    // Rotation2d.fromDegrees(0), m_swerve.getPose().getRotation()),
+    // new PathPoint(
+    // new Translation2d(pathGroup.get(0).getInitialState().poseMeters.getX(),
+    // pathGroup.get(0).getInitialState().poseMeters.getY()),
+    // pathGroup.get(0).getInitialState().poseMeters.getRotation(),
+    // pathGroup.get(0).getInitialState().holonomicRotation));
+
+    // Next we must pass the trajectory into a command that follows it.
+    // Currently this commmand is commented out because we don't have a limelight.
+    // PPSwerveControllerCommand goToStartCommand =
+    // new PPSwerveControllerCommand(
+    // goToStart,
+    // m_swerve::getPose,
+    // SwerveConstants.swerveKinematics,
+    // new PIDController(0, 0, 0),
+    // new PIDController(0, 0, 0),
+    // new PIDController(0, 0, 0),
+    // m_swerve::setModuleStates,
+    // true,
+    // m_swerve
+    // )
+    // ;
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    int i = 0;
+    for (PathPlannerTrajectory traj : pathGroup) {
+      System.out.println(i);
+      i++; // 8.25/9.25 .4
+      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.swerveKinematics, new PIDController(3, 0, 0), new PIDController(3, 0, 0),
+          new PIDController(5, 0, 0), swerve::setModuleStates, true, swerve));
+    }
+
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intake out",
+        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(2));
+    eventMap.put("bring in intake",
+        new SequentialCommandGroup(
+            new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
+            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
+    // eventMap.put("shoot", new ShootPieceComeHomeAuton(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("raise intake", new RaiseIntakeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("Bring home",
+        new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(0.25));
+
+    // Make the auton command
+    Command autonCommmand = new SequentialCommandGroup(
+        // goToStartCommand,
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+        new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
+        new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
+            .raceWith(
+                new AutonGyroReset(
+                    (DriverStation.getAlliance() == Alliance.Red)
+                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                            + 180
+                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+
+
+
+    return autonCommmand;
+
+
+
+  }
+
 
 }

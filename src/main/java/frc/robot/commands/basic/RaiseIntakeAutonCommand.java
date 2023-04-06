@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class RaiseIntakeAutonCommand extends ParallelCommandGroup {
   public RaiseIntakeAutonCommand(ArmPositionSubsystem armPosSub, ArmRollersSubsystem armRollerSub) {
-    addCommands(new ParallelCommandGroup(new ArmRequestSelectorCommand(armPosSub, -3000),
-        new ArmRollerRunInCommand(armRollerSub)));
+    addCommands(
+        new ParallelCommandGroup(new ArmRequestSelectorCommand(armPosSub, ArmConstants.kArmBowlPos),
+            new ArmRollerRunInCommand(armRollerSub)));
   }
 }

@@ -264,7 +264,13 @@ public class RobotContainer {
     operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
     // Elevator runs down to beam break to get the zero position.
     operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
-    operatorB.onTrue(new ShootCommand(m_ArmPosSubystem, m_ArmRollersSubsystem));
+
+    operatorB.onTrue(new SequentialCommandGroup(
+        new ParallelCommandGroup(
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidShootPos),
+            new ArmRollerRunInCommand(m_ArmRollersSubsystem)),
+        new WaitCommand(0.25), new ArmRollerShootCommand(m_ArmRollersSubsystem).withTimeout(.5),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
     operatorLeftTrigger
         .onTrue(new SequentialCommandGroup(new ArmRollerStopCommand(m_ArmRollersSubsystem),
             new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
@@ -275,7 +281,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.scoreOneBalance();
+    return autos.BLThreeCubeLow();
   }
 
 }
