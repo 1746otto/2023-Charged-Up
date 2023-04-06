@@ -70,11 +70,11 @@ public final class Autos {
 
   private boolean hasZeroed = false;
   // Swerve Controller PID values for Paths
-  private double translationalP = 26.5;
-  private double translationalD = 0.06;
+  private double translationalP = 3;// 26.5;
+  private double translationalD = 0;// 0.06;
   private double translationalI = 0.000;
-  private double rotationalP = 5;
-  private double rotationalD = .008;// (0.085 / 2.0);
+  private double rotationalP = 5;// 5;
+  private double rotationalD = 0;// .008;// (0.085 / 2.0);
   private double rotationalI = 0; // 0.0125;
 
 
@@ -418,6 +418,12 @@ public final class Autos {
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
+    SmartDashboard.putNumber("TP", translationalP);
+    SmartDashboard.putNumber("TI", translationalI);
+    SmartDashboard.putNumber("TD", translationalD);
+    SmartDashboard.putNumber("RP", rotationalP);
+    SmartDashboard.putNumber("RI", rotationalI);
+    SmartDashboard.putNumber("RD", rotationalD);
 
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("driveforwardtesting",
         new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
@@ -485,7 +491,9 @@ public final class Autos {
     // Make the auton command
     SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        controllerGroup.get(0));
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+        controllerGroup.get(0),
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve));
 
 
 
@@ -894,28 +902,28 @@ public final class Autos {
       i++;
       controllerGroup.add(
           new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(9.25, 0, .4), new PIDController(9.25, 0, .4),
-              new PIDController(5.75, 0, 0.2), swerve::setModuleStates, true, swerve));
+              new PIDController(translationalP, translationalI, translationalD),
+              new PIDController(translationalP, translationalI, translationalD),
+              new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates,
+              true, swerve));
     }
 
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intake out",
-        new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(1));
-    eventMap.put("bring in intake",
-        new SequentialCommandGroup(new ArmRollerStopCommand(armRollerSubsystem),
-            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
+    // eventMap.put("intake out",
+    // new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem).withTimeout(1));
+    // eventMap.put("bring in intake",
+    // new SequentialCommandGroup(new ArmRollerStopCommand(armRollerSubsystem),
+    // new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos)));
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
-        new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
-        new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
-        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5), controllerGroup.get(2),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
+        // new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
+        scoreOne(),
+        new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap))
+            // new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5)
             .raceWith(
                 new AutonGyroReset(
                     (DriverStation.getAlliance() == Alliance.Red)
