@@ -15,20 +15,26 @@ public class ArmRollerIntakeCommand extends CommandBase {
   }
 
   @Override
+  public void initialize() {
+    time = Timer.getFPGATimestamp();
+    current = false;
+  }
+
+  @Override
   public void execute() {
     m_Arm.armRollerIntake();
-    time = Timer.getFPGATimestamp();
+
   }
 
   @Override
   public void end(boolean interrupted) {
     m_Arm.armRollerStow();
-
+    time = 0;
   }
 
   @Override
   public boolean isFinished() {
-    if (Timer.getFPGATimestamp() - time > .1875)
+    if (Timer.getFPGATimestamp() - time > .25)
       current = m_Arm.currentBroken();
     return current;
   }

@@ -123,11 +123,14 @@ public final class Autos {
     // The reason we need these wait commands because the commands end when the solenoid is set to
     // true, not when the solenoid is actually fully in that state.
     return new SequentialCommandGroup(
-        new ParallelDeadlineGroup(new SequentialCommandGroup(
-            new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kHighPosition),
-            new WaitCommand(1.2)
-                .until(() -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
-            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos)),
+        new ParallelDeadlineGroup(
+            new SequentialCommandGroup(
+                new ElevatorRequestSelectorCommand(elevatorSubsystem,
+                    ElevatorConstants.kHighPosition),
+                // This is useless because it is being run after not at the same time as elevator.
+                new WaitCommand(1.2).until(
+                    () -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
+                new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos)),
             new ArmRollerIntakeCommand(armRollerSubsystem)),
         new WaitCommand(.75),
         new ParallelDeadlineGroup(
@@ -837,7 +840,7 @@ public final class Autos {
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
             .raceWith(
                 new AutonGyroReset(
@@ -1286,7 +1289,7 @@ public final class Autos {
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
             .raceWith(
                 new AutonGyroReset(

@@ -25,15 +25,15 @@
     {
       "anchorPoint": {
         "x": 5.518237019380022,
-        "y": 4.58
+        "y": 4.63
       },
       "prevControl": {
         "x": 4.340196647572651,
-        "y": 4.661244163572923
+        "y": 4.711244163572923
       },
       "nextControl": {
         "x": 5.849392895366989,
-        "y": 4.5571616637250365
+        "y": 4.607161663725036
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -50,15 +50,15 @@
     {
       "anchorPoint": {
         "x": 7.105501390489961,
-        "y": 4.579086423130112
+        "y": 4.63
       },
       "prevControl": {
         "x": 6.545962151753363,
-        "y": 4.601924759405074
+        "y": 4.652838336274963
       },
       "nextControl": {
         "x": 6.545962151753363,
-        "y": 4.601924759405074
+        "y": 4.652838336274963
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -85,7 +85,7 @@
         "x": 3.205860537719301,
         "y": 4.7514277104863
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": -190.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -249,28 +249,14 @@
       ]
     },
     {
-      "position": 5.86,
-      "names": [
-        "shoot"
-      ]
-    },
-    {
-      "position": 3.43272727272726,
-      "names": [
-        "shoot"
-      ]
-    },
-    {
       "position": 2.967272727272708,
       "names": [
-        "event",
         "raise intake"
       ]
     },
     {
       "position": 5.643636363636048,
       "names": [
-        "event",
         "raise intake"
       ]
     },
@@ -281,10 +267,15 @@
       ]
     },
     {
-      "position": 6.109090909090586,
+      "position": 5.643636363636373,
       "names": [
-        "event",
         "Bring home"
+      ]
+    },
+    {
+      "position": 7.0981818181817955,
+      "names": [
+        "raise intake"
       ]
     }
   ]

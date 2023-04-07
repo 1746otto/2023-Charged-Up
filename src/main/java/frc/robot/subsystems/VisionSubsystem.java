@@ -39,7 +39,7 @@ public class VisionSubsystem extends SubsystemBase {
     new Thread(() -> {
       while (true) {
         fetchvision();
-        Timer.delay(0.01);
+        Timer.delay(0.04);
       }
     });
   }

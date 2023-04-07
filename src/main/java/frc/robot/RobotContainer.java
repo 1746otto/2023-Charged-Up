@@ -220,6 +220,7 @@ public class RobotContainer {
         .onTrue(new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
             new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.ksubstationPosition)));
 
+
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
 
     driverB.onTrue(new SequentialCommandGroup(
@@ -281,7 +282,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.BLThreeCubeLow();
+    return autos.scoreOneBalance();
   }
 
 }
