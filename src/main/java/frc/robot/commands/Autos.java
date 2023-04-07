@@ -134,15 +134,16 @@ public final class Autos {
                 new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos)),
             new ArmRollerIntakeCommand(armRollerSubsystem)),
         // This can be lessened significantly.
+        // This is to make sure arm is actually out on time
         new WaitCommand(.75),
         new ParallelDeadlineGroup(
-            new SequentialCommandGroup(new WaitCommand(0.8),
+            new SequentialCommandGroup(new WaitCommand(0.1),
                 new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos),
                 // This is again useless, it should be a timeout. The arm finishes already.
                 new WaitCommand(.25)
                     .until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
                 // What is this for?
-                new WaitCommand(.25),
+                // new WaitCommand(.25),
                 new ElevatorRequestSelectorCommand(elevatorSubsystem,
                     ElevatorConstants.kOriginPosition)),
             // Why is this a deadline group, we should just outtake and be done with it.
@@ -946,8 +947,8 @@ public final class Autos {
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
         new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(0.5),
-        new WaitCommand(.125), controllerGroup.get(1), scoreOne(),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
+        new WaitCommand(.125), controllerGroup.get(1),
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve), scoreOne())
             // new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5)
             .raceWith(
                 new AutonGyroReset(
