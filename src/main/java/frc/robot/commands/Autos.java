@@ -115,7 +115,8 @@ public final class Autos {
   }
 
   public Command moveBalance() {
-    return new SequentialCommandGroup(resetGyroCommand(), new DriveOverChargeStationCommand(swerve),
+    return new SequentialCommandGroup(resetGyroCommand(),
+        new DriveOverChargeStationCommand(swerve).withTimeout(2.0),
         new DriveBackTo5DegreesCommand(swerve), new BalancingCommand(swerve));
   }
 
@@ -132,15 +133,19 @@ public final class Autos {
                     () -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
                 new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos)),
             new ArmRollerIntakeCommand(armRollerSubsystem)),
+        // This can be lessened significantly.
         new WaitCommand(.75),
         new ParallelDeadlineGroup(
             new SequentialCommandGroup(new WaitCommand(0.8),
                 new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos),
+                // This is again useless, it should be a timeout. The arm finishes already.
                 new WaitCommand(.25)
                     .until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
+                // What is this for?
                 new WaitCommand(.5),
                 new ElevatorRequestSelectorCommand(elevatorSubsystem,
                     ElevatorConstants.kOriginPosition)),
+            // Why is this a deadline group, we should just outtake and be done with it.
             new ArmRollerOuttakeCommand(armRollerSubsystem)),
         new WaitCommand(1.2));
 
@@ -940,8 +945,7 @@ public final class Autos {
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
         new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(0.5),
-        new WaitCommand(1), controllerGroup.get(1),
-        new ShootCubeHighCommand(elevatorSubsystem, armPosSubsystem, armRollerSubsystem),
+        new WaitCommand(1), controllerGroup.get(1), scoreOne(),
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
             // new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5)
             .raceWith(
