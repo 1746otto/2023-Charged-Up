@@ -142,11 +142,12 @@ public final class Autos {
                 new WaitCommand(.25)
                     .until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
                 // What is this for?
-                new WaitCommand(.5),
+                new WaitCommand(.25),
                 new ElevatorRequestSelectorCommand(elevatorSubsystem,
                     ElevatorConstants.kOriginPosition)),
             // Why is this a deadline group, we should just outtake and be done with it.
             new ArmRollerOuttakeCommand(armRollerSubsystem)),
+        // Why is this so long?
         new WaitCommand(1.2));
 
   }
@@ -945,7 +946,7 @@ public final class Autos {
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
         new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(0.5),
-        new WaitCommand(1), controllerGroup.get(1), scoreOne(),
+        new WaitCommand(.125), controllerGroup.get(1), scoreOne(),
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
             // new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5)
             .raceWith(
