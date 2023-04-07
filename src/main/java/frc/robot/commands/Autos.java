@@ -1035,8 +1035,7 @@ public final class Autos {
         // goToStartCommand,
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve), scoreOne(),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-        new ShootCubeHighCommand(elevatorSubsystem, armPosSubsystem, armRollerSubsystem),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
+        scoreOne(), new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
             .raceWith(
                 new AutonGyroReset(
                     (DriverStation.getAlliance() == Alliance.Red)
