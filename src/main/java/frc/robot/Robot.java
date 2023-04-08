@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     PathPlannerServer.startServer(5811);
     m_robotContainer = new RobotContainer();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // This won't work because the robot will be disabled. Also, the elevator subsystem within robot
     // container is private.
@@ -71,7 +72,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // m_robotContainer.s_Swerve.resetModulesToAbsolute();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
