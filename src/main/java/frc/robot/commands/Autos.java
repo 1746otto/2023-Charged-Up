@@ -171,6 +171,28 @@ public final class Autos {
     return new DriveForwardsCommand(swerve).beforeStarting(resetGyroCommand());
   }
 
+  public Command ArchivescoreOne() {
+    return new SequentialCommandGroup(
+        new ParallelDeadlineGroup(new SequentialCommandGroup(
+            new ElevatorRequestSelectorCommand(elevatorSubsystem, ElevatorConstants.kHighPosition),
+            new WaitCommand(1.2)
+                .until(() -> elevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
+            new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmHighScoringPos)),
+            new ArmRollerIntakeCommand(armRollerSubsystem)),
+        new WaitCommand(.75),
+        new ParallelDeadlineGroup(
+            new SequentialCommandGroup(new WaitCommand(.8),
+                new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos),
+                new WaitCommand(.25)
+                    .until(() -> armPosSubsystem.armAtReq(ArmConstants.kArmRestPos)),
+                new WaitCommand(.25),
+                new ElevatorRequestSelectorCommand(elevatorSubsystem,
+                    ElevatorConstants.kOriginPosition)),
+            new ArmRollerOuttakeCommand(armRollerSubsystem)),
+        new WaitCommand(1.2));
+  }
+
+
   // Not sure if have to create duplicate keys for same event label
 
   private HashMap<String, Command> create3PieceEventMap() {
@@ -967,8 +989,8 @@ public final class Autos {
 
   }
 
-
-  public Command PathPlannerOuterAutonConeBalance() {
+  
+   Command PathPlannerOuterAutonConeBalance() {
     // This is the combined trajectories of autons we want to use.
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
