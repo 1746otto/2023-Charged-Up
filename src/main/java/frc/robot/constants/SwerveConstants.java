@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.lib.util.BetterSwerveKinematics;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -33,6 +34,12 @@ public final class SwerveConstants {
    */
   public static final SwerveDriveKinematics swerveKinematics =
       new SwerveDriveKinematics(new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+          new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+          new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+          new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+
+  public static final BetterSwerveKinematics betterSwerveKinematics =
+      new BetterSwerveKinematics(new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
           new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
           new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
           new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
