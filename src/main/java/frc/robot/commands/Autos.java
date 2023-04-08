@@ -893,9 +893,8 @@ public final class Autos {
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
 
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("B3ConeCubeHigh",
-        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    List<PathPlannerTrajectory> pathGroup =
+        PathPlanner.loadPathGroup("B3ConeCubeHigh", new PathConstraints(3.5, 3.25));
     PathPlannerState allianceState = PathPlannerTrajectory
         .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
 
@@ -952,9 +951,9 @@ public final class Autos {
 
     // Assuming it takes the correct amount of time the time estimate for the auton is:
     // 3.75 for scoreOne() + 1.375 for shoot + 9.62@3-3/10.01@2.875-2.75/10.42@2.875-2.5 =
-    // 14.745/15.135/15.545
+    // 14.745/15.135/15.545 // all off by about .06-.07
     // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh why?????????????
-    // If we push more we can get 14.365@3.5-3.25. We may have to use this one because of no second
+    // If we push more we can get 14.425@3.5-3.25. We may have to use this one because of no second
     // order kinematics.
     // Corrected times will differ by ~.2.
     // Now we create an event map that will hold the name of the marker and the corresponding event.
