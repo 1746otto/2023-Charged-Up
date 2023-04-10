@@ -241,7 +241,7 @@ public class RobotContainer {
             .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmHighScoringPos)));
 
-    operatorX.onTrue(new XLockCommand(s_Swerve));
+    operatorX.whileTrue(new XLockCommand(s_Swerve));
     driverStart.onTrue(new InstantCommand(() -> {
       s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
     }));
@@ -282,7 +282,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.scoreOne();
+    return autos.BConeCubeHigh();
   }
 
 }

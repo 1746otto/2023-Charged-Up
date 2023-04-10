@@ -989,8 +989,8 @@ public final class Autos {
 
   }
 
-  
-   Command PathPlannerOuterAutonConeBalance() {
+
+  public Command PathPlannerOuterAutonConeBalance() {
     // This is the combined trajectories of autons we want to use.
     // Each trajectory we want to use is seperated by a stop point.
     // We store each path in the deploy/Path Planner/ folder.
