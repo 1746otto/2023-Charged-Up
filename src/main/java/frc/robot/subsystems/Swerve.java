@@ -134,10 +134,15 @@ public class Swerve extends SubsystemBase {
   }
 
   public void XLock() {
-    mSwerveMods[0].setAngleNoDeadzone(Rotation2d.fromDegrees(45));
-    mSwerveMods[1].setAngleNoDeadzone(Rotation2d.fromDegrees(135));
-    mSwerveMods[2].setAngleNoDeadzone(Rotation2d.fromDegrees(135));
-    mSwerveMods[3].setAngleNoDeadzone(Rotation2d.fromDegrees(45));
+    double[] mAngles = new double[4];
+    mAngles[0] = (int) (mSwerveMods[0].getPosition().angle.getDegrees() / 180) * 180 + 45;
+    mAngles[1] = (int) (mSwerveMods[1].getPosition().angle.getDegrees() / 180) * 180 + 135;
+    mAngles[2] = (int) (mSwerveMods[2].getPosition().angle.getDegrees() / 180) * 180 + 135;
+    mAngles[3] = (int) (mSwerveMods[3].getPosition().angle.getDegrees() / 180) * 180 + 45;
+    mSwerveMods[0].setAngleNoDeadzone(Rotation2d.fromDegrees(mAngles[0]));
+    mSwerveMods[1].setAngleNoDeadzone(Rotation2d.fromDegrees(mAngles[1]));
+    mSwerveMods[2].setAngleNoDeadzone(Rotation2d.fromDegrees(mAngles[2]));
+    mSwerveMods[3].setAngleNoDeadzone(Rotation2d.fromDegrees(mAngles[3]));
   }
 
   public void addVisionMeasurement(Pose2d pose, double latency) {
