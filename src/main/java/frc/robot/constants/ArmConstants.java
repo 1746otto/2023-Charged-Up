@@ -5,7 +5,7 @@ public final class ArmConstants {
   public static final double kArmRestPos = 0.0;
   public static final double kArmIntakeAndScorePos = -18640.0;
   // TODO: change cube intake pos
-  public static final double kArmConeIntakePos = -18640.0;
+  public static final double kArmConeIntakePos = -16000.00;
   public static final double kArmHighScoringPos = -14776.0;
   public static final double kArmBowlPos = -10426.0;
   public static final double kArmMidShootPos = -3500;

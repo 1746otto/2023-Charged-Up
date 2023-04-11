@@ -53,6 +53,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShootCubeHighCommand;
+import frc.robot.commands.ConeIntakeCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -264,7 +265,7 @@ public class RobotContainer {
     }).andThen(new WaitCommand(.5)));
     operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
     // Elevator runs down to beam break to get the zero position.
-    operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+    // operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
 
     operatorB.onTrue(new SequentialCommandGroup(
         new ParallelCommandGroup(
@@ -277,8 +278,17 @@ public class RobotContainer {
             new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
     operatorY.onTrue(
         new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
+    operatorA.whileTrue(new ParallelCommandGroup(
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kConeElevatorIntakePos),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
+    operatorA.onFalse(new ParallelCommandGroup(
+        // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+        // ElevatorConstants.kOriginPosition),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem)));
   }
-
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
@@ -286,3 +296,4 @@ public class RobotContainer {
   }
 
 }
+
