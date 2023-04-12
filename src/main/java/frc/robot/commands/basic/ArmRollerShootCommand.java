@@ -3,21 +3,21 @@ package frc.robot.commands.basic;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmRollersSubsystem;
 
-public class ArmRollerStopCommand extends CommandBase {
+public class ArmRollerShootCommand extends CommandBase {
   private ArmRollersSubsystem m_Arm;
 
-  public ArmRollerStopCommand(ArmRollersSubsystem subsystem) {
+  public ArmRollerShootCommand(ArmRollersSubsystem subsystem) {
     m_Arm = subsystem;
     addRequirements(subsystem);
   }
 
   @Override
-  public void initialize() {
-    m_Arm.armRollerStop();
+  public void execute() {
+    m_Arm.armRollerShoot();
   }
 
   @Override
-  public boolean isFinished() {
-    return true;
+  public void end(boolean interrupted) {
+    m_Arm.armRollerStop();
   }
 }

@@ -83,17 +83,17 @@ public final class SwerveConstants {
    * Drive Motor Characterization Values Divide SYSID values by 12 to convert from volts to percent
    * output for CTRE
    */
-  public static final double driveKS = (0.10163 / 12.0); // TODO: This must be tuned cuz its bad
-  public static final double driveKV = (1.8382 / 12.0);
-  public static final double driveKA = (0.14572 / 12.0);
+  public static final double driveKS = (0.22528 / 12.0); // TODO: This must be tuned cuz its bad
+  public static final double driveKV = (1.8397 / 12.0);
+  public static final double driveKA = (0.19052 / 12.0);
 
   /* Swerve Profiling Values */
   /** Meters per Second */
-  public static double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
+  public static double maxSpeed = 13.5; // TODO: This must be tuned to specific robot
   /** Radians per Second */
-  public static final double maxAngularVelocity = 5; // TODO: This must be tuned to specific robot
+  public static double maxAngularVelocity = 10; // TODO: This must be tuned to specific robot
 
-  public static final double autonDriveSpeed = 0.425;
+  public static final double autonDriveSpeed = 0.250;
 
   /* Neutral Modes */
   public static NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -133,7 +133,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 1;
     public static final int angleMotorID = 2;
     public static final int canCoderID = 0;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(151.875000);// 328.623047
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(151.699219);// 328.623047
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
@@ -148,7 +148,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 21;
     public static final int angleMotorID = 22;
     public static final int canCoderID = 20;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(42.978516 + 180);// 158.378906
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(30.410156 + 180);// 158.378906
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;

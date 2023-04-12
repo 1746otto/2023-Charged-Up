@@ -26,6 +26,7 @@ public class DriveTo5DegreesCommand extends CommandBase {
     if (DriverStation.getAlliance() == Alliance.Red) {
       direction = -1;
     }
+
   }
 
   @Override

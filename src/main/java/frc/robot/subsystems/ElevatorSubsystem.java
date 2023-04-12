@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
 import frc.robot.constants.ElevatorConstants;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private final double kP = ElevatorConstants.kElevatorP;
@@ -27,7 +28,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   private SparkMaxLimitSwitch limitSwitch;
   private boolean beamBreakLastState;
   private double currState;
+  private double reqPosition;
 
+  // Make a vacation home for the elevator
   public ElevatorSubsystem() {
     elevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotor1ID, MotorType.kBrushless);
     beamBreak = new AnalogInput(ElevatorConstants.kElevatorAnalogInputChannel);
@@ -38,7 +41,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     // pidController.setFF(.005, 0);
     pidController.setOutputRange(-0.7, 0.7);
     elevatorMotor.setIdleMode(IdleMode.kBrake);
-    // elevatorMotor.getEncoder().setPosition(0);
+    elevatorMotor.getEncoder().setPosition(0);
+    reqPosition = ElevatorConstants.kOriginPosition;
+    // pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
+    // pidController.setReference(0, ControlType.kSmartMotion, 0);
   }
 
   public void elevatorRunUp() {
@@ -51,6 +57,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void stopElevator() {
     elevatorMotor.stopMotor();
+  }
+
+  public boolean isElevatorAtReq(double reqPosition) {
+    return (getElevatorEncoderValues() == reqPosition);
   }
 
   public boolean beamBreakBroken() {
@@ -69,14 +79,32 @@ public class ElevatorSubsystem extends SubsystemBase {
     return currState;
   }
 
-  public void runToRequest(double reqPosition) {
-    pidController.setReference(reqPosition, ControlType.kPosition);
+  public void setElevatorReq(double req) {
+    reqPosition = req;
+  }
+
+  public boolean reqIsCorrect(double req) {
+    return (reqPosition == req);
+  }
+
+  public void runToRequest(double requestPos) {
+    if (limitSwitchActivated() || beamBreakBroken()) {
+      stopElevator();
+      if (beamBreakBroken()) {
+        setPositionTo0();
+      }
+    } else {
+      pidController.setReference(reqPosition, ControlType.kPosition);
+    }
   }
 
   @Override
   public void periodic() {
-    beamBreakLastState = (Math.floor(beamBreak.getVoltage()) > 0 && (elevatorMotor.get() < 0));
-    // System.out.println("Beam break: " + beamBreakLastState);
     currState = elevatorMotor.getEncoder().getPosition();
+    beamBreakLastState = ((Math.floor(beamBreak.getVoltage()) > 0) && (elevatorMotor.get() < 0));
+    runToRequest(reqPosition);
+    SmartDashboard.putNumber("Elevator: ", currState);
+    SmartDashboard.putBoolean("Beambreak: ", beamBreakBroken());
+    SmartDashboard.putBoolean("LimitSwitch: ", limitSwitchActivated());
   }
 }
