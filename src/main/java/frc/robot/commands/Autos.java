@@ -16,7 +16,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import frc.lib.util.BetterPPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -252,15 +252,15 @@ public final class Autos {
 
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(2.2, 0.2, .05), new PIDController(2.2, 0.2, .05),
-              new PIDController(2.95, 0, 0.1325), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(2.2, 0.2, .05),
+          new PIDController(2.2, 0.2, .05), new PIDController(2.95, 0, 0.1325),
+          swerve::setModuleStates, true, swerve));
     }
 
 
@@ -311,11 +311,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -327,12 +327,13 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
 
     for (PathPlannerTrajectory traj : pathGroup) {
-      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
-          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
-          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), new PIDController(0, 0, 0), swerve::setModuleStates, true,
+          swerve));
     }
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
@@ -402,11 +403,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -418,12 +419,13 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
 
     for (PathPlannerTrajectory traj : pathGroup) {
-      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
-          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
-          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), new PIDController(0, 0, 0), swerve::setModuleStates, true,
+          swerve));
     }
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
@@ -486,11 +488,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -503,17 +505,17 @@ public final class Autos {
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
 
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates,
-              true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics,
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates, true,
+          swerve));
     }
 
 
@@ -568,15 +570,15 @@ public final class Autos {
 
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(2.2, 0.2, .05), new PIDController(2.2, 0.2, .05),
-              new PIDController(2.95, 0, 0.1325), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(2.2, 0.2, .05),
+          new PIDController(2.2, 0.2, .05), new PIDController(2.95, 0, 0.1325),
+          swerve::setModuleStates, true, swerve));
     }
 
 
@@ -631,11 +633,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -647,15 +649,15 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(7.5, 0, 0), new PIDController(7.5, 0, 0),
-              new PIDController(4.5, 0, 0), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(7.5, 0, 0),
+          new PIDController(7.5, 0, 0), new PIDController(4.5, 0, 0), swerve::setModuleStates, true,
+          swerve));
     }
 
 
@@ -715,11 +717,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -731,15 +733,15 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(9.25, 0, .4), new PIDController(9.25, 0, .4),
-              new PIDController(5.75, 0, 0.2), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(9.25, 0, .4),
+          new PIDController(9.25, 0, .4), new PIDController(5.75, 0, 0.2), swerve::setModuleStates,
+          true, swerve));
     }
 
 
@@ -817,11 +819,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -833,17 +835,17 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++; // 8.25/9.25 .4
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates,
-              true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics,
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates, true,
+          swerve));
     }
 
 
@@ -921,11 +923,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -937,17 +939,17 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates,
-              true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics,
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates, true,
+          swerve));
     }
 
     // Assuming it takes the correct amount of time the time estimate for the auton is:
@@ -1030,11 +1032,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -1046,17 +1048,17 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates,
-              true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics,
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates, true,
+          swerve));
     }
 
 
@@ -1132,11 +1134,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -1148,17 +1150,17 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(translationalP, translationalI, translationalD),
-              new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates,
-              true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics,
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(translationalP, translationalI, translationalD),
+          new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates, true,
+          swerve));
     }
 
 
@@ -1230,11 +1232,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -1246,12 +1248,13 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
 
     for (PathPlannerTrajectory traj : pathGroup) {
-      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
-          SwerveConstants.swerveKinematics, new PIDController(0, 0, 0), new PIDController(0, 0, 0),
-          new PIDController(0, 0, 0), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(0, 0, 0),
+          new PIDController(0, 0, 0), new PIDController(0, 0, 0), swerve::setModuleStates, true,
+          swerve));
     }
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
@@ -1309,15 +1312,15 @@ public final class Autos {
 
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(2.2, 0.2, .05), new PIDController(2.2, 0.2, .05),
-              new PIDController(2.95, 0, 0.1325), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(2.2, 0.2, .05),
+          new PIDController(2.2, 0.2, .05), new PIDController(2.95, 0, 0.1325),
+          swerve::setModuleStates, true, swerve));
     }
 
 
@@ -1363,15 +1366,15 @@ public final class Autos {
 
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(2.2, 0.2, .05), new PIDController(2.2, 0.2, .05),
-              new PIDController(2.95, 0, 0.1325), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(2.2, 0.2, .05),
+          new PIDController(2.2, 0.2, .05), new PIDController(2.95, 0, 0.1325),
+          swerve::setModuleStates, true, swerve));
     }
 
 
@@ -1416,15 +1419,15 @@ public final class Autos {
 
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++;
-      controllerGroup.add(
-          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
-              new PIDController(2.2, 0.2, .05), new PIDController(2.2, 0.2, .05),
-              new PIDController(2.95, 0, 0.1325), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(2.2, 0.2, .05),
+          new PIDController(2.2, 0.2, .05), new PIDController(2.95, 0, 0.1325),
+          swerve::setModuleStates, true, swerve));
     }
 
 
@@ -1478,11 +1481,11 @@ public final class Autos {
 
     // Next we must pass the trajectory into a command that follows it.
     // Currently this commmand is commented out because we don't have a limelight.
-    // PPSwerveControllerCommand goToStartCommand =
-    // new PPSwerveControllerCommand(
+    // BetterPPSwerveControllerCommand goToStartCommand =
+    // new BetterPPSwerveControllerCommand(
     // goToStart,
     // m_swerve::getPose,
-    // SwerveConstants.swerveKinematics,
+    // SwerveConstants.betterSwerveKinematics,
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
     // new PIDController(0, 0, 0),
@@ -1494,14 +1497,15 @@ public final class Autos {
 
     // We then make a list of controller commands that can be accessed through the .get(int i)
     // method.
-    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+    List<BetterPPSwerveControllerCommand> controllerGroup = new ArrayList<>();
     int i = 0;
     for (PathPlannerTrajectory traj : pathGroup) {
       System.out.println(i);
       i++; // 8.25/9.25 .4
-      controllerGroup.add(new PPSwerveControllerCommand(traj, swerve::getPose,
-          SwerveConstants.swerveKinematics, new PIDController(3, 0, 0), new PIDController(3, 0, 0),
-          new PIDController(5, 0, 0), swerve::setModuleStates, true, swerve));
+      controllerGroup.add(new BetterPPSwerveControllerCommand(traj, swerve::getPose,
+          SwerveConstants.betterSwerveKinematics, new PIDController(3, 0, 0),
+          new PIDController(3, 0, 0), new PIDController(5, 0, 0), swerve::setModuleStates, true,
+          swerve));
     }
 
 

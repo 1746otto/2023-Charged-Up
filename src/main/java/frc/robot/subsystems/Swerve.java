@@ -4,7 +4,8 @@ import frc.robot.SwerveModule;
 import frc.robot.constants.SwerveConstants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import frc.lib.util.BetterSwerveKinematics;
+import frc.lib.util.BetterSwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -14,7 +15,6 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -71,12 +71,12 @@ public class Swerve extends SubsystemBase {
   // fieldRelative switches the speeds from fieldRelative to robotRelative and vice versa
   public void drive(Translation2d translation, double rotation, boolean fieldRelative,
       boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates =
-        SwerveConstants.swerveKinematics.toSwerveModuleStates(fieldRelative
+    BetterSwerveModuleState[] swerveModuleStates =
+        SwerveConstants.betterSwerveKinematics.toSwerveModuleStates(fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(),
                 rotation, getYaw())
             : new ChassisSpeeds((translation.getX()), (translation.getY()), rotation));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.maxSpeed);
+    BetterSwerveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
@@ -84,8 +84,8 @@ public class Swerve extends SubsystemBase {
   }
 
   /* Used by SwerveControllerCommand in Auto */
-  public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxSpeed);
+  public void setModuleStates(BetterSwerveModuleState[] desiredStates) {
+    BetterSwerveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
@@ -100,10 +100,10 @@ public class Swerve extends SubsystemBase {
     poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
   }
 
-  public SwerveModuleState[] getModuleStates() {
-    SwerveModuleState[] states = new SwerveModuleState[4];
+  public BetterSwerveModuleState[] getModuleStates() {
+    BetterSwerveModuleState[] states = new BetterSwerveModuleState[4];
     for (SwerveModule mod : mSwerveMods) {
-      states[mod.moduleNumber] = mod.getState();
+      states[mod.moduleNumber] = mod.getBetterModuleState();
     }
     return states;
   }
