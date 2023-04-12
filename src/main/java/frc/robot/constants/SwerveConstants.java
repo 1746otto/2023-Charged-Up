@@ -79,6 +79,9 @@ public final class SwerveConstants {
   public static final double angleKI = chosenModule.angleKI;
   public static final double angleKD = chosenModule.angleKD;
   public static final double angleKF = chosenModule.angleKF;
+  public static final double angleKV = 0.0125; // 0.3 or 0.3/12 1/rad/sec TODO: Tune this so our
+                                               // robot
+  // doesn't spin that much
 
   /* Drive Motor PID Values */
   public static final double driveKP = 0.01; // TODO: This must be tuned to specific robot
