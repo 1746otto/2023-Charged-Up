@@ -96,7 +96,7 @@ public class SwerveModule {
   }
 
   public double getAngularVelocity() {
-    return Conversions.falconToDegrees(mAngleMotor.getSelectedSensorVelocity() * 10,
+    return Conversions.falconToDegrees(mAngleMotor.getSelectedSensorVelocity() / 10.0,
         SwerveConstants.angleGearRatio) * Math.PI / 180.0;
   }
 
