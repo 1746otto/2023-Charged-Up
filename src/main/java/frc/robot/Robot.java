@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +27,10 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private ZeroOutElevatorCommand m_ZeroOutElevator;
+  private AddressableLED led;
+  private AddressableLEDBuffer ledBuffer;
+
+  private int rainbowFirstPixelHue;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -39,6 +45,10 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+    led = new AddressableLED(0);
+    ledBuffer = new AddressableLEDBuffer(91);
+    led.setLength(ledBuffer.getLength());
+    led.start();
     // This won't work because the robot will be disabled. Also, the elevator subsystem within robot
     // container is private.
     // m_ZeroOutElevator = new ZeroOutElevatorCommand(m_robotContainer.m_ElevatorSubsystem);
@@ -52,12 +62,29 @@ public class Robot extends TimedRobot {
    * This runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard
    * integrated updating.
    */
+  private void rainbow() {
+    // For every pixel
+    for (int i = 0; i < ledBuffer.getLength(); i++) {
+      // Calculate the hue - hue is easier for rainbows because the color
+      // shape is a circle so only one value needs to precess
+      final int hue = (rainbowFirstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
+      // Set the value
+      ledBuffer.setHSV(i, hue, 255, 128);
+    }
+    // Increase by to make the rainbow "move"
+    rainbowFirstPixelHue += 3;
+    // Check bounds
+    rainbowFirstPixelHue %= 180;
+  }
+
   @Override
   public void robotPeriodic() {
     // Runs the Scheduler. This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods. This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    rainbow();
+    led.setData(ledBuffer);
     CommandScheduler.getInstance().run();
   }
 

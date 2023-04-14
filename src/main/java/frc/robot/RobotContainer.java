@@ -149,9 +149,10 @@ public class RobotContainer {
 
     // Auton Selector
     m_chooser.setDefaultOption("Score only", autos.scoreOne());
-    m_chooser.addOption("Cone,Cube,Cone Top", autos.Bruh());
-    m_chooser.addOption("Top Cube,Balance ", autos.PathPlannerOuterAutonCubeBalance());
-    m_chooser.addOption("Bottom Cone,Balance ", autos.PathPlannerOuterAutonConeBalance());
+    m_chooser.addOption("Bump side two piece", autos.BConeCubeHigh());
+    m_chooser.addOption("Score one balance", autos.scoreOneBalance());
+    m_chooser.addOption("Bumpless Three piece", autos.BLThreeCubeLow());
+    m_chooser.addOption("Bump side 2 and a half", autos.B3ConeCubeHigh());
     SmartDashboard.putData("Auton Selector: ", m_chooser);
 
 
@@ -282,7 +283,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.scoreOne();
+    return m_chooser.getSelected();
   }
 
 }
