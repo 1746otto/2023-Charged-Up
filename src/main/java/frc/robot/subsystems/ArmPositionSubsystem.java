@@ -58,7 +58,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armMotor.set(TalonFXControlMode.Position, requestedPosition, DemandType.ArbitraryFeedForward,
         feedForward.calculate(
             Conversions.falconToDegrees(armMotor.getSelectedSensorPosition(), 30) * Math.PI / 180.0,
-            -(requestedPosition - armMotor.getSelectedSensorPosition()) / 18000.0) / 12.0);
+            0));
   }
 
   public void setHomeSpeed() {
