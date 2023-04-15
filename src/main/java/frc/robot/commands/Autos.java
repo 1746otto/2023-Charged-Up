@@ -10,6 +10,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ArmPositionSubsystem;
 import frc.robot.subsystems.ArmRollersSubsystem;
+import frc.robot.subsystems.CatapultSubsystem;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -40,6 +41,8 @@ import frc.robot.commands.basic.ArmRollerOuttakeCommand;
 import frc.robot.commands.basic.ArmRollerRunInCommand;
 import frc.robot.commands.basic.ArmRollerShootCommand;
 import frc.robot.commands.basic.ArmRollerStopCommand;
+import frc.robot.commands.basic.CatapultRunToMax;
+import frc.robot.commands.basic.CatapultRunToMin;
 import frc.robot.commands.basic.RaiseIntakeAutonCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
@@ -58,6 +61,7 @@ public final class Autos {
   ElevatorSubsystem elevatorSubsystem;
   ArmPositionSubsystem armPosSubsystem;
   ArmRollersSubsystem armRollerSubsystem;
+  CatapultSubsystem catapultSubsystem;
 
   // Paths
   List<PathPlannerTrajectory> examplePaths;
@@ -79,13 +83,15 @@ public final class Autos {
 
 
   public Autos(Swerve swerve, VisionSubsystem visionSubsystem, ElevatorSubsystem elevatorSubsystem,
-      ArmPositionSubsystem armPosSubsystem, ArmRollersSubsystem armRollerSubsystem) {
+      ArmPositionSubsystem armPosSubsystem, ArmRollersSubsystem armRollerSubsystem,
+      CatapultSubsystem catapultSubsystem) {
 
     this.elevatorSubsystem = elevatorSubsystem;
     this.swerve = swerve;
     this.visionSubsystem = visionSubsystem;
     this.armPosSubsystem = armPosSubsystem;
     this.armRollerSubsystem = armRollerSubsystem;
+    this.catapultSubsystem = catapultSubsystem;
 
   }
 
@@ -169,6 +175,14 @@ public final class Autos {
 
   public Command move() {
     return new DriveForwardsCommand(swerve).beforeStarting(resetGyroCommand());
+  }
+
+  public Command runCatapultToMax() {
+    return new CatapultRunToMax(catapultSubsystem);
+  }
+
+  public Command runCatapultTomin() {
+    return new CatapultRunToMin(catapultSubsystem);
   }
 
   public Command ArchivescoreOne() {

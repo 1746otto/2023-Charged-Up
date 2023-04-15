@@ -45,10 +45,16 @@ public class Robot extends TimedRobot {
     PathPlannerServer.startServer(5811);
     m_robotContainer = new RobotContainer();
     m_LED = new AddressableLED(0);
-    m_LEDBuffer = new AddressableLEDBuffer(10);
+    m_LEDBuffer = new AddressableLEDBuffer(91);
     m_LED.setLength(m_LEDBuffer.getLength());
     m_LED.setData(m_LEDBuffer);
     m_LED.start();
+
+    for (int i = 0; i < m_LEDBuffer.getLength(); i++) {
+      m_LEDBuffer.setHSV(i, i, 100, 30);
+    }
+    m_LED.setData(m_LEDBuffer);
+
     // This won't work because the robot will be disabled. Also, the elevator subsystem within robot
     // container is private.
     // m_ZeroOutElevator = new ZeroOutElevatorCommand(m_robotContainer.m_ElevatorSubsystem);
@@ -70,9 +76,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    for (int i = 0; i < m_LEDBuffer.getLength(); i++) {
-      m_LEDBuffer.setRGB(i, 100, 0, 100);
-    }
+
 
     // for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
     // // Calculate the hue - hue is easier for rainbows because the color
@@ -86,7 +90,6 @@ public class Robot extends TimedRobot {
     // // Check bounds
     // m_rainbowFirstPixelHue %= 180;
 
-    m_LED.setData(m_LEDBuffer);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -100,7 +103,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // m_robotContainer.s_Swerve.resetModulesToAbsolute();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

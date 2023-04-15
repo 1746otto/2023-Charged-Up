@@ -23,6 +23,8 @@ import frc.robot.commands.basic.ArmRollerStopCommand;
 import frc.robot.commands.basic.ArmToSmartDashboardCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
+import frc.robot.commands.basic.CatapultRunToMax;
+import frc.robot.commands.basic.CatapultRunToMin;
 import frc.robot.commands.basic.NormalSpeedCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -137,12 +139,13 @@ public class RobotContainer {
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
+  private final CatapultSubsystem m_CatapultSubsystem = new CatapultSubsystem();
 
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
   private final Autos autos = new Autos(s_Swerve, m_VisionSubsystem, m_ElevatorSubsystem,
-      m_ArmPosSubystem, m_ArmRollersSubsystem);
+      m_ArmPosSubystem, m_ArmRollersSubsystem, m_CatapultSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -278,16 +281,18 @@ public class RobotContainer {
             new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
     operatorY.onTrue(
         new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
-    operatorA.whileTrue(new ParallelCommandGroup(
-        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-            ElevatorConstants.kConeElevatorIntakePos),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
-        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
-    operatorA.onFalse(new ParallelCommandGroup(
-        // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-        // ElevatorConstants.kOriginPosition),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-        new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem)));
+    // operatorA.whileTrue(new ParallelCommandGroup(
+    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+    // ElevatorConstants.kConeElevatorIntakePos),
+    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
+    // new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
+    // operatorA.onFalse(new ParallelCommandGroup(
+    // // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+    // // ElevatorConstants.kOriginPosition),
+    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+    // new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem)));
+    operatorRightTrigger.onTrue(new CatapultRunToMax(m_CatapultSubsystem));
+    operatorA.onTrue(new CatapultRunToMin(m_CatapultSubsystem));
   }
 
   public Command getAutonomousCommand() {
