@@ -194,7 +194,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
                     new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                        ArmConstants.kArmConeIntakePos)),
+                        ArmConstants.kArmCubeIntakePos)),
                 new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // Cone intaking
@@ -273,9 +273,11 @@ public class RobotContainer {
             new ArmRollerRunInCommand(m_ArmRollersSubsystem)),
         new WaitCommand(0.25), new ArmRollerShootCommand(m_ArmRollersSubsystem).withTimeout(.5),
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
-    operatorLeftTrigger
-        .onTrue(new SequentialCommandGroup(new ArmRollerStopCommand(m_ArmRollersSubsystem),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+    /*
+     * operatorLeftTrigger .onTrue(new SequentialCommandGroup(new
+     * ArmRollerStopCommand(m_ArmRollersSubsystem), new ArmRequestSelectorCommand(m_ArmPosSubystem,
+     * ArmConstants.kArmRestPos)));
+     */
     operatorY.onTrue(
         new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
     operatorA.whileTrue(new ParallelCommandGroup(
@@ -287,7 +289,15 @@ public class RobotContainer {
         // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
         // ElevatorConstants.kOriginPosition),
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-        new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem)));
+        new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem),
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kOriginPosition)));
+
+    operatorRightTrigger.whileTrue(
+        new InstantCommand(() -> m_ElevatorSubsystem.elevatorRunUp(), m_ElevatorSubsystem));
+    operatorLeftTrigger.whileTrue(
+        new InstantCommand(() -> m_ElevatorSubsystem.elevatorRunDown(), m_ElevatorSubsystem));
+
   }
 
   public Command getAutonomousCommand() {

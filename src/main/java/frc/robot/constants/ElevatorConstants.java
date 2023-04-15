@@ -14,5 +14,5 @@ public final class ElevatorConstants {
   public static final double kHighCubePosition = 20;
   public static final double kElevatorSpeed = 0.4;
   public static final int kElevatorAnalogInputChannel = 0;
-  public static final double kConeElevatorIntakePos = 3.0;
+  public static final double kConeElevatorIntakePos = 3.2;
 }
