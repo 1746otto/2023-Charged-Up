@@ -6,7 +6,7 @@ import frc.robot.commands.basic.CatapultRunToMin;
 import frc.robot.subsystems.CatapultSubsystem;
 
 public class CatapultAutonCommand extends SequentialCommandGroup {
-  CatapultAutonCommand(CatapultSubsystem catapultSubsystem) {
+  public CatapultAutonCommand(CatapultSubsystem catapultSubsystem) {
     addCommands(new CatapultRunToMax(catapultSubsystem).withTimeout(0.5),
         new CatapultRunToMin(catapultSubsystem));
   }

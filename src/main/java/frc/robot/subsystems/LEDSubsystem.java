@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.LEDConstants;
 
 public class LEDSubsystem extends SubsystemBase {
@@ -19,16 +20,23 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void setLEDToCube() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setHSV(i, LEDConstants.cubeHValue, 100, 30);
+      ledBuffer.setHSV(i, LEDConstants.cubeHValue, LEDConstants.cubeSValue,
+          LEDConstants.cubeVValue);
     }
     led.setData(ledBuffer);
   }
 
   public void setLedtoCone() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setHSV(i, LEDConstants.coneHValue, 100, 30);
+      ledBuffer.setHSV(i, LEDConstants.coneHValue, LEDConstants.coneSValue,
+          LEDConstants.coneVValue);
     }
     led.setData(ledBuffer);
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("led", ledBuffer.getLength());
   }
 
 }

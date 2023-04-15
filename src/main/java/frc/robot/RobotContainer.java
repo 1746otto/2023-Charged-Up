@@ -58,6 +58,7 @@ import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShootCubeHighCommand;
 import frc.robot.commands.ConeIntakeCommand;
+import frc.robot.commands.CatapultAutonCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -143,6 +144,7 @@ public class RobotContainer {
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
   private final CatapultSubsystem m_CatapultSubsystem = new CatapultSubsystem();
   private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
+
 
 
   /* Commands */
@@ -289,6 +291,7 @@ public class RobotContainer {
         new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
     operatorLeftTrigger.onTrue(new LedConeCommand(m_LedSubsystem));
     operatorRightTrigger.onTrue(new LedCubeCommand(m_LedSubsystem));
+    operatorBack.onTrue(new CatapultAutonCommand(m_CatapultSubsystem));
   }
 
 
