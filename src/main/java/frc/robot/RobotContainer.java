@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -61,7 +62,7 @@ import frc.robot.commands.ShootCubeHighCommand;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  public final SendableChooser<Command> m_chooser = new SendableChooser<>();
+  public final SendableChooser<Supplier<Command>> m_chooser = new SendableChooser<>();
 
   /* Controllers */
   private final XboxController m_driver = new XboxController(ControllerConstants.kDriverPort);
@@ -148,11 +149,11 @@ public class RobotContainer {
 
 
     // Auton Selector
-    m_chooser.setDefaultOption("Score only", autos.scoreOne());
-    m_chooser.addOption("Bump side two piece", autos.BConeCubeHigh());
-    m_chooser.addOption("Score one balance", autos.scoreOneBalance());
-    m_chooser.addOption("Bumpless Three piece", autos.BLThreeCubeLow());
-    m_chooser.addOption("Bump side 2 and a half", autos.B3ConeCubeHigh());
+    m_chooser.setDefaultOption("Score only", autos::scoreOne);
+    m_chooser.addOption("Bump side two piece", autos::BConeCubeHigh);
+    m_chooser.addOption("Score one balance", autos::scoreOneBalance);
+    m_chooser.addOption("Bumpless Three piece", autos::BLThreeCubeLow);
+    m_chooser.addOption("Bump side 2 and a half", autos::B3ConeCubeHigh);
     SmartDashboard.putData("Auton Selector: ", m_chooser);
 
 
@@ -283,7 +284,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return m_chooser.getSelected();
+    return m_chooser.getSelected().get();
   }
 
 }

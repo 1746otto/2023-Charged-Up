@@ -1,13 +1,17 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.apache.commons.lang3.Conversion;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import frc.lib.math.Conversions;
 import frc.robot.constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmPositionSubsystem extends SubsystemBase {
@@ -15,6 +19,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
   private CANCoder armEncoder;
   private BaseTalonPIDSetConfiguration armPIDController;
   private double requestPos = 0;
+  private ArmFeedforward feedForward;
 
   public ArmPositionSubsystem() {
     armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
@@ -28,6 +33,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
     requestPos = ArmConstants.kArmRestPos;
     // armMotor.configMotionAcceleration(1000)
     armMotor.setInverted(true);
+    feedForward =
+        new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
 
   }
 
@@ -48,7 +55,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
   }
 
   public void armToRequest(double requestedPosition) {
-    armMotor.set(TalonFXControlMode.Position, requestedPosition);
+    armMotor.set(TalonFXControlMode.Position, requestedPosition, DemandType.ArbitraryFeedForward,
+        feedForward.calculate(
+            Conversions.falconToDegrees(armMotor.getSelectedSensorPosition(), 30) * Math.PI / 180.0,
+            -(requestedPosition - armMotor.getSelectedSensorPosition()) / 18000.0) / 12.0);
   }
 
   public void setHomeSpeed() {

@@ -20,4 +20,8 @@ public final class ArmConstants {
   public static final int kArmRollerMotorID = 31;
   public static final int kCANCoderID = 50;
   public static final double ksubstationPosition = -2469.0;
+  public static final double kG = 0;
+  public static final double kS = 0;
+  public static final double kV = 0;
+  public static final double kA = 0;
 }

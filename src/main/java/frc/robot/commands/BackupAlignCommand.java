@@ -50,7 +50,7 @@ public class BackupAlignCommand extends CommandBase {
     }
     targetAngle = (int) m_gyro.getYaw() / 180;
     targetAngle *= 180;
-    m_visionSubsystem.setToAprilTag(state);
+    m_visionSubsystem.setLeftState(pipelineStates.APRILTAG);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -64,9 +64,9 @@ public class BackupAlignCommand extends CommandBase {
         shouldRotate = false;
       }
     } else {
-      m_swerve.drive(new Translation2d(0, getStrafeVal(m_visionSubsystem.getXOffset())),
+      m_swerve.drive(new Translation2d(0, getStrafeVal(m_visionSubsystem.getXOffsetLeft())),
           getRotationSignal(m_gyro.getYaw() - targetAngle), true, true);
-      if (Math.abs(m_visionSubsystem.getXOffset()) < .5)
+      if (Math.abs(m_visionSubsystem.getXOffsetLeft()) < .5)
         shouldAlign = false;
     }
 
