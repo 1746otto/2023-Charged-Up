@@ -57,7 +57,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
   public void armToRequest(double requestedPosition) {
     armMotor.set(TalonFXControlMode.Position, requestedPosition, DemandType.ArbitraryFeedForward,
         feedForward.calculate(
-            Conversions.falconToDegrees(armMotor.getSelectedSensorPosition(), 30) * Math.PI / 180.0,
+            (Conversions.falconToDegrees(armMotor.getSelectedSensorPosition(), 30) + 111.43)
+                * Math.PI / 180.0,
             0));
   }
 
