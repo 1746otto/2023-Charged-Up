@@ -978,14 +978,12 @@ public final class Autos {
         // goToStartCommand,
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
         // new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
-        ArchivescoreOne(),
-        new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(.75),
+        new CatapultAutonCommand(catapultSubsystem),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new InstantCommand(() -> armRollerSubsystem.armRollerStow(), armRollerSubsystem),
         new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos).withTimeout(0.5),
         new WaitCommand(.125), controllerGroup.get(1),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve),
-        ArchivescoreOne())
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve), scoreOne())
             // new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5)
             .raceWith(
                 new AutonGyroReset(

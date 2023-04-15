@@ -26,12 +26,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private ZeroOutElevatorCommand m_ZeroOutElevator;
-
-  private AddressableLED m_LED;
-  private AddressableLEDBuffer m_LEDBuffer;
-
-  private int m_rainbowFirstPixelHue = 0;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -44,16 +38,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     PathPlannerServer.startServer(5811);
     m_robotContainer = new RobotContainer();
-    m_LED = new AddressableLED(0);
-    m_LEDBuffer = new AddressableLEDBuffer(91);
-    m_LED.setLength(m_LEDBuffer.getLength());
-    m_LED.setData(m_LEDBuffer);
-    m_LED.start();
-
-    for (int i = 0; i < m_LEDBuffer.getLength(); i++) {
-      m_LEDBuffer.setHSV(i, i, 100, 30);
-    }
-    m_LED.setData(m_LEDBuffer);
 
     // This won't work because the robot will be disabled. Also, the elevator subsystem within robot
     // container is private.

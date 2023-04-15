@@ -25,6 +25,8 @@ import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
 import frc.robot.commands.basic.CatapultRunToMax;
 import frc.robot.commands.basic.CatapultRunToMin;
+import frc.robot.commands.basic.LedConeCommand;
+import frc.robot.commands.basic.LedCubeCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -140,6 +142,7 @@ public class RobotContainer {
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
   private final CatapultSubsystem m_CatapultSubsystem = new CatapultSubsystem();
+  private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
 
 
   /* Commands */
@@ -197,16 +200,19 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
                     new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                        ArmConstants.kArmConeIntakePos)),
+                        ArmConstants.kArmCubeIntakePos)),
                 new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // Cone intaking
-    driverRightBumper
-        .onTrue(new SequentialCommandGroup(
-            new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                    ArmConstants.kArmIntakeAndScorePos)),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+    driverRightBumper.whileTrue(new ParallelCommandGroup(
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kConeElevatorIntakePos),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
+    driverRightBumper.onFalse(new ParallelCommandGroup(
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem)));
 
     // driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
     // new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
@@ -281,19 +287,10 @@ public class RobotContainer {
             new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
     operatorY.onTrue(
         new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
-    // operatorA.whileTrue(new ParallelCommandGroup(
-    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-    // ElevatorConstants.kConeElevatorIntakePos),
-    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
-    // new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
-    // operatorA.onFalse(new ParallelCommandGroup(
-    // // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-    // // ElevatorConstants.kOriginPosition),
-    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-    // new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem)));
-    operatorRightTrigger.onTrue(new CatapultRunToMax(m_CatapultSubsystem));
-    operatorA.onTrue(new CatapultRunToMin(m_CatapultSubsystem));
+    operatorLeftTrigger.onTrue(new LedConeCommand(m_LedSubsystem));
+    operatorRightTrigger.onTrue(new LedCubeCommand(m_LedSubsystem));
   }
+
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
