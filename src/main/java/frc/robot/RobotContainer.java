@@ -292,7 +292,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.BConeCubeHigh();
+    return autos.balanceAfterCharge();
   }
 
 }

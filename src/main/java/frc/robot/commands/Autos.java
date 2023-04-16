@@ -1197,5 +1197,95 @@ public final class Autos {
 
   }
 
+  public Command overchargeStationBalanceCommand() {
+
+    // This is the combined trajectories of autons we want to use.
+    // Each trajectory we want to use is seperated by a stop point.
+    // We store each path in the deploy/Path Planner/ folder.
+    // You can have multiple constraints for each path, but for our purposes it is not required.
+
+    List<PathPlannerTrajectory> pathGroup =
+        PathPlanner.loadPathGroup("OverChargeStationBalance", new PathConstraints(1.5, 1.5));
+    // This color might need to be swapped, I am not sure.
+    PathPlannerState allianceState = PathPlannerTrajectory
+        .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
+
+    // swerve.gyro.setYaw(allianceState.holonomicRotation.getDegrees());
+
+    swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
+        new Pose2d(allianceState.poseMeters.getTranslation(), allianceState.holonomicRotation));
+
+    // Then we use the position we got from vision to get our actual initial pose and make a
+    // trajectory to go to it.
+    // PathPlannerTrajectory goToStart = PathPlanner.generatePath(
+    // new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+    // AutoConstants.kMaxAccelerationMetersPerSecondSquared),
+    // new PathPoint(new Translation2d(m_swerve.getPose().getX(), m_swerve.getPose().getY()),
+    // Rotation2d.fromDegrees(0), m_swerve.getPose().getRotation()),
+    // new PathPoint(
+    // new Translation2d(pathGroup.get(0).getInitialState().poseMeters.getX(),
+    // pathGroup.get(0).getInitialState().poseMeters.getY()),
+    // pathGroup.get(0).getInitialState().poseMeters.getRotation(),
+    // pathGroup.get(0).getInitialState().holonomicRotation));
+
+    // Next we must pass the trajectory into a command that follows it.
+    // Currently this commmand is commented out because we don't have a limelight.
+    // PPSwerveControllerCommand goToStartCommand =
+    // new PPSwerveControllerCommand(
+    // goToStart,
+    // m_swerve::getPose,
+    // SwerveConstants.swerveKinematics,
+    // new PIDController(0, 0, 0),
+    // new PIDController(0, 0, 0),
+    // new PIDController(0, 0, 0),
+    // m_swerve::setModuleStates,
+    // true,
+    // m_swerve
+    // )
+    // ;
+
+    // We then make a list of controller commands that can be accessed through the .get(int i)
+    // method.
+    List<PPSwerveControllerCommand> controllerGroup = new ArrayList<>();
+
+    for (PathPlannerTrajectory traj : pathGroup) {
+      controllerGroup.add(
+          new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
+              new PIDController(translationalP, translationalI, translationalD),
+              new PIDController(translationalP, translationalI, translationalD),
+              new PIDController(rotationalP, rotationalI, rotationalD), swerve::setModuleStates,
+              true, swerve));
+    }
+
+    // Now we create an event map that will hold the name of the marker and the corresponding event.
+
+
+    // Make the auton command
+    Command autonCommmand = new SequentialCommandGroup(
+
+        // goToStartCommand,
+
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+        controllerGroup.get(0),
+
+        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve)
+            .raceWith(new AutonGyroReset(
+                (DriverStation.getAlliance() == Alliance.Red)
+                    ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+
+                    : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180,
+                swerve.getYaw()::getDegrees, swerve.gyro::setYaw)));
+
+    return autonCommmand;
+
+  }
+
+  public Command balanceAfterCharge() {
+    Command autonCommand = new SequentialCommandGroup(overchargeStationBalanceCommand(),
+        new DriveTo5DegreesCommand(swerve), new BalancingCommand2(swerve), new InstantCommand(
+            () -> swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0)));
+    return autonCommand;
+  }
+
 
 }
