@@ -23,6 +23,10 @@ import frc.robot.commands.basic.ArmRollerStopCommand;
 import frc.robot.commands.basic.ArmToSmartDashboardCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
+import frc.robot.commands.basic.CatapultRunToMax;
+import frc.robot.commands.basic.CatapultRunToMin;
+import frc.robot.commands.basic.LedConeCommand;
+import frc.robot.commands.basic.LedCubeCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -54,6 +58,7 @@ import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShootCubeHighCommand;
 import frc.robot.commands.ConeIntakeCommand;
+import frc.robot.commands.CatapultAutonCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -137,12 +142,15 @@ public class RobotContainer {
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
+  private final CatapultSubsystem m_CatapultSubsystem = new CatapultSubsystem();
+  private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
+
 
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
   private final Autos autos = new Autos(s_Swerve, m_VisionSubsystem, m_ElevatorSubsystem,
-      m_ArmPosSubystem, m_ArmRollersSubsystem);
+      m_ArmPosSubystem, m_ArmRollersSubsystem, m_CatapultSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -198,12 +206,15 @@ public class RobotContainer {
                 new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // Cone intaking
-    driverRightBumper
-        .onTrue(new SequentialCommandGroup(
-            new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                    ArmConstants.kArmIntakeAndScorePos)),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+    driverRightBumper.whileTrue(new ParallelCommandGroup(
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kConeElevatorIntakePos),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
+    driverRightBumper.onFalse(new ParallelCommandGroup(
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem)));
 
     // driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
     // new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
@@ -247,7 +258,7 @@ public class RobotContainer {
       s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
     }));
 
-    driverLeftBumper.toggleOnTrue(new BalanceSpeedCommand());
+    driverLeftBumper.toggleOnTrue(new CatapultAutonCommand(m_CatapultSubsystem));
 
     operatorRightBumper.whileTrue(new BalanceSpeedCommand());
     operatorRightBumper.onTrue(new InstantCommand(() -> {
@@ -293,16 +304,16 @@ public class RobotContainer {
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
             ElevatorConstants.kOriginPosition)));
 
-    operatorRightTrigger.whileTrue(
-        new InstantCommand(() -> m_ElevatorSubsystem.elevatorRunUp(), m_ElevatorSubsystem));
-    operatorLeftTrigger.whileTrue(
-        new InstantCommand(() -> m_ElevatorSubsystem.elevatorRunDown(), m_ElevatorSubsystem));
 
+
+    operatorLeftTrigger.onTrue(new LedConeCommand(m_LedSubsystem));
+    operatorRightTrigger.onTrue(new LedCubeCommand(m_LedSubsystem));
   }
+
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.balanceAfterCharge();
+    return autos.threePieceBumpCatapult();
   }
 
 }
