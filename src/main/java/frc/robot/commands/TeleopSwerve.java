@@ -4,7 +4,6 @@ import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
@@ -64,6 +63,7 @@ public class TeleopSwerve extends CommandBase {
     Translation2d driveVector = new Translation2d(translationVal, strafeVal);
     driveVector = new Translation2d(Math.pow(driveVector.getNorm(), 1), driveVector.getAngle())
         .times(SwerveConstants.maxSpeed).times(alliance);
+
 
     // Slew limiting stuff
     // Translation2d velocityVector = new Translation2d(

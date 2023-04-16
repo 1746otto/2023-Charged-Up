@@ -284,7 +284,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return m_chooser.getSelected().get();
+    return autos.BConeCubeHigh();
   }
 
 }

@@ -1010,7 +1010,7 @@ public final class Autos {
     PathPlannerState allianceState = PathPlannerTrajectory
         .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
 
-    // swerve.gyro.setYaw(allianceState.holonomicRotation.getDegrees());
+    swerve.gyro.setYaw(pathGroup.get(0).getInitialState().holonomicRotation.getDegrees());
 
     swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
         new Pose2d(allianceState.poseMeters.getTranslation(), allianceState.holonomicRotation));

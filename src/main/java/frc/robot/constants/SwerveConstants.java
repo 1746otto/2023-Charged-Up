@@ -79,8 +79,8 @@ public final class SwerveConstants {
   public static final double angleKI = chosenModule.angleKI;
   public static final double angleKD = chosenModule.angleKD;
   public static final double angleKF = chosenModule.angleKF;
-  public static final double angleKV = 0.0125; // 0.3 or 0.3/12 1/rad/sec TODO: Tune this so our
-                                               // robot
+  public static final double angleKV = 0.025; // 0.3 or 0.3/12 1/rad/sec TODO: Tune this so our
+  // robot
   // doesn't spin that much
 
   /* Drive Motor PID Values */
@@ -99,7 +99,7 @@ public final class SwerveConstants {
 
   /* Swerve Profiling Values */
   /** Meters per Second */
-  public static double maxSpeed = 13.5; // TODO: This must be tuned to specific robot
+  public static double maxSpeed = 7.5; // TODO: This must be tuned to specific robot
   /** Radians per Second */
   public static double maxAngularVelocity = 10; // TODO: This must be tuned to specific robot
 
@@ -115,7 +115,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 11;
     public static final int angleMotorID = 12;
     public static final int canCoderID = 10;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(199.335938 - 180);// 87.187500
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(19.248047);// 87.187500
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
@@ -129,7 +129,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 31;
     public static final int angleMotorID = 32;
     public static final int canCoderID = 30;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(247.587891);// 108.808594
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(68.466767 + 180);// 108.808594
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
@@ -143,7 +143,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 1;
     public static final int angleMotorID = 2;
     public static final int canCoderID = 0;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(151.699219);// 328.623047
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(331.171875 - 180.0);// 328.623047
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
@@ -158,7 +158,7 @@ public final class SwerveConstants {
     public static final int driveMotorID = 21;
     public static final int angleMotorID = 22;
     public static final int canCoderID = 20;
-    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(30.410156 + 180);// 158.378906
+    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(208.916016);// 158.378906
     public static final double kS = driveKS;
     public static final double kV = driveKV;
     public static final double kA = driveKA;
