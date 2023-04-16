@@ -12,6 +12,7 @@ import frc.robot.commands.FourDimensionalBalancingCommand;
 import frc.robot.commands.OuttakingSequentialCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.UpdateOdometryCommand;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroOutElevatorCommand;
 import frc.robot.commands.basic.ArmPositionStopCommand;
@@ -176,6 +177,8 @@ public class RobotContainer {
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
             DriverStation::getAlliance));
+    m_VisionSubsystem.setDefaultCommand(
+        new UpdateOdometryCommand(m_VisionSubsystem, s_Swerve.poseEstimator::addVisionMeasurement));
   }
 
   /**
@@ -302,7 +305,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.balanceAfterCharge();
+    return autos.BConeCubeHigh();
   }
 
 }
