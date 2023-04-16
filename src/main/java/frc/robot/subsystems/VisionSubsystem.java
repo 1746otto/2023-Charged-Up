@@ -62,8 +62,8 @@ public class VisionSubsystem extends SubsystemBase {
           .getDouble(0.0);
       yOffsetLeft = NetworkTableInstance.getDefault().getTable(kLimeLightNameLeft).getEntry("ty")
           .getDouble(0.0);
-      pipeLatencyLeft = llResultsLeft.targetingResults.latency_pipeline;
-      captureLatencyLeft = llResultsLeft.targetingResults.latency_capture;
+      pipeLatencyLeft = llResultsLeft.targetingResults.latency_pipeline / 1000.0;
+      captureLatencyLeft = llResultsLeft.targetingResults.latency_capture / 1000.0;
       getpipeLeft = llResultsLeft.targetingResults.pipelineID;
       tagIDLeft = (int) NetworkTableInstance.getDefault().getTable(kLimeLightNameLeft)
           .getEntry("tid").getInteger(0);

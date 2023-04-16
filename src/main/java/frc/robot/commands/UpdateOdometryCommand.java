@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.VisionSubsystem;
 import java.util.function.BiConsumer;
@@ -22,12 +23,14 @@ public class UpdateOdometryCommand extends CommandBase {
     if (leftLatestTimestamp != vision.getTimeSinceBootLeft()) {
       leftLatestTimestamp = vision.getTimeSinceBootLeft();
       if (vision.getNumTagsLeft() > 0)
-        poseSetter.accept(vision.getPose2dLeft(), vision.getPipeLatencyLeft());
+        poseSetter.accept(vision.getPose2dLeft(), Timer.getFPGATimestamp()
+            - vision.getPipeLatencyLeft() - vision.getCaptureLatencyLeft());
     }
     if (rightLatestTimestamp != vision.getTimeSinceBootRight()) {
       rightLatestTimestamp = vision.getTimeSinceBootRight();
       if (vision.getNumTagsRight() > 0)
-        poseSetter.accept(vision.getPose2dRight(), vision.getPipeLatencyRight());
+        poseSetter.accept(vision.getPose2dRight(), Timer.getFPGATimestamp()
+            - vision.getPipeLatencyRight() - vision.getCaptureLatencyRight());
     }
   }
 
