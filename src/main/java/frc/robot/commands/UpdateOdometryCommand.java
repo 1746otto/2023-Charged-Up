@@ -16,6 +16,7 @@ public class UpdateOdometryCommand extends CommandBase {
   public UpdateOdometryCommand(VisionSubsystem vision, BiConsumer<Pose2d, Double> poseSetter) {
     this.vision = vision;
     this.poseSetter = poseSetter;
+    addRequirements(vision);
   }
 
   @Override
