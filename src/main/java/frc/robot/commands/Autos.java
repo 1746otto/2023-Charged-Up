@@ -364,18 +364,16 @@ public final class Autos {
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+
         controllerGroup.get(0),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
         controllerGroup.get(2),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
-            .raceWith(
-                new AutonGyroReset(
-                    (DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+
+        new AutonGyroReset(
+            (DriverStation.getAlliance() == Alliance.Red)
+                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
     return autonCommmand;
@@ -541,16 +539,14 @@ public final class Autos {
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+
         controllerGroup.get(0),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
-            .raceWith(
-                new AutonGyroReset(
-                    (DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));;
+
+        new AutonGyroReset(
+            (DriverStation.getAlliance() == Alliance.Red)
+                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));;
 
 
 
@@ -776,20 +772,18 @@ public final class Autos {
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+
         new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5), controllerGroup.get(2),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
-            .raceWith(
-                new AutonGyroReset(
-                    (DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+
+        new AutonGyroReset(
+            (DriverStation.getAlliance() == Alliance.Red)
+                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 
@@ -880,20 +874,18 @@ public final class Autos {
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+
         new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
-            .raceWith(
-                new AutonGyroReset(
-                    (DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+
+        new AutonGyroReset(
+            (DriverStation.getAlliance() == Alliance.Red)
+                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 
@@ -978,7 +970,7 @@ public final class Autos {
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+
         // new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
         new CatapultAutonCommand(catapultSubsystem),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
@@ -1188,20 +1180,18 @@ public final class Autos {
     // Make the auton command
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+
         new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
-            .raceWith(
-                new AutonGyroReset(
-                    (DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+
+        new AutonGyroReset(
+            (DriverStation.getAlliance() == Alliance.Red)
+                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 
@@ -1280,7 +1270,7 @@ public final class Autos {
         // goToStartCommand,
 
 
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+
         controllerGroup.get(0),
 
         new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve)
@@ -1387,7 +1377,7 @@ public final class Autos {
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
         new CatapultAutonCommand(catapultSubsystem),
-        new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Brake), swerve),
+
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new SequentialCommandGroup(
             new ParallelCommandGroup(
@@ -1397,14 +1387,12 @@ public final class Autos {
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos))
                 .withTimeout(.375),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        scoreOne(), new InstantCommand(() -> swerve.setDriveNeutralMode(NeutralMode.Coast), swerve))
-            .raceWith(
-                new AutonGyroReset(
-                    (DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+        scoreOne(),
+        new AutonGyroReset(
+            (DriverStation.getAlliance() == Alliance.Red)
+                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 
