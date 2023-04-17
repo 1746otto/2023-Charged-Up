@@ -318,7 +318,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.threePieceBumpCatapult();
+    return m_chooser.getSelected();
   }
 
 }
