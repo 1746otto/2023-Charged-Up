@@ -1298,8 +1298,10 @@ public final class Autos {
   public Command balanceAfterCharge() {
     Command autonCommand = new SequentialCommandGroup(new CatapultAutonCommand(catapultSubsystem),
         overchargeStationBalanceCommand(), new DriveTo5DegreesCommand(swerve),
-        new BalancingCommand2(swerve), new InstantCommand(
-            () -> swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0)));
+        new BalancingCommand2(swerve),
+        new InstantCommand(() -> swerve.gyro
+            .setYaw((DriverStation.getAlliance() == Alliance.Red) ? swerve.gyro.getYaw() + 180
+                : swerve.gyro.getYaw())));
     return autonCommand;
   }
 
