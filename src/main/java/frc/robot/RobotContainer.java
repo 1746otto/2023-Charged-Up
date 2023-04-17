@@ -266,16 +266,7 @@ public class RobotContainer {
     driverLeftBumper.toggleOnTrue(new CatapultAutonCommand(m_CatapultSubsystem));
 
     operatorRightBumper.whileTrue(new BalanceSpeedCommand());
-    operatorRightBumper.onTrue(new InstantCommand(() -> {
-      for (SwerveModule mod : s_Swerve.mSwerveMods) {
-        mod.setModuleNeutralMode(NeutralMode.Brake);
-      }
-    }));
-    operatorRightBumper.onFalse(new InstantCommand(() -> {
-      for (SwerveModule mod : s_Swerve.mSwerveMods) {
-        mod.setModuleNeutralMode(NeutralMode.Coast);
-      }
-    }));
+
     operatorStart.onTrue(new InstantCommand(() -> {
       s_Swerve.resetModulesToAbsolute();
     }).andThen(new WaitCommand(.5)));
