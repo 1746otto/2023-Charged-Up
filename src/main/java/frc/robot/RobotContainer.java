@@ -185,8 +185,10 @@ public class RobotContainer {
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
             DriverStation::getAlliance));
-    m_VisionSubsystem.setDefaultCommand(
-        new UpdateOdometryCommand(m_VisionSubsystem, s_Swerve.poseEstimator::addVisionMeasurement));
+    /*
+     * m_VisionSubsystem.setDefaultCommand( new UpdateOdometryCommand(m_VisionSubsystem,
+     * s_Swerve.poseEstimator::addVisionMeasurement));
+     */
   }
 
   /**
@@ -316,7 +318,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.balanceAfterCharge();
+    return autos.threePieceBumpCatapult();
   }
 
 }
