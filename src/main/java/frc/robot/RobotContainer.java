@@ -263,7 +263,12 @@ public class RobotContainer {
       s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
     }));
 
-    driverLeftBumper.toggleOnTrue(new CatapultAutonCommand(m_CatapultSubsystem));
+    driverLeftBumper.onTrue(new SequentialCommandGroup(
+        new ParallelCommandGroup(
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidShootPos),
+            new ArmRollerRunInCommand(m_ArmRollersSubsystem)),
+        new WaitCommand(0.25), new ArmRollerShootCommand(m_ArmRollersSubsystem).withTimeout(.5),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     operatorRightBumper.whileTrue(new BalanceSpeedCommand());
 
@@ -274,12 +279,6 @@ public class RobotContainer {
     // Elevator runs down to beam break to get the zero position.
     // operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
 
-    operatorB.onTrue(new SequentialCommandGroup(
-        new ParallelCommandGroup(
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidShootPos),
-            new ArmRollerRunInCommand(m_ArmRollersSubsystem)),
-        new WaitCommand(0.25), new ArmRollerShootCommand(m_ArmRollersSubsystem).withTimeout(.5),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
     /*
      * operatorLeftTrigger .onTrue(new SequentialCommandGroup(new
      * ArmRollerStopCommand(m_ArmRollersSubsystem), new ArmRequestSelectorCommand(m_ArmPosSubystem,
