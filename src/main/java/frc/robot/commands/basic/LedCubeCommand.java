@@ -15,4 +15,9 @@ public class LedCubeCommand extends CommandBase {
   public void initialize() {
     m_LedSubsystem.setLEDToCube();
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_LedSubsystem.setLedOff();
+  }
 }

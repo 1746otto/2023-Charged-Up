@@ -34,6 +34,13 @@ public class LEDSubsystem extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
+  public void setLedOff() {
+    for (int i = 0; i < ledBuffer.getLength(); i++) {
+      ledBuffer.setHSV(i, 0, 0, 0);
+    }
+    led.setData(ledBuffer);
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("led", ledBuffer.getLength());

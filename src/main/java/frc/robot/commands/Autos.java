@@ -366,14 +366,15 @@ public final class Autos {
         // goToStartCommand,
 
         controllerGroup.get(0),
-        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        controllerGroup.get(2),
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
+            eventMap),
+        controllerGroup.get(2)).raceWith(
 
-        new AutonGyroReset(
-            (DriverStation.getAlliance() == Alliance.Red)
-                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
-                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+            new AutonGyroReset(
+                (DriverStation.getAlliance() == Alliance.Red)
+                    ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                    : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+                swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
     return autonCommmand;
@@ -540,13 +541,13 @@ public final class Autos {
     Command autonCommmand = new SequentialCommandGroup(
         // goToStartCommand,
 
-        controllerGroup.get(0),
+        controllerGroup.get(0)).raceWith(
 
-        new AutonGyroReset(
-            (DriverStation.getAlliance() == Alliance.Red)
-                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
-                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));;
+            new AutonGyroReset(
+                (DriverStation.getAlliance() == Alliance.Red)
+                    ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                    : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+                swerve.getYaw()::getDegrees, swerve.gyro::setYaw));;
 
 
 
@@ -777,13 +778,15 @@ public final class Autos {
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5), controllerGroup.get(2),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5), controllerGroup.get(2))
+            .raceWith(
 
-        new AutonGyroReset(
-            (DriverStation.getAlliance() == Alliance.Red)
-                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
-                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+                new AutonGyroReset(
+                    (DriverStation.getAlliance() == Alliance.Red)
+                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                            + 180
+                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 
@@ -878,14 +881,15 @@ public final class Autos {
         new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
-        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
+            eventMap),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375)).raceWith(
 
-        new AutonGyroReset(
-            (DriverStation.getAlliance() == Alliance.Red)
-                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
-                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+            new AutonGyroReset(
+                (DriverStation.getAlliance() == Alliance.Red)
+                    ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                    : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+                swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 
@@ -1184,14 +1188,15 @@ public final class Autos {
         new ShootCommand(armPosSubsystem, armRollerSubsystem).withTimeout(0.75),
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
         new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
-        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375),
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
+            eventMap),
+        new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.375)).raceWith(
 
-        new AutonGyroReset(
-            (DriverStation.getAlliance() == Alliance.Red)
-                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
-                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+            new AutonGyroReset(
+                (DriverStation.getAlliance() == Alliance.Red)
+                    ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                    : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+                swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 
@@ -1287,11 +1292,9 @@ public final class Autos {
 
   public Command balanceAfterCharge() {
     Command autonCommand = new SequentialCommandGroup(new CatapultAutonCommand(catapultSubsystem),
-        overchargeStationBalanceCommand(), new DriveTo5DegreesCommand(swerve),
-        new BalancingCommand2(swerve),
-        new InstantCommand(() -> swerve.gyro
-            .setYaw((DriverStation.getAlliance() == Alliance.Red) ? swerve.gyro.getYaw() + 180
-                : swerve.gyro.getYaw())));
+        overchargeStationBalanceCommand(), new WaitCommand(0.1), new DriveTo5DegreesCommand(swerve),
+        new BalancingCommand2(swerve))
+            .finallyDo((boolean interrupted) -> swerve.gyro.setYaw(swerve.gyro.getYaw() + 180));
     return autonCommand;
   }
 
@@ -1386,13 +1389,15 @@ public final class Autos {
             new WaitCommand(0.25), new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos))
                 .withTimeout(.375),
-        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        scoreOne(),
-        new AutonGyroReset(
-            (DriverStation.getAlliance() == Alliance.Red)
-                ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
-                : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-            swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
+            eventMap),
+        scoreOne()).raceWith(
+
+            new AutonGyroReset(
+                (DriverStation.getAlliance() == Alliance.Red)
+                    ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180
+                    : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
+                swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 

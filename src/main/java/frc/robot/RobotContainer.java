@@ -185,10 +185,11 @@ public class RobotContainer {
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
             DriverStation::getAlliance));
-    /*
-     * m_VisionSubsystem.setDefaultCommand( new UpdateOdometryCommand(m_VisionSubsystem,
-     * s_Swerve.poseEstimator::addVisionMeasurement));
-     */
+
+    // m_VisionSubsystem.setDefaultCommand(
+    // new UpdateOdometryCommand(m_VisionSubsystem, s_Swerve.getYaw()::getDegrees,
+    // s_Swerve::getPose, s_Swerve.poseEstimator::addVisionMeasurement));
+
   }
 
   /**
@@ -263,12 +264,8 @@ public class RobotContainer {
       s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
     }));
 
-    driverLeftBumper.onTrue(new SequentialCommandGroup(
-        new ParallelCommandGroup(
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidShootPos),
-            new ArmRollerRunInCommand(m_ArmRollersSubsystem)),
-        new WaitCommand(0.25), new ArmRollerShootCommand(m_ArmRollersSubsystem).withTimeout(.5),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+    driverLeftBumper
+        .onTrue(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidShootPos));
 
     operatorRightBumper.whileTrue(new BalanceSpeedCommand());
 
@@ -301,14 +298,14 @@ public class RobotContainer {
 
 
 
-    operatorLeftTrigger.onTrue(new LedConeCommand(m_LedSubsystem));
-    operatorRightTrigger.onTrue(new LedCubeCommand(m_LedSubsystem));
+    operatorRightTrigger.whileTrue(new LedConeCommand(m_LedSubsystem));
+    operatorLeftTrigger.whileTrue(new LedCubeCommand(m_LedSubsystem));
   }
 
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return m_chooser.getSelected();
+    return autos.balanceAfterCharge();
   }
 
 }

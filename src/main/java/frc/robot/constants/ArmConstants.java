@@ -9,7 +9,7 @@ public final class ArmConstants {
   public static final double kArmCubeIntakePos = -18640.0;
   public static final double kArmHighScoringPos = -14776.0;
   public static final double kArmBowlPos = -10426.0;
-  public static final double kArmMidShootPos = -7000; // NEED TO CHANGE
+  public static final double kArmMidShootPos = -7000; // NEED TO CHANGE to 11000
   public static final double kArmP = .4;
   public static final double kRollerSpeed = 0.75;
   public static final double kRollerShoot = 1;

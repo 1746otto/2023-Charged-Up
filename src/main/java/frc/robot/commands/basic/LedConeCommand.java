@@ -15,4 +15,9 @@ public class LedConeCommand extends CommandBase {
   public void initialize() {
     m_LedSubsystem.setLedtoCone();
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_LedSubsystem.setLedOff();
+  }
 }
