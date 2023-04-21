@@ -30,19 +30,50 @@ public class UpdateOdometryCommand extends CommandBase {
     this.currentPose = currentPose;
     this.poseSetter = poseSetter;
     addRequirements(this.vision);
+
+    leftLatestTimestamp = 0;
+    rightLatestTimestamp = 0;
   }
 
   @Override
   public void execute() {
-    if (DriverStation.isAutonomous()) {
-      if (DriverStation.getAlliance() == Alliance.Red) {
+    if (vision.getTimeSinceBootLeft() > 0.5 && vision.getTimeSinceBootRight() > 0.5) {
+      if (DriverStation.isAutonomous()) {
+        if (DriverStation.getAlliance() == Alliance.Red) {
+          if (leftLatestTimestamp != vision.getTimeSinceBootLeft()) {
+            leftLatestTimestamp = vision.getTimeSinceBootLeft();
+            if (vision.getNumTagsLeft() > 0) {
+              Pose2d newPose = new Pose2d(
+                  new Translation2d(
+                      -(vision.getPose2dLeft().getX() - halfFieldLength) + halfFieldLength,
+                      fieldWidth - vision.getPose2dLeft().getY()),
+                  Rotation2d.fromDegrees(gyroAngle.getAsDouble()));
+              if (newPose.getTranslation().getDistance(currentPose.get().getTranslation()) > 1) {
+                poseSetter.accept(newPose, Timer.getFPGATimestamp() - vision.getPipeLatencyLeft()
+                    - vision.getCaptureLatencyLeft());
+              }
+            }
+          }
+          if (rightLatestTimestamp != vision.getTimeSinceBootRight()) {
+            rightLatestTimestamp = vision.getTimeSinceBootRight();
+            if (vision.getNumTagsRight() > 0) {
+              Pose2d newPose = new Pose2d(
+                  new Translation2d(
+                      -(vision.getPose2dRight().getX() - halfFieldLength) + halfFieldLength,
+                      fieldWidth - vision.getPose2dRight().getY()),
+                  Rotation2d.fromDegrees(gyroAngle.getAsDouble()));
+              if (newPose.getTranslation().getDistance(currentPose.get().getTranslation()) > 1) {
+                poseSetter.accept(newPose, Timer.getFPGATimestamp() - vision.getPipeLatencyRight()
+                    - vision.getCaptureLatencyRight());
+              }
+            }
+          }
+        }
+      } else {
         if (leftLatestTimestamp != vision.getTimeSinceBootLeft()) {
           leftLatestTimestamp = vision.getTimeSinceBootLeft();
           if (vision.getNumTagsLeft() > 0) {
-            Pose2d newPose = new Pose2d(
-                new Translation2d(
-                    -(vision.getPose2dLeft().getX() - halfFieldLength) + halfFieldLength,
-                    fieldWidth - vision.getPose2dLeft().getY()),
+            Pose2d newPose = new Pose2d(vision.getPose2dLeft().getTranslation(),
                 Rotation2d.fromDegrees(gyroAngle.getAsDouble()));
             if (newPose.getTranslation().getDistance(currentPose.get().getTranslation()) > 1) {
               poseSetter.accept(newPose, Timer.getFPGATimestamp() - vision.getPipeLatencyLeft()
@@ -53,38 +84,12 @@ public class UpdateOdometryCommand extends CommandBase {
         if (rightLatestTimestamp != vision.getTimeSinceBootRight()) {
           rightLatestTimestamp = vision.getTimeSinceBootRight();
           if (vision.getNumTagsRight() > 0) {
-            Pose2d newPose = new Pose2d(
-                new Translation2d(
-                    -(vision.getPose2dRight().getX() - halfFieldLength) + halfFieldLength,
-                    fieldWidth - vision.getPose2dRight().getY()),
+            Pose2d newPose = new Pose2d(vision.getPose2dRight().getTranslation(),
                 Rotation2d.fromDegrees(gyroAngle.getAsDouble()));
             if (newPose.getTranslation().getDistance(currentPose.get().getTranslation()) > 1) {
               poseSetter.accept(newPose, Timer.getFPGATimestamp() - vision.getPipeLatencyRight()
                   - vision.getCaptureLatencyRight());
             }
-          }
-        }
-      }
-    } else {
-      if (leftLatestTimestamp != vision.getTimeSinceBootLeft()) {
-        leftLatestTimestamp = vision.getTimeSinceBootLeft();
-        if (vision.getNumTagsLeft() > 0) {
-          Pose2d newPose = new Pose2d(vision.getPose2dLeft().getTranslation(),
-              Rotation2d.fromDegrees(gyroAngle.getAsDouble()));
-          if (newPose.getTranslation().getDistance(currentPose.get().getTranslation()) > 1) {
-            poseSetter.accept(newPose, Timer.getFPGATimestamp() - vision.getPipeLatencyLeft()
-                - vision.getCaptureLatencyLeft());
-          }
-        }
-      }
-      if (rightLatestTimestamp != vision.getTimeSinceBootRight()) {
-        rightLatestTimestamp = vision.getTimeSinceBootRight();
-        if (vision.getNumTagsRight() > 0) {
-          Pose2d newPose = new Pose2d(vision.getPose2dRight().getTranslation(),
-              Rotation2d.fromDegrees(gyroAngle.getAsDouble()));
-          if (newPose.getTranslation().getDistance(currentPose.get().getTranslation()) > 1) {
-            poseSetter.accept(newPose, Timer.getFPGATimestamp() - vision.getPipeLatencyRight()
-                - vision.getCaptureLatencyRight());
           }
         }
       }

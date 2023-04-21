@@ -51,6 +51,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.commands.ElevatorRequestSelectorCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -137,6 +138,9 @@ public class RobotContainer {
   private final Trigger operatorRightTrigger = new Trigger(operatorRightTriggerSupplier);
   private final Trigger operatorLeftTrigger = new Trigger(operatorLeftTriggerSupplier);
 
+  private final JoystickButton L3 =
+      new JoystickButton(m_operator, XboxController.Button.kLeftStick.value);
+
   /* Subsystems */
   public final Swerve s_Swerve = new Swerve();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
@@ -159,9 +163,8 @@ public class RobotContainer {
 
     // Auton Selector
     m_chooser.setDefaultOption("Score only", autos.scoreOne());
-    m_chooser.addOption("Cone,Cube,Cone Top", autos.Bruh());
-    m_chooser.addOption("Top Cube,Balance ", autos.PathPlannerOuterAutonCubeBalance());
-    m_chooser.addOption("Bottom Cone,Balance ", autos.PathPlannerOuterAutonConeBalance());
+    m_chooser.addOption("3 piece bump", autos.threePieceBumpCatapult());
+    m_chooser.addOption("Score,community,balance ", autos.balanceAfterCharge());
     SmartDashboard.putData("Auton Selector: ", m_chooser);
 
 
@@ -212,15 +215,15 @@ public class RobotContainer {
                 new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // Cone intaking
-    driverRightBumper.whileTrue(new ParallelCommandGroup(
+    driverRightBumper.onTrue(new SequentialCommandGroup(
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
             ElevatorConstants.kConeElevatorIntakePos),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
-        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
-    driverRightBumper.onFalse(new ParallelCommandGroup(
-        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition),
+        new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos)),
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-        new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem)));
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kOriginPosition)));
+
 
     // driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
     // new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
@@ -233,6 +236,7 @@ public class RobotContainer {
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
     // driverLeftBumper.onFalse(
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
+    // OLD LEFT BUMPER
 
     driverLeftTrigger
         .onTrue(new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
@@ -297,7 +301,10 @@ public class RobotContainer {
             ElevatorConstants.kOriginPosition)));
 
 
-
+    L3.toggleOnTrue(new RepeatCommand(new InstantCommand(() -> m_LedSubsystem
+        .setToHue((int) ((Math.atan2(m_operator.getRawAxis(XboxController.Axis.kLeftX.value),
+            m_operator.getRawAxis(XboxController.Axis.kLeftY.value)) + Math.PI) * 90 / Math.PI))))
+                .finallyDo((boolean interrupted) -> m_LedSubsystem.setLedOff()));
     operatorRightTrigger.whileTrue(new LedConeCommand(m_LedSubsystem));
     operatorLeftTrigger.whileTrue(new LedCubeCommand(m_LedSubsystem));
   }
@@ -305,7 +312,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
-    return autos.balanceAfterCharge();
+    return autos.threePieceBumpCatapult();
   }
 
 }

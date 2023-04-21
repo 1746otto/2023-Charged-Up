@@ -49,6 +49,31 @@
     },
     {
       "anchorPoint": {
+        "x": 5.785407580316349,
+        "y": 0.5141066814200143
+      },
+      "prevControl": {
+        "x": 5.68005198728434,
+        "y": 0.5066129114662347
+      },
+      "nextControl": {
+        "x": 5.890763173348358,
+        "y": 0.5216004513737938
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
         "x": 4.41270220644198,
         "y": 0.4445508712126559
       },
@@ -172,27 +197,27 @@
   ],
   "markers": [
     {
-      "position": 0.35,
+      "position": 1.9854545454545618,
       "names": [
-        "intake out"
+        "Spit position "
       ]
     },
     {
-      "position": 1.3090909090909093,
+      "position": 0.661818181818102,
       "names": [
-        "bring in intake"
+        "Intake"
       ]
     },
     {
-      "position": 3.45,
+      "position": 4.327272727272727,
       "names": [
-        "intake out1"
+        "Intake"
       ]
     },
     {
-      "position": 4.199999999999994,
+      "position": 2.7999999999998706,
       "names": [
-        "bring in intake1"
+        "Spit"
       ]
     }
   ]

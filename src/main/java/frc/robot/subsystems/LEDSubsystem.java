@@ -26,6 +26,13 @@ public class LEDSubsystem extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
+  public void setToHue(int hue) {
+    for (int i = 0; i < ledBuffer.getLength(); i++) {
+      ledBuffer.setHSV(i, hue, 255, 130);
+    }
+    led.setData(ledBuffer);
+  }
+
   public void setLedtoCone() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setHSV(i, LEDConstants.coneHValue, LEDConstants.coneSValue,

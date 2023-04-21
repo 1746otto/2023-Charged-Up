@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AutonGyroReset extends CommandBase {
@@ -20,6 +21,13 @@ public class AutonGyroReset extends CommandBase {
   @Override
   public void initialize() {
     startAngle = gyroAngle.getAsDouble();
+  }
+
+  @Override
+  public void execute() {
+    SmartDashboard.putNumber("initial angle", initialAngle);
+    SmartDashboard.putNumber("gyro angle", gyroAngle.getAsDouble());
+    SmartDashboard.putNumber("accepted angle", gyroAngle.getAsDouble() - startAngle + initialAngle);
   }
 
   @Override
