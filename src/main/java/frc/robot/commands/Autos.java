@@ -1474,7 +1474,7 @@ public final class Autos {
     eventMap.put("spit position",
         new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmBowlPos));
     eventMap.put("spit", new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5));
-    eventMap.put("extend elevator", new ElevatorRequestSelectorCommand(elevatorSubsystem, 15.0));
+    eventMap.put("extend elevator", new ElevatorRequestSelectorCommand(elevatorSubsystem, 10.0));
 
 
     // Make the auton command
@@ -1502,7 +1502,7 @@ public final class Autos {
     // You can have multiple constraints for each path, but for our purposes it is not required.
 
     List<PathPlannerTrajectory> pathGroup =
-        PathPlanner.loadPathGroup("3pieceBumpCatapult2.0", new PathConstraints(2.875, 2.5));
+        PathPlanner.loadPathGroup("3pieceBumpCatapult2.0", new PathConstraints(2.875, 2.25));
     PathPlannerState allianceState = PathPlannerTrajectory
         .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
 
@@ -1558,10 +1558,10 @@ public final class Autos {
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intake", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
-    eventMap.put("spit position",
+    eventMap.put("Intake", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("Spit position",
         new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmBowlPos));
-    eventMap.put("spit", new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5));
+    eventMap.put("Spit", new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5));
     new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos);
 
 
@@ -1570,16 +1570,15 @@ public final class Autos {
         // goToStartCommand,
         new CatapultAutonCommand(catapultSubsystem),
 
-        new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap))
-            .raceWith(
+        new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
+        new ShootCubeHighCommand(elevatorSubsystem, armPosSubsystem, armRollerSubsystem)).raceWith(
 
-                new AutonGyroReset(
-                    (DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees(),
-                    swerve.getYaw()::getDegrees, swerve.gyro::setYaw))
-            .andThen(scoreOne());
+            new AutonGyroReset(
+                (DriverStation.getAlliance() == Alliance.Red)
+                    ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+
+                    : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees() + 180,
+                swerve.getYaw()::getDegrees, swerve.gyro::setYaw));
 
 
 

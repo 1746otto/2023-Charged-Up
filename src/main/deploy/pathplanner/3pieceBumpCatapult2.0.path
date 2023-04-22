@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 4.3983618557577016,
-        "y": 1.0611859506366614
+        "x": 4.418481786472646,
+        "y": 0.46
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.971975883128868,
-        "y": 1.0325052492681022
+        "x": 4.992095813843813,
+        "y": 0.43131929863144075
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -49,18 +49,18 @@
     },
     {
       "anchorPoint": {
-        "x": 5.785407580316349,
-        "y": 0.5141066814200143
+        "x": 5.632428700754838,
+        "y": 0.8221801058986732
       },
       "prevControl": {
-        "x": 5.68005198728434,
-        "y": 0.5066129114662347
+        "x": 6.156080577868319,
+        "y": 0.8020396490866178
       },
       "nextControl": {
-        "x": 5.890763173348358,
-        "y": 0.5216004513737938
+        "x": 5.335530329180318,
+        "y": 0.8335992740361537
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": -180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -75,21 +75,21 @@
     {
       "anchorPoint": {
         "x": 4.41270220644198,
-        "y": 0.4445508712126559
+        "y": 1.03
       },
       "prevControl": {
-        "x": 4.857253077654636,
-        "y": 0.47323157258121384
+        "x": 4.947278612505944,
+        "y": 0.8264376103111184
       },
       "nextControl": {
-        "x": 3.9831457960567542,
-        "y": 0.4168375544136095
+        "x": 4.947278612505944,
+        "y": 0.8264376103111184
       },
       "holonomicAngle": 180.0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -153,12 +153,12 @@
         "y": 0.7456982355825191
       },
       "prevControl": {
-        "x": 4.566382907810539,
-        "y": 0.752868410924659
+        "x": 4.638961072793941,
+        "y": 0.7765034333487463
       },
       "nextControl": {
-        "x": 4.287702206441979,
-        "y": 0.7385280602403793
+        "x": 4.288969004144163,
+        "y": 0.7256273932943964
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -174,12 +174,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.7868000581606875,
-        "y": 1.0567748451411407
+        "x": 1.7,
+        "y": 1.18
       },
       "prevControl": {
-        "x": 1.7314702335028274,
-        "y": 1.0245090561015122
+        "x": 1.6446701753421398,
+        "y": 1.1477342109603714
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -195,27 +195,30 @@
       }
     }
   ],
+  "maxVelocity": 2.875,
+  "maxAcceleration": 2.25,
+  "isReversed": null,
   "markers": [
     {
-      "position": 1.9854545454545618,
-      "names": [
-        "Spit position "
-      ]
-    },
-    {
-      "position": 0.661818181818102,
+      "position": 0.509090909090938,
       "names": [
         "Intake"
       ]
     },
     {
-      "position": 4.327272727272727,
+      "position": 4.63,
       "names": [
         "Intake"
       ]
     },
     {
-      "position": 2.7999999999998706,
+      "position": 1.73,
+      "names": [
+        "Spit position"
+      ]
+    },
+    {
+      "position": 2.9018181818180038,
       "names": [
         "Spit"
       ]
