@@ -1391,7 +1391,7 @@ public final class Autos {
             new ParallelCommandGroup(
                 new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmBowlPos),
                 new ArmRollerRunInCommand(armRollerSubsystem)),
-            new WaitCommand(0.25), new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.5),
+            new WaitCommand(0.25), new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.6),
             new ArmRequestSelectorCommand(armPosSubsystem, ArmConstants.kArmRestPos))
                 .withTimeout(.375),
         new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap))
