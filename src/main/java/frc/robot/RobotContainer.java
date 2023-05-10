@@ -141,6 +141,7 @@ public class RobotContainer {
   private final JoystickButton L3 =
       new JoystickButton(m_operator, XboxController.Button.kLeftStick.value);
 
+
   /* Subsystems */
   public final Swerve s_Swerve = new Swerve();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
@@ -275,10 +276,16 @@ public class RobotContainer {
 
     // operatorRightBumper.whileTrue(new BalanceSpeedCommand());
 
-    operatorStart.onTrue(new InstantCommand(() -> {
+    driverBack.onTrue(new InstantCommand(() -> {
       s_Swerve.resetModulesToAbsolute();
     }).andThen(new WaitCommand(.5)));
-    operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
+    driverA.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
+    driverY.onTrue(
+        new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem)
+            .andThen(new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+                ElevatorConstants.kOriginPosition)));
+    driverB.whileTrue(new LedConeCommand(m_LedSubsystem));
+    driverX.whileTrue(new LedCubeCommand(m_LedSubsystem));
     // Elevator runs down to beam break to get the zero position.
     // operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
 
@@ -287,10 +294,8 @@ public class RobotContainer {
      * ArmRollerStopCommand(m_ArmRollersSubsystem), new ArmRequestSelectorCommand(m_ArmPosSubystem,
      * ArmConstants.kArmRestPos)));
      */
-    operatorY.onTrue(
-        new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem)
-            .andThen(new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-                ElevatorConstants.kOriginPosition)));
+
+
     // operatorA.whileTrue(new ParallelCommandGroup(
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
     // ElevatorConstants.kConeElevatorIntakePos),
@@ -304,13 +309,11 @@ public class RobotContainer {
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
     // ElevatorConstants.kOriginPosition)));
 
+    // L3.toggleOnTrue(new RepeatCommand(new InstantCommand(() -> m_LedSubsystem
+    // .setToHue((int) ((Math.atan2(m_operator.getRawAxis(XboxController.Axis.kLeftX.value),
+    // m_operator.getRawAxis(XboxController.Axis.kLeftY.value)) + Math.PI) * 90 / Math.PI))))
+    // .finallyDo((boolean interrupted) -> m_LedSubsystem.setLedOff()));
 
-    L3.toggleOnTrue(new RepeatCommand(new InstantCommand(() -> m_LedSubsystem
-        .setToHue((int) ((Math.atan2(m_operator.getRawAxis(XboxController.Axis.kLeftX.value),
-            m_operator.getRawAxis(XboxController.Axis.kLeftY.value)) + Math.PI) * 90 / Math.PI))))
-                .finallyDo((boolean interrupted) -> m_LedSubsystem.setLedOff()));
-    operatorRightTrigger.whileTrue(new LedConeCommand(m_LedSubsystem));
-    operatorLeftTrigger.whileTrue(new LedCubeCommand(m_LedSubsystem));
   }
 
 
