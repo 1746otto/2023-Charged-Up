@@ -249,7 +249,7 @@ public class RobotContainer {
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
         new WaitCommand(0.8)
             .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kMidPosition)),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidPos)));
 
     driverX.onTrue(new SequentialCommandGroup(
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
@@ -313,7 +313,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
     // balance, BL, B2 for practice field
-    return autos.threePieceBumpCatapult();
+    return autos.balanceAfterCharge();
   }
 
 }

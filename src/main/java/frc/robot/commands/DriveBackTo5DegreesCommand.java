@@ -38,6 +38,6 @@ public class DriveBackTo5DegreesCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(s_Swerve.gyro.getRoll() - initRoll) > 13;
+    return Math.abs(s_Swerve.gyro.getRoll() - initRoll) > 16;
   }
 }
