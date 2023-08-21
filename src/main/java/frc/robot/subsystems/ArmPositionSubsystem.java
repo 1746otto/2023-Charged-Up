@@ -11,6 +11,8 @@ import frc.robot.constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// New stuff
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 public class ArmPositionSubsystem extends SubsystemBase {
   private TalonFX armMotor;
@@ -21,8 +23,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
   public ArmPositionSubsystem() {
     armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
     armMotor.setNeutralMode(NeutralMode.Brake);
-    armEncoder = new CANCoder(ArmConstants.kCANCoderID);
-    armMotor.setSelectedSensorPosition(0.0);
+    armEncoder = new CANCoder(ArmConstants.kCANCoderID);   
     armPIDController = new BaseTalonPIDSetConfiguration(FeedbackDevice.Analog);
     armMotor.config_kP(0, ArmConstants.kArmP);
     armMotor.config_kD(0, 0);
