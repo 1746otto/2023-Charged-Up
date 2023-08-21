@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.lang.module.InvalidModuleDescriptorException;
 import java.util.function.BooleanSupplier;
 // import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 // import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -16,8 +17,10 @@ import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 public class ArmPositionSubsystem extends SubsystemBase {
@@ -40,6 +43,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armEncoder = new CANcoderConfigurator(id);
     armMotor.apply(armConfig);
     armEncoder.apply(encoderConfig);
+    armMotor.refresh(new MotorOutputConfigs());
   }
 
   public void armToRequest(double requestedPosition) {
