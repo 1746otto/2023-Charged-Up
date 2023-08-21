@@ -9,6 +9,7 @@ import java.util.function.BooleanSupplier;
 // import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import frc.lib.math.Conversions;
 import frc.robot.constants.ArmConstants;
+import edu.wpi.first.wpilibj.DutyCycle;
 // import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
 // import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,11 +17,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 public class ArmPositionSubsystem extends SubsystemBase {
@@ -43,19 +46,22 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armEncoder = new CANcoderConfigurator(id);
     armMotor.apply(armConfig);
     armEncoder.apply(encoderConfig);
-    armMotor.refresh(new MotorOutputConfigs());
+    armActRequest.setInverted(true);
   }
 
   public void armToRequest(double requestedPosition) {
-    armMotor.set(TalonFXControlMode.Position, requestedPosition);
+    // armMotor.set(TalonFXControlMode.Position, requestedPosition);
+    armActRequest.setControl(new PositionDutyCycle(requestedPosition));
   }
 
   public void armStop() {
-    armMotor.set(TalonFXControlMode.PercentOutput, 0);
+    // armMotor.set(TalonFXControlMode.PercentOutput, 0);
+    armActRequest.set(0.0);
   }
 
   public boolean armAtReq(double reqPosition) {
-    return (armEncoder.getPosition() == reqPosition);
+    // return (armEncoder.getPosition() == reqPosition);
+    return (encoderRequest.getAbsolutePosition() == reqPosition);
   }
 
   public boolean armReqisCorrect(double req) {
@@ -67,7 +73,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
   }
 
   public void armRun() {
-    armMotor.set(TalonFXControlMode.PercentOutput, 0.1);
+    // armMotor.set(TalonFXControlMode.PercentOutput, 0.1);
+    armActRequest.set(0.1);
   }
 
   @Override
@@ -77,7 +84,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
-    SmartDashboard.putNumber("Arm Encoder: ", armMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Arm Encoder: ", encoderRequest.getAbsolutePosition());
     armToRequest(requestPos);
   }
 }
