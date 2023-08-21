@@ -12,26 +12,34 @@ import frc.robot.constants.ArmConstants;
 // import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // New stuff
+import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.configs.CANcoderConfigurator;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.CANcoder;
 
 public class ArmPositionSubsystem extends SubsystemBase {
-  private TalonFX armMotor;
-  private CANCoder armEncoder;
-  private BaseTalonPIDSetConfiguration armPIDController;
+  // private TalonFX armMotor;
+  // private CANCoder armEncoder;
+  // private BaseTalonPIDSetConfiguration armPIDController;
+  // Arm Motor
+  private TalonFXConfigurator armMotor;
+  private DeviceIdentifier id = new DeviceIdentifier(ArmConstants.kArmPosMotorID, "TalonFX", "123");
+  private TalonFXConfiguration armConfig = new TalonFXConfiguration();
+  private TalonFX armActRequest = new TalonFX(ArmConstants.kArmPosMotorID);
+  // CANCoder
+  private CANcoderConfigurator armEncoder;
+  private CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
+  private CANcoder encoderRequest = new CANcoder(ArmConstants.kCANCoderID);
   private double requestPos;
 
   public ArmPositionSubsystem() {
-    armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
-    armMotor.setNeutralMode(NeutralMode.Brake);
-    armEncoder = new CANCoder(ArmConstants.kCANCoderID);   
-    armPIDController = new BaseTalonPIDSetConfiguration(FeedbackDevice.Analog);
-    armMotor.config_kP(0, ArmConstants.kArmP);
-    armMotor.config_kD(0, 0);
-    armMotor.configClosedLoopPeakOutput(0, 0.2, 0);
-    requestPos = ArmConstants.kArmRestPos;
-    // armMotor.configMotionAcceleration(1000)
-    armMotor.setInverted(true);
-
+    armMotor = new TalonFXConfigurator(id);
+    armEncoder = new CANcoderConfigurator(id);
+    armMotor.apply(armConfig);
+    armEncoder.apply(encoderConfig);
   }
 
   public void armToRequest(double requestedPosition) {
