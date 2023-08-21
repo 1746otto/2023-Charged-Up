@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.lang.module.InvalidModuleDescriptorException;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 // import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 // import com.ctre.phoenix.motorcontrol.NeutralMode;
 // import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -61,7 +62,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   public boolean armAtReq(double reqPosition) {
     // return (armEncoder.getPosition() == reqPosition);
-    return (encoderRequest.getAbsolutePosition() == reqPosition);
+    return ((encoderRequest.getAbsolutePosition().getValue()) == reqPosition);
   }
 
   public boolean armReqisCorrect(double req) {
@@ -84,7 +85,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
-    SmartDashboard.putNumber("Arm Encoder: ", encoderRequest.getAbsolutePosition());
+    SmartDashboard.putNumber("Arm Encoder: ", (encoderRequest.getAbsolutePosition().getValue()));
     armToRequest(requestPos);
   }
 }
