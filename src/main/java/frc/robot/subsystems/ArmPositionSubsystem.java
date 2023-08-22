@@ -20,12 +20,14 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 
 public class ArmPositionSubsystem extends SubsystemBase {
   // private TalonFX armMotor;
@@ -45,9 +47,14 @@ public class ArmPositionSubsystem extends SubsystemBase {
   public ArmPositionSubsystem() {
     armMotor = new TalonFXConfigurator(id);
     armEncoder = new CANcoderConfigurator(id);
+    armConfig.CurrentLimits.StatorCurrentLimit = 30;
+    armConfig.CurrentLimits.SupplyCurrentLimit = 30;
+    armConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     armMotor.apply(armConfig);
     armEncoder.apply(encoderConfig);
     armActRequest.setInverted(true);
+    armActRequest.setSafetyEnabled(true);
   }
 
   public void armToRequest(double requestedPosition) {
