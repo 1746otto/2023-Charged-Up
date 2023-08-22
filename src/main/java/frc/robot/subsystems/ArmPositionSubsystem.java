@@ -18,16 +18,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 
 public class ArmPositionSubsystem extends SubsystemBase {
   // private TalonFX armMotor;
@@ -92,7 +88,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
-    SmartDashboard.putNumber("Arm Encoder: ", (encoderRequest.getAbsolutePosition().getValue()));
+    SmartDashboard.putNumber("Arm CANCoder: ", (encoderRequest.getAbsolutePosition().getValue()));
     armToRequest(requestPos);
   }
 }
