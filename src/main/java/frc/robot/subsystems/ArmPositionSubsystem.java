@@ -30,42 +30,51 @@ public class ArmPositionSubsystem extends SubsystemBase {
   // private CANCoder armEncoder;
   // private BaseTalonPIDSetConfiguration armPIDController;
   // Arm Motor
-  private TalonFXConfigurator armMotor;
-  private DeviceIdentifier id = new DeviceIdentifier(ArmConstants.kArmPosMotorID, "TalonFX", "123");
-  private TalonFXConfiguration armConfig = new TalonFXConfiguration();
-  private TalonFX armActRequest = new TalonFX(ArmConstants.kArmPosMotorID);
+  private TalonFXConfigurator armMotorConfgrtr;
+  private DeviceIdentifier armId;
+  private DeviceIdentifier enId;
+  private TalonFXConfiguration armConfig;
+  private TalonFX armMotor;
   // CANCoder
-  private CANcoderConfigurator armEncoder;
-  private CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
-  private CANcoder encoderRequest = new CANcoder(ArmConstants.kCANCoderID);
+  private CANcoderConfigurator armEnConfgrtr;
+  private CANcoderConfiguration encoderConfig;
+  private CANcoder armEncoder;
   private double requestPos;
 
   public ArmPositionSubsystem() {
-    armMotor = new TalonFXConfigurator(id);
-    armEncoder = new CANcoderConfigurator(id);
-    armConfig.CurrentLimits.StatorCurrentLimit = 30;
-    armConfig.CurrentLimits.SupplyCurrentLimit = 30;
-    armConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-    armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    armMotor.apply(armConfig);
-    armEncoder.apply(encoderConfig);
-    armActRequest.setInverted(true);
-    armActRequest.setSafetyEnabled(true);
+    armEncoder = new CANcoder(ArmConstants.kCANCoderID, "rio");
+    armMotor = new TalonFX(ArmConstants.kArmPosMotorID, "rio");
+
+    enId = new DeviceIdentifier(ArmConstants.kCANCoderID, "CANCoder", "");
+    armId = new DeviceIdentifier(ArmConstants.kArmPosMotorID, "TalonFX", "");
+    encoderConfig = new CANcoderConfiguration();
+    armConfig = new TalonFXConfiguration();
+    // armMotorConfgrtr = new TalonFXConfigurator(armId);
+    // armEnConfgrtr = new CANcoderConfigurator(enId);
+    armMotor.getConfigurator().apply(armConfig);
+    armEncoder.getConfigurator().apply(encoderConfig);
+
+    // armConfig.CurrentLimits.StatorCurrentLimit = 30;
+    // armConfig.CurrentLimits.SupplyCurrentLimit = 30;
+    // armConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    // armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    armMotor.setInverted(true);
+    // armActRequest.setSafetyEnabled(true);
   }
 
   public void armToRequest(double requestedPosition) {
     // armMotor.set(TalonFXControlMode.Position, requestedPosition);
-    armActRequest.setControl(new PositionDutyCycle(requestedPosition));
+    armMotor.setControl(new PositionDutyCycle(requestedPosition));
   }
 
   public void armStop() {
     // armMotor.set(TalonFXControlMode.PercentOutput, 0);
-    armActRequest.set(0.0);
+    armMotor.set(0.0);
   }
 
   public boolean armAtReq(double reqPosition) {
     // return (armEncoder.getPosition() == reqPosition);
-    return ((encoderRequest.getAbsolutePosition().getValue()) == reqPosition);
+    return ((armEncoder.getPosition().getValue()) == reqPosition);
   }
 
   public boolean armReqisCorrect(double req) {
@@ -78,7 +87,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   public void armRun() {
     // armMotor.set(TalonFXControlMode.PercentOutput, 0.1);
-    armActRequest.set(0.1);
+    armMotor.set(0.1);
   }
 
   @Override
@@ -88,7 +97,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
-    SmartDashboard.putNumber("Arm CANCoder: ", (encoderRequest.getAbsolutePosition().getValue()));
+    SmartDashboard.putNumber("Arm CANCoder: ", (armEncoder.getAbsolutePosition().getValue()));
+    System.out.println("Arm CANCoder: " + (armEncoder.getAbsolutePosition().toString()));
     armToRequest(requestPos);
   }
 }

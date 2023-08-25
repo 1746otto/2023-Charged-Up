@@ -17,5 +17,5 @@ public final class ArmConstants {
   public static final double kCANTickToFalConversion = .5;
   public static final int kArmPosMotorID = 51;
   public static final int kArmRollerMotorID = 31;
-  public static final int kCANCoderID = 0;
+  public static final int kCANCoderID = 50;
 }
