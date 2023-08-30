@@ -73,7 +73,7 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor = new TalonSRX(50);
     turretMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
     turretMotor.setSensorPhase(false);
-    turretMotor.config_kP(0, 0.05);
+    turretMotor.config_kP(0, 1);
 
     SmartDashboard.putBoolean("enable turret", false);
     SmartDashboard.putNumber("Target RPM", 0);
@@ -83,10 +83,8 @@ public class TurretSubsystem extends SubsystemBase {
     Vision.getLastResult();
 
     if (Vision.lastResult.hasTargets()) {
-      System.out.println("Target Valid!");
       double target = 0;
-      xOffset = Math.atan2(-Vision.bestTarget.getBestCameraToTarget().getY(),
-          Vision.bestTarget.getBestCameraToTarget().getX());
+      xOffset = Vision.bestTarget.getYaw();
 
       if (target - xOffset != error) {
         error = target - xOffset;
