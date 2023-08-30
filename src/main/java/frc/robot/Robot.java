@@ -4,14 +4,12 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.ZeroOutElevatorCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,7 +18,6 @@ import frc.robot.commands.ZeroOutElevatorCommand;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
 
@@ -33,10 +30,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    ctreConfigs = new CTREConfigs();
     // Instantiate our RobotContainer. This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    PathPlannerServer.startServer(5811);
     m_robotContainer = new RobotContainer();
 
     // This won't work because the robot will be disabled. Also, the elevator subsystem within robot
