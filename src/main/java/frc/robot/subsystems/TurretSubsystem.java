@@ -30,8 +30,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   public static double kTurretTicksPerRevolution = 28000;
   public static final double kTurretTicksPerDegree = kTurretTicksPerRevolution / 360;
-  private double kP = 0.05;
-  private double kD = 0 * kP;
+  private double kP = 0.1;
+  private double kD = 0;
   private double error = 0;
   double prevError = 0;
   double deltaError = 0;
@@ -73,7 +73,7 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor = new TalonSRX(50);
     turretMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
     turretMotor.setSensorPhase(false);
-    turretMotor.config_kP(0, 1);
+    turretMotor.config_kP(0, .05);
 
     SmartDashboard.putBoolean("enable turret", false);
     SmartDashboard.putNumber("Target RPM", 0);
@@ -85,15 +85,16 @@ public class TurretSubsystem extends SubsystemBase {
     if (Vision.lastResult.hasTargets()) {
       double target = 0;
       xOffset = Vision.bestTarget.getYaw();
-
+      SmartDashboard.putString("Transform 3D",
+          Vision.bestTarget.getBestCameraToTarget().toString());
       if (target - xOffset != error) {
         error = target - xOffset;
         deltaError = error - prevError;
         double kPnorm = -(kP * error + kD * deltaError);
-        if (kPnorm < -0.5) {
-          kPnorm = -0.5;
-        } else if (kPnorm > 0.5) {
-          kPnorm = 0.5;
+        if (kPnorm < -0.25) {
+          kPnorm = -0.25;
+        } else if (kPnorm > 0.25) {
+          kPnorm = 0.25;
         }
         turretMotor.set(ControlMode.PercentOutput, kPnorm);
         prevError = error;
@@ -129,9 +130,10 @@ public class TurretSubsystem extends SubsystemBase {
     if (SmartDashboard.getNumber("Target RPM", targetRPM) != targetRPM) {
       setRPM((int) SmartDashboard.getNumber("Target RPM", targetRPM));
     }
-    if (SmartDashboard.getBoolean("enable turret", false)) {
-      configTurret();
-    }
+    // if (SmartDashboard.getBoolean("enable turret", true)) {
+    // configTurret();
+    // }
+    configTurret();
   }
 
 }
