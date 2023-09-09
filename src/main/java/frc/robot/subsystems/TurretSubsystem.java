@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.subsystems.Vision;
 
+// IMPORTANT!!! This needs a feedforward of about .1 applied to the turret in the direction of
+// motion in order to function properly.
+
 public class TurretSubsystem extends SubsystemBase {
   // Flywheel
   public TalonSRX controller;
