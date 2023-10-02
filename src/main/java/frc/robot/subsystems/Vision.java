@@ -36,6 +36,7 @@ public class Vision {
     try {
       tags = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
     } catch (Exception e) {
+      SmartDashboard.putString("fail", "fail");
     } ;
     lottoCamera = new PhotonCamera("lotto");
     rottoCamera = new PhotonCamera("rotto");
@@ -44,47 +45,33 @@ public class Vision {
         List<Pose3d> poses = new ArrayList<>();
         Vision.getLastResult();
         if (lottoLastResult.hasTargets()) {
-          SmartDashboard.putString("Lotto April Tag Rotation", Double.toString(
-              lottoBestTarget.getBestCameraToTarget().getRotation().getX() / Math.PI * 180)
-              + ", "
-              + Double.toString(
-                  lottoBestTarget.getBestCameraToTarget().getRotation().getY() / Math.PI * 180)
-              + ", " + Double.toString(
-                  lottoBestTarget.getBestCameraToTarget().getRotation().getZ() / Math.PI * 180));
+          SmartDashboard.putBoolean("lotto has target", true);
           for (PhotonTrackedTarget target : Vision.lottoLastResult.targets) {
             poses.add(tags.getTagPose(target.getFiducialId()).get()
                 .transformBy(target.getBestCameraToTarget().inverse())
                 .transformBy(robotToLotto.inverse()));
           }
+        } else {
+
+          SmartDashboard.putBoolean("lotto has target", false);
         }
         if (rottoLastResult.hasTargets()) {
-          SmartDashboard
-              .putString("Rotto April Tag Rotation",
-                  Double
-                      .toString(tags.getTagPose(rottoBestTarget.getFiducialId()).get()
-                          .transformBy(rottoBestTarget.getBestCameraToTarget().inverse())
-                          .transformBy(robotToRotto.inverse()).getRotation().getX() / Math.PI * 180)
-                      + ", "
-                      + Double.toString(tags.getTagPose(rottoBestTarget.getFiducialId()).get()
-                          .transformBy(rottoBestTarget.getBestCameraToTarget().inverse())
-                          .transformBy(robotToRotto.inverse()).getRotation().getY() / Math.PI * 180)
-                      + ", "
-                      + Double.toString(tags.getTagPose(rottoBestTarget.getFiducialId()).get()
-                          .transformBy(rottoBestTarget.getBestCameraToTarget().inverse())
-                          .transformBy(robotToRotto.inverse()).getRotation().getZ() / Math.PI
-                          * 180));
+
+          SmartDashboard.putBoolean("rotto has target", true);
           for (PhotonTrackedTarget target : Vision.rottoLastResult.targets) {
             poses.add(tags.getTagPose(target.getFiducialId()).get()
                 .transformBy(target.getBestCameraToTarget().inverse())
                 .transformBy(robotToRotto.inverse()));
           }
+        } else {
+
+          SmartDashboard.putBoolean("rotto has target", false);
         }
-        PhotonPoseEstimator poseEstimator = new PhotonPoseEstimator(null, null, lottoCamera, null);
         try {
           Thread.sleep(10);
         } catch (InterruptedException e) {
           // TODO Auto-generated catch block
-          e.printStackTrace();
+          SmartDashboard.putString("fail", e.getMessage());
         }
       }
     }).start();
