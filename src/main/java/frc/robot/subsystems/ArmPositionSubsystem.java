@@ -45,22 +45,12 @@ public class ArmPositionSubsystem extends SubsystemBase {
   private TalonFX armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
 
   public ArmPositionSubsystem() {
-    // enId = new DeviceIdentifier(ArmConstants.kCANCoderID, "CANCoder", "");
-    // armId = new DeviceIdentifier(ArmConstants.kArmPosMotorID, "TalonFX", "");
     encoderConfig = new CANcoderConfiguration();
     armConfig = new TalonFXConfiguration();
     encoderConfig.serialize();
-    // armMotorConfgrtr = new TalonFXConfigurator(armId);
-    // armEnConfgrtr = new CANcoderConfigurator(enId);
-    armMotor.getConfigurator().apply(armConfig);
     armEncoder.getConfigurator().apply(encoderConfig);
-
-    // armConfig.CurrentLimits.StatorCurrentLimit = 30;
-    // armConfig.CurrentLimits.SupplyCurrentLimit = 30;
-    // armConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-    // armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    armMotor.getConfigurator().apply(armConfig);
     armMotor.setInverted(true);
-    // armActRequest.setSafetyEnabled(true);
     armEncoder.getPosition().setUpdateFrequency(100);
     armEncoder.getPosition().waitForUpdate(0.1);
   }
