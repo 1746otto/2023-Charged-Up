@@ -238,6 +238,7 @@ public class RobotContainer {
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
     // OLD LEFT BUMPER
 
+    // humman player station intake
     driverLeftTrigger
         .onTrue(new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
             new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.ksubstationPosition)));
@@ -267,7 +268,7 @@ public class RobotContainer {
     driverStart.onTrue(new InstantCommand(() -> {
       s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
     }));
-
+    // bowling piece to mid
     driverLeftBumper
         .onTrue(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidShootPos));
 
