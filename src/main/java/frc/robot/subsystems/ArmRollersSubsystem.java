@@ -15,10 +15,14 @@ public class ArmRollersSubsystem extends SubsystemBase {
   private double current;
   private double shootSpeed = -Math.abs(ArmConstants.kRollerShoot);
 
+  private CANcoderConfiguration encoderConfig;
+  private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID);
+
   public ArmRollersSubsystem() {
     armRollerMotor = new CANSparkMax(ArmConstants.kArmRollerMotorID, MotorType.kBrushless);
     armRollerMotor.setIdleMode(IdleMode.kBrake);
     // armRollerMotor.setSmartCurrentLimit(0);
+
   }
 
   public void armRollerIntake() {
