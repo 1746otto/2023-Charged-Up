@@ -41,8 +41,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
   // private CANcoder armEncoder;
   private double requestPos;
 
-  private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID, "rio");
-  private TalonFX armMotor = new TalonFX(ArmConstants.kArmPosMotorID, "rio");
+  private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID);
+  private TalonFX armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
 
   public ArmPositionSubsystem() {
     // enId = new DeviceIdentifier(ArmConstants.kCANCoderID, "CANCoder", "");
@@ -61,6 +61,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     armMotor.setInverted(true);
     // armActRequest.setSafetyEnabled(true);
+    armEncoder.getPosition().setUpdateFrequency(100);
+    armEncoder.getPosition().waitForUpdate(0.1);
   }
 
   public void armToRequest(double requestedPosition) {

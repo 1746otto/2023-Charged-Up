@@ -179,7 +179,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // ----Driver Controls----
-    // Pushing
+    // cone off ground
     driverLeftBumper
         .onTrue(new ParallelCommandGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
             new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos)));
@@ -187,6 +187,7 @@ public class RobotContainer {
         .onFalse(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
 
     // Cube intaking
+    // cubes off ground
     driverRightTrigger
         .onTrue(
             new SequentialCommandGroup(
@@ -196,6 +197,7 @@ public class RobotContainer {
                 new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // Cone intaking
+    // spit command
     driverRightBumper
         .onTrue(new SequentialCommandGroup(
             new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
@@ -215,6 +217,7 @@ public class RobotContainer {
     // driverLeftBumper.onFalse(
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
 
+    // human player intake
     driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
 
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
