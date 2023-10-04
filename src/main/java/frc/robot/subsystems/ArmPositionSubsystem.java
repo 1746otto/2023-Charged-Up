@@ -34,21 +34,22 @@ public class ArmPositionSubsystem extends SubsystemBase {
   private DeviceIdentifier armId;
   private DeviceIdentifier enId;
   private TalonFXConfiguration armConfig;
-  private TalonFX armMotor;
+  // private TalonFX armMotor;
   // CANCoder
   private CANcoderConfigurator armEnConfgrtr;
   private CANcoderConfiguration encoderConfig;
-  private CANcoder armEncoder;
+  // private CANcoder armEncoder;
   private double requestPos;
 
-  public ArmPositionSubsystem() {
-    armEncoder = new CANcoder(ArmConstants.kCANCoderID, "rio");
-    armMotor = new TalonFX(ArmConstants.kArmPosMotorID, "rio");
+  private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID, "rio");
+  private TalonFX armMotor = new TalonFX(ArmConstants.kArmPosMotorID, "rio");
 
-    enId = new DeviceIdentifier(ArmConstants.kCANCoderID, "CANCoder", "");
-    armId = new DeviceIdentifier(ArmConstants.kArmPosMotorID, "TalonFX", "");
+  public ArmPositionSubsystem() {
+    // enId = new DeviceIdentifier(ArmConstants.kCANCoderID, "CANCoder", "");
+    // armId = new DeviceIdentifier(ArmConstants.kArmPosMotorID, "TalonFX", "");
     encoderConfig = new CANcoderConfiguration();
     armConfig = new TalonFXConfiguration();
+    encoderConfig.serialize();
     // armMotorConfgrtr = new TalonFXConfigurator(armId);
     // armEnConfgrtr = new CANcoderConfigurator(enId);
     armMotor.getConfigurator().apply(armConfig);
@@ -74,7 +75,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   public boolean armAtReq(double reqPosition) {
     // return (armEncoder.getPosition() == reqPosition);
-    return ((armEncoder.getPosition().getValue()) == reqPosition);
+    return ((armEncoder.getAbsolutePosition().getValue()) <= (reqPosition++)
+        && ((armEncoder.getAbsolutePosition().getValue()) >= (reqPosition--)));
   }
 
   public boolean armReqisCorrect(double req) {
@@ -99,6 +101,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // // Falcon: 20
     SmartDashboard.putNumber("Arm CANCoder: ", (armEncoder.getAbsolutePosition().getValue()));
     System.out.println("Arm CANCoder: " + (armEncoder.getAbsolutePosition().toString()));
-    armToRequest(requestPos);
+
+    // armToRequest(requestPos);
   }
 }
