@@ -37,6 +37,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     encoderConfig = new CANcoderConfiguration();
     encoderConfig.serialize();
     armEncoder.getConfigurator().apply(encoderConfig);
+    armEncoder.setPosition(0.0, 0.1); // Use once at origin then delete
     armEncoder.getPosition().setUpdateFrequency(100);
     armEncoder.getPosition().waitForUpdate(0.1);
 
