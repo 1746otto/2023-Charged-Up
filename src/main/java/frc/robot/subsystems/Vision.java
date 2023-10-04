@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -25,7 +26,10 @@ public class Vision {
   private Pose3d lottoEstimatedRobotPose = new Pose3d();
   private Pose3d rottoEstimatedRobotPose = new Pose3d();
   static Pose3d robotEstimatedPose = new Pose3d();
+  private Pose3d temp;
   private AprilTagFieldLayout tags;
+  private DoubleSupplier gyroVal;
+  private double tolerance;
   // +X is forward, Y is left and right, +Z is up
   public static Transform3d robotToLotto =
       new Transform3d(new Translation3d(0.5, 0.5, 0.5), new Rotation3d(0, -Math.PI / 9.0, -29.8));
@@ -47,9 +51,21 @@ public class Vision {
         if (lottoLastResult.hasTargets()) {
           SmartDashboard.putBoolean("lotto has target", true);
           for (PhotonTrackedTarget target : Vision.lottoLastResult.targets) {
-            poses.add(tags.getTagPose(target.getFiducialId()).get()
+            temp = tags.getTagPose(target.getFiducialId()).get()
                 .transformBy(target.getBestCameraToTarget().inverse())
-                .transformBy(robotToLotto.inverse()));
+                .transformBy(robotToLotto.inverse());
+            if (!(gyroVal.getAsDouble() - tolerance < temp.getRotation().getZ()
+                && temp.getRotation().getZ() < gyroVal.getAsDouble() + tolerance)) {
+              temp = tags.getTagPose(target.getFiducialId()).get()
+                  .transformBy(target.getAlternateCameraToTarget().inverse())
+                  .transformBy(robotToLotto.inverse());
+              if (gyroVal.getAsDouble() - tolerance < temp.getRotation().getZ()
+                  && temp.getRotation().getZ() < gyroVal.getAsDouble() + tolerance) {
+                poses.add(temp);
+              }
+            } else {
+              poses.add(temp);
+            }
           }
         } else {
 
@@ -59,9 +75,21 @@ public class Vision {
 
           SmartDashboard.putBoolean("rotto has target", true);
           for (PhotonTrackedTarget target : Vision.rottoLastResult.targets) {
-            poses.add(tags.getTagPose(target.getFiducialId()).get()
+            temp = tags.getTagPose(target.getFiducialId()).get()
                 .transformBy(target.getBestCameraToTarget().inverse())
-                .transformBy(robotToRotto.inverse()));
+                .transformBy(robotToRotto.inverse());
+            if (!(gyroVal.getAsDouble() - tolerance < temp.getRotation().getZ()
+                && temp.getRotation().getZ() < gyroVal.getAsDouble() + tolerance)) {
+              temp = tags.getTagPose(target.getFiducialId()).get()
+                  .transformBy(target.getAlternateCameraToTarget().inverse())
+                  .transformBy(robotToRotto.inverse());
+              if (gyroVal.getAsDouble() - tolerance < temp.getRotation().getZ()
+                  && temp.getRotation().getZ() < gyroVal.getAsDouble() + tolerance) {
+                poses.add(temp);
+              }
+            } else {
+              poses.add(temp);
+            }
           }
         } else {
 
