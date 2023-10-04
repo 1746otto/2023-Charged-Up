@@ -7,6 +7,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.constants.ArmConstants;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+
 public class ArmRollersSubsystem extends SubsystemBase {
   private CANSparkMax armRollerMotor;
   private double current;
