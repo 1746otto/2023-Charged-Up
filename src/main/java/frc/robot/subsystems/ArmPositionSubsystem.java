@@ -7,19 +7,23 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import frc.robot.constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
-import com.ctre.phoenix.sensors.CANCoder;
+// import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 
 public class ArmPositionSubsystem extends SubsystemBase {
   private TalonFX armMotor;
-  private CANCoder armEncoder;
   private BaseTalonPIDSetConfiguration armPIDController;
   private double requestPos = 0;
+
+  private CANcoderConfiguration encoderConfig;
+  private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID);
 
   public ArmPositionSubsystem() {
     armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
     armMotor.setNeutralMode(NeutralMode.Brake);
-    armEncoder = new CANCoder(ArmConstants.kCANCoderID);
     armMotor.setSelectedSensorPosition(0.0);
     armPIDController = new BaseTalonPIDSetConfiguration(FeedbackDevice.Analog);
     armMotor.config_kP(0, ArmConstants.kArmP);
@@ -28,6 +32,13 @@ public class ArmPositionSubsystem extends SubsystemBase {
     requestPos = ArmConstants.kArmRestPos;
     // armMotor.configMotionAcceleration(1000)
     armMotor.setInverted(true);
+
+    // CANCoder
+    encoderConfig = new CANcoderConfiguration();
+    encoderConfig.serialize();
+    armEncoder.getConfigurator().apply(encoderConfig);
+    armEncoder.getPosition().setUpdateFrequency(100);
+    armEncoder.getPosition().waitForUpdate(0.1);
 
   }
 
@@ -60,7 +71,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
   }
 
   public boolean armAtReq(double reqPosition) {
-    return (armEncoder.getPosition() == reqPosition);
+    return (armEncoder.getAbsolutePosition().getValue() == reqPosition);
   }
 
   public boolean armReqisCorrect(double req) {
@@ -77,12 +88,12 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("CANCoder: ", armEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("CANCoder: ", armEncoder.getAbsolutePosition().getValue());
+    System.out.println("CANCoder: " + armEncoder.getAbsolutePosition().getValue());
     // System.out.println("Relative Encoder: " + armMotor.getSelectedSensorPosition());
     // armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
-    SmartDashboard.putNumber("Arm Encoder: ", armMotor.getSelectedSensorPosition());
     armToRequest(requestPos);
     SmartDashboard.putNumber("Target Position", getRequestedPosition());
 
