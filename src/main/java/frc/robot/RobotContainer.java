@@ -68,6 +68,8 @@ import swervelib.SwerveDrive;
  */
 public class RobotContainer {
   public final SendableChooser<Command> m_chooser = new SendableChooser<>();
+  File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+  SwerveDrive swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive();
 
   /* Controllers */
   private final XboxController m_driver = new XboxController(ControllerConstants.kDriverPort);
