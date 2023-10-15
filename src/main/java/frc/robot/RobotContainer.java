@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.Vision;
 import java.io.Console;
 import edu.wpi.first.wpilibj.XboxController;
