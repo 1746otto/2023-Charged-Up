@@ -60,7 +60,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setControl(new PositionDutyCycle(requestedPosition));
 
     // Change position values immediatley for safety reasons
-    armMotor.setControl(new DutyCycleOut(0.01).withOutput(requestedPosition));
+    armMotor.setControl(new PositionDutyCycle(requestedPosition));
   }
 
   public void armStop() {
