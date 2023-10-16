@@ -39,8 +39,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
   // private CANcoder armEncoder;
   private double requestPos;
 
-  private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID);
-  private TalonFX armMotor = new TalonFX(ArmConstants.kArmPosMotorID);
+  private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID, "rio");
+  private TalonFX armMotor = new TalonFX(ArmConstants.kArmPosMotorID, "rio");
 
   public ArmPositionSubsystem() {
     encoderConfig = new CANcoderConfiguration();
@@ -50,6 +50,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armConfig.CurrentLimits.SupplyCurrentLimit = 130;
     armEncoder.getConfigurator().apply(encoderConfig);
     armMotor.getConfigurator().apply(armConfig);
+    armConfig.Slot0.kP = ArmConstants.kArmP;
     armMotor.setInverted(true);
     armEncoder.getPosition().setUpdateFrequency(100);
     armEncoder.getPosition().waitForUpdate(0.1);
@@ -60,7 +61,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setControl(new PositionDutyCycle(requestedPosition));
 
     // Change position values immediatley for safety reasons
-    armMotor.setControl(new PositionDutyCycle(requestedPosition));
+    armMotor.setControl(new PositionDutyCycle(requestedPosition, false, 0.0, 1, true));
   }
 
   public void armStop() {
