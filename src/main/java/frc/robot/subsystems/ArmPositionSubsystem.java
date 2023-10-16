@@ -32,12 +32,13 @@ public class ArmPositionSubsystem extends SubsystemBase {
     requestPos = ArmConstants.kArmRestPos;
     // armMotor.configMotionAcceleration(1000)
     armMotor.setInverted(true);
+    // armMotor.configSelectedFeedbackCoefficient(1);
 
     // CANCoder
     encoderConfig = new CANcoderConfiguration();
     encoderConfig.serialize();
     armEncoder.getConfigurator().apply(encoderConfig);
-    armEncoder.setPosition(0.0, 0.1); // Use once at origin then delete
+    // armEncoder.setPosition(0.0, 0.1); // Use once at origin then delete
     armEncoder.getPosition().setUpdateFrequency(100);
     armEncoder.getPosition().waitForUpdate(0.1);
 

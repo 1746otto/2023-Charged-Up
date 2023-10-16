@@ -205,6 +205,7 @@ public class RobotContainer {
     // ----Driver Controls----
     // Pushing
 
+    // Pos:
     // Cube intaking
     driverRightTrigger
         .onTrue(
@@ -214,6 +215,7 @@ public class RobotContainer {
                         ArmConstants.kArmCubeIntakePos)),
                 new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
+    // Pos:
     // Cone intaking
     driverRightBumper.onTrue(new SequentialCommandGroup(
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
@@ -238,6 +240,7 @@ public class RobotContainer {
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
     // OLD LEFT BUMPER
 
+    // Pos:
     // humman player station intake
     driverLeftTrigger
         .onTrue(new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
@@ -268,6 +271,8 @@ public class RobotContainer {
     driverStart.onTrue(new InstantCommand(() -> {
       s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
     }));
+
+    // Pos:
     // bowling piece to mid
     driverLeftBumper
         .onTrue(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidShootPos));
