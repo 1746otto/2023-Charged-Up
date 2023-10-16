@@ -18,9 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -61,7 +63,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setControl(new PositionDutyCycle(requestedPosition));
 
     // Change position values immediatley for safety reasons
-    armMotor.setControl(new PositionDutyCycle(requestedPosition, false, 0.0, 1, true));
+    // armMotor.setControl(new PositionDutyCycle(0.0, false, 0.0, 0, true));
+    armMotor.setControl(new DutyCycleOut(-0.01, false, true).withOutput(-0.01));
   }
 
   public void armStop() {
