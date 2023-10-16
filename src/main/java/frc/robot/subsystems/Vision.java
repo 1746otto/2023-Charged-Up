@@ -40,12 +40,13 @@ public class Vision {
   public static Transform3d robotToRotto =
       new Transform3d(new Translation3d(0.5, -0.5, 0.5), new Rotation3d(0, Math.PI / 9.0, 29.8));
 
-  public Vision() {
+  public Vision(DoubleSupplier yawSupplier) {
     try {
       tags = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
     } catch (Exception e) {
       SmartDashboard.putString("fail", "fail");
     } ;
+    // gyroVal = yawSupplier;
     gyroVal = () -> {
       return gyro.getYaw();
     };
@@ -58,7 +59,7 @@ public class Vision {
         if (lottoLastResult.hasTargets()) {
           SmartDashboard.putBoolean("lotto has target", true);
           for (PhotonTrackedTarget target : Vision.lottoLastResult.targets) {
-            if (target.getFiducialId() > 8) {
+            if (target.getFiducialId() > 8 || target.getFiducialId() <= 0) {
               continue;
             }
             temp = tags.getTagPose(target.getFiducialId()).get()
@@ -84,31 +85,34 @@ public class Vision {
 
           SmartDashboard.putBoolean("lotto has target", false);
         }
-        // if (rottoLastResult.hasTargets()) {
+        if (rottoLastResult.hasTargets()) {
 
-        // SmartDashboard.putBoolean("rotto has target", true);
-        // for (PhotonTrackedTarget target : Vision.rottoLastResult.targets) {
-        // temp = tags.getTagPose(target.getFiducialId()).get()
-        // .transformBy(target.getBestCameraToTarget().inverse())
-        // .transformBy(robotToRotto.inverse());
-        // if (target.getBestCameraToTarget().getTranslation().getNorm() < maxDist) {
-        // if (!(gyroVal.getAsDouble() - tolerance < temp.getRotation().getZ()
-        // && temp.getRotation().getZ() < gyroVal.getAsDouble() + tolerance)) {
-        // temp = tags.getTagPose(target.getFiducialId()).get()
-        // .transformBy(target.getAlternateCameraToTarget().inverse())
-        // .transformBy(robotToRotto.inverse());
-        // if (gyroVal.getAsDouble() - tolerance < temp.getRotation().getZ()
-        // && temp.getRotation().getZ() < gyroVal.getAsDouble() + tolerance) {
-        // poses.add(temp);
-        // }
-        // } else {
-        // poses.add(temp);
-        // }
-        // }
-        // }
-        // } else {
-        // SmartDashboard.putBoolean("rotto has target", false);
-        // }
+          SmartDashboard.putBoolean("rotto has target", true);
+          for (PhotonTrackedTarget target : Vision.rottoLastResult.targets) {
+            if (target.getFiducialId() > 8 || target.getFiducialId() <= 0) {
+              continue;
+            }
+            temp = tags.getTagPose(target.getFiducialId()).get()
+                .transformBy(target.getBestCameraToTarget().inverse())
+                .transformBy(robotToRotto.inverse());
+            if (target.getBestCameraToTarget().getTranslation().getNorm() < maxDist) {
+              if (!(gyroVal.getAsDouble() - tolerance < temp.getRotation().getZ()
+                  && temp.getRotation().getZ() < gyroVal.getAsDouble() + tolerance)) {
+                temp = tags.getTagPose(target.getFiducialId()).get()
+                    .transformBy(target.getAlternateCameraToTarget().inverse())
+                    .transformBy(robotToRotto.inverse());
+                if (gyroVal.getAsDouble() - tolerance < temp.getRotation().getZ()
+                    && temp.getRotation().getZ() < gyroVal.getAsDouble() + tolerance) {
+                  poses.add(temp);
+                }
+              } else {
+                poses.add(temp);
+              }
+            }
+          }
+        } else {
+          SmartDashboard.putBoolean("rotto has target", false);
+        }
         robotEstimatedPose = new Pose3d();
         for (Pose3d pose : poses) {
           // if (pose == null) {
@@ -119,11 +123,11 @@ public class Vision {
           robotEstimatedPose = robotEstimatedPose.plus(new Transform3d(new Pose3d(), pose));
         }
         robotEstimatedPose = robotEstimatedPose.div(poses.size() - iTemp);
-        SmartDashboard.putString("pose", robotEstimatedPose.getTranslation().toString() + ", "
-        // + Double.toString(robotEstimatedPose.getRotation().getX() / Math.PI * 180) + ", "
-        // + Double.toString(robotEstimatedPose.getRotation().getY() / Math.PI * 180) + ", "
-        // + Double.toString(robotEstimatedPose.getRotation().getZ() / Math.PI * 180)
-            + robotEstimatedPose.getRotation().toRotation2d().toString());
+        SmartDashboard.putString("pose",
+            robotEstimatedPose.getTranslation().toString() + ", "
+                + Double.toString(robotEstimatedPose.getRotation().getX() / Math.PI * 180) + ", "
+                + Double.toString(robotEstimatedPose.getRotation().getY() / Math.PI * 180) + ", "
+                + Double.toString(robotEstimatedPose.getRotation().getZ() / Math.PI * 180));
         poses.clear();
         try {
           Thread.sleep(10);

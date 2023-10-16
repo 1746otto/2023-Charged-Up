@@ -26,7 +26,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // turretSubsystem = new TurretSubsystem();
-    vision = new Vision();
+    vision = new Vision(() -> {
+      return 5.0;
+    });
 
 
   }
