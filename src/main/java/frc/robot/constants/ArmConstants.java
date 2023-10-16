@@ -8,7 +8,7 @@ public final class ArmConstants {
                                                               // 0.5634
   // TODO: change cube intake pos
   // TODO: change positions constants to match cancoder.
-  public static final double kArmConeIntakePos = -2.7741; // 0.7521
+  public static final double kArmConeIntakePos = -0.1;// -2.7741; // 0.7521
   public static final double kArmHighScoringPos = -4.543;
   public static final double kArmP = .4;
   public static final double kRollerSpeed = 0.5;
