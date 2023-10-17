@@ -47,12 +47,11 @@ public class ArmPositionSubsystem extends SubsystemBase {
   public ArmPositionSubsystem() {
     encoderConfig = new CANcoderConfiguration();
     armConfig = new TalonFXConfiguration();
-    encoderConfig.serialize();
-    armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    armConfig.CurrentLimits.SupplyCurrentLimit = 130;
+    // armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    // armConfig.CurrentLimits.SupplyCurrentLimit = 130;
+    armConfig.Slot0.kP = ArmConstants.kArmP;
     armEncoder.getConfigurator().apply(encoderConfig);
     armMotor.getConfigurator().apply(armConfig);
-    armConfig.Slot0.kP = ArmConstants.kArmP;
     armMotor.setInverted(true);
     armEncoder.getPosition().setUpdateFrequency(100);
     armEncoder.getPosition().waitForUpdate(0.1);
@@ -63,7 +62,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setControl(new PositionDutyCycle(requestedPosition));
 
     // Change position values immediatley for safety reasons
-    armMotor.setControl(new PositionDutyCycle(0.0, false, 0.0, 0, true).withPosition(-2.5));
+    armMotor.setControl(new PositionDutyCycle(requestedPosition, false, 0.0, 0, true));
     // armMotor.setControl(new DutyCycleOut(0, false, true).withOutput(-0.1));
   }
 
@@ -101,7 +100,6 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // // Falcon: 20
     SmartDashboard.putNumber("Arm CANCoder: ", (armEncoder.getAbsolutePosition().getValue()));
     System.out.println("Arm CANCoder: " + (armEncoder.getAbsolutePosition().toString()));
-    System.out.println("CANCoder relPos: " + armEncoder.getPosition().getValue());
     SmartDashboard.putNumber("Arm Talon Position: ", armMotor.getPosition().getValue());
     System.out.println("Arm Talon Position: " + (armMotor.getPosition().toString()));
 
