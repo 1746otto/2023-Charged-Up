@@ -47,20 +47,20 @@ public class ArmPositionSubsystem extends SubsystemBase {
   public ArmPositionSubsystem() {
     encoderConfig = new CANcoderConfiguration();
     armConfig = new TalonFXConfiguration();
-    // armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    // armConfig.CurrentLimits.SupplyCurrentLimit = 130;
+    armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    armConfig.CurrentLimits.SupplyCurrentLimit = 130;
+    armConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    armConfig.CurrentLimits.StatorCurrentLimit = 130;
     armConfig.Slot0.kP = ArmConstants.kArmP;
     armEncoder.getConfigurator().apply(encoderConfig);
     armMotor.getConfigurator().apply(armConfig);
     armMotor.setInverted(true);
     armEncoder.getPosition().setUpdateFrequency(100);
     armEncoder.getPosition().waitForUpdate(0.1);
+    requestPos = ArmConstants.kArmRestPos;
   }
 
   public void armToRequest(double requestedPosition) {
-    // armMotor.set(TalonFXControlMode.Position, requestedPosition);
-    // armMotor.setControl(new PositionDutyCycle(requestedPosition));
-
     // Change position values immediatley for safety reasons
     armMotor.setControl(new PositionDutyCycle(requestedPosition, false, 0.0, 0, true));
     // armMotor.setControl(new DutyCycleOut(0, false, true).withOutput(-0.1));

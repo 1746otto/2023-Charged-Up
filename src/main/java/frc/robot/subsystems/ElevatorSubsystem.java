@@ -43,7 +43,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotor.setIdleMode(IdleMode.kBrake);
     elevatorMotor.getEncoder().setPosition(0);
     reqPosition = ElevatorConstants.kOriginPosition;
-    // elevatorMotor.setSmartCurrentLimit(60);
+    elevatorMotor.setSmartCurrentLimit(130);
   }
 
   public void elevatorRunUp() {
