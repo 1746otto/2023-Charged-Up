@@ -23,8 +23,11 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.pathplanner.lib.PathPoint;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 public class ArmPositionSubsystem extends SubsystemBase {
@@ -44,6 +47,9 @@ public class ArmPositionSubsystem extends SubsystemBase {
   private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID, "rio");
   private TalonFX armMotor = new TalonFX(ArmConstants.kArmPosMotorID, "rio");
 
+  private double lastPos;
+  private double currPos;
+
   public ArmPositionSubsystem() {
     encoderConfig = new CANcoderConfiguration();
     armConfig = new TalonFXConfiguration();
@@ -52,12 +58,15 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     armConfig.CurrentLimits.StatorCurrentLimit = 130;
     armConfig.Slot0.kP = ArmConstants.kArmP;
+    // encoderConfig.MagnetSensor.AbsoluteSensorRange =
+    // AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     armEncoder.getConfigurator().apply(encoderConfig);
     armMotor.getConfigurator().apply(armConfig);
     armMotor.setInverted(true);
     armEncoder.getPosition().setUpdateFrequency(100);
     armEncoder.getPosition().waitForUpdate(0.1);
     requestPos = ArmConstants.kArmRestPos;
+    lastPos = armEncoder.getAbsolutePosition().getValue();
   }
 
   public void armToRequest(double requestedPosition) {
@@ -102,6 +111,13 @@ public class ArmPositionSubsystem extends SubsystemBase {
     System.out.println("Arm CANCoder: " + (armEncoder.getAbsolutePosition().toString()));
     SmartDashboard.putNumber("Arm Talon Position: ", armMotor.getPosition().getValue());
     System.out.println("Arm Talon Position: " + (armMotor.getPosition().toString()));
+
+    currPos = armEncoder.getAbsolutePosition().getValue();
+    if (Math.abs(currPos - lastPos) > 0.1) {
+      double relPos = currPos * ArmConstants.CANToIntConvert;
+      requestPos = requestPos + (relPos - requestPos);
+    }
+    lastPos = currPos;
 
     armToRequest(requestPos);
   }
