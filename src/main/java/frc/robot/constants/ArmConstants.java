@@ -3,7 +3,8 @@ package frc.robot.constants;
 public final class ArmConstants {
   // TODO: change values to accurate positions and values
   // TODO: chnage positions to match cancoder.
-  public static final double kArmRestPos = -.02; // 0.5
+  public static final double CANToIntConvert = -3.68847227762;
+  public static final double kArmRestPos = -.5; // 0.5
   public static final double kArmIntakeAndScorePos = -6.3383; // CANCoder: 0.9065 human player pos:
                                                               // 0.5634
   // TODO: change cube intake pos
