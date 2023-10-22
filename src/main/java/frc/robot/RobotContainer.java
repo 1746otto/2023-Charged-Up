@@ -226,7 +226,7 @@ public class RobotContainer {
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
         new WaitCommand(0.8)
             .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kMidPosition)),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos)));
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidScoringPos)));
 
     driverX.onTrue(new SequentialCommandGroup(
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
@@ -244,7 +244,42 @@ public class RobotContainer {
     driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
     // Elevator runs down to beam break to get the zero position.
-    operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+    operatorRightBumper.whileTrue(new BalanceSpeedCommand());
+
+    // operatorStart.onTrue(new InstantCommand(() -> {
+    // s_Swerve.resetModulesToAbsolute();
+    // }).andThen(new WaitCommand(.5)));
+    // operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
+    // // Elevator runs down to beam break to get the zero position.
+    // // operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+
+    // /*
+    // * operatorLeftTrigger .onTrue(new SequentialCommandGroup(new
+    // * ArmRollerStopCommand(m_ArmRollersSubsystem), new
+    // ArmRequestSelectorCommand(m_ArmPosSubystem,
+    // * ArmConstants.kArmRestPos)));
+    // */
+    // operatorY.onTrue(
+    // new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
+    // operatorA.whileTrue(new ParallelCommandGroup(
+    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+    // ElevatorConstants.kConeElevatorIntakePos),
+    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
+    // new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
+    // operatorA.onFalse(new ParallelCommandGroup(
+    // // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+    // // ElevatorConstants.kOriginPosition),
+    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+    // new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem),
+    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+    // ElevatorConstants.kOriginPosition)));
+    // L3.toggleOnTrue(new RepeatCommand(new InstantCommand(() -> m_LedSubsystem
+    // .setToHue((int) ((Math.atan2(m_operator.getRawAxis(XboxController.Axis.kLeftX.value),
+    // m_operator.getRawAxis(XboxController.Axis.kLeftY.value)) + Math.PI) * 90 / Math.PI))))
+    // .finallyDo((boolean interrupted) -> m_LedSubsystem.setLedOff()));
+    // operatorRightTrigger.whileTrue(new LedConeCommand(m_LedSubsystem));
+    // operatorLeftTrigger.whileTrue(new LedCubeCommand(m_LedSubsystem));
+    // }
   }
 
 
@@ -252,5 +287,6 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return autos.scoreOneMove();
   }
+
 
 }

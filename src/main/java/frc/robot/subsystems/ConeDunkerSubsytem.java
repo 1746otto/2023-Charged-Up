@@ -4,39 +4,61 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.constants.DunkerConstants;
 
 public class ConeDunkerSubsytem extends SubsystemBase {
   private CANSparkMax Dunker;
   private double current;
+  private double currentState;
 
   ConeDunkerSubsytem() {
-    Dunker = new CANSparkMax(30, MotorType.kBrushless);
+    Dunker = new CANSparkMax(DunkerConstants.kCANCoderID, MotorType.kBrushless);
     Dunker.setIdleMode(IdleMode.kBrake);
+    Dunker.getEncoder().setPosition(DunkerConstants.KZeroPos);
+
 
   }
 
   public void theDunk() {
-    Dunker.set(0.1);
+    Dunker.set(DunkerConstants.KDunkSpeed);
   }
 
   public void theReverseDunk() {
-    Dunker.set(-0.1);
+    Dunker.set(DunkerConstants.KRDunkSpeed);
   }
 
   public void dunkStop() {
     Dunker.stopMotor();
   }
 
+  public void setPositionTo0() {
+    Dunker.getEncoder().setPosition(DunkerConstants.KZeroPos);
+  }
+
+  public boolean DownPosition() {
+    return (currentState > DunkerConstants.KDownPosition);
+  }
+
+  public boolean UpPosition() {
+    return (currentState > DunkerConstants.KUpPosition);
+  }
+
   public boolean currentBroken() {
-    return (current >= 50);
+    return (current >= DunkerConstants.KMaxDownCurrent);
   }
 
   public boolean currentBrokenUp() {
-    return (current >= 30);
+    return (current >= DunkerConstants.KMaxUpCurrent);
+  }
+
+  public double getDunkerEncoderValues() {
+    return currentState;
   }
 
   @Override
   public void periodic() {
     current = Dunker.getOutputCurrent();
+    currentState = Dunker.getEncoder().getPosition();
+
   }
 }

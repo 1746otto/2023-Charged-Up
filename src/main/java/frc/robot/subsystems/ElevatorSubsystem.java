@@ -105,5 +105,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Elevator: ", currState);
     SmartDashboard.putBoolean("Beambreak: ", beamBreakBroken());
     SmartDashboard.putBoolean("LimitSwitch: ", limitSwitchActivated());
+
   }
 }
