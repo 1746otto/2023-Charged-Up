@@ -24,15 +24,12 @@ public class Vision {
   static PhotonCamera rottoCamera;
   static PhotonPipelineResult rottoLastResult;
   static PhotonTrackedTarget rottoBestTarget;
-  private Pose3d lottoEstimatedRobotPose = new Pose3d();
-  private Pose3d rottoEstimatedRobotPose = new Pose3d();
   static Pose3d robotEstimatedPose = new Pose3d();
   private Pose3d temp;
   private AprilTagFieldLayout tags;
   private DoubleSupplier gyroVal;
   private double tolerance = 3000;
   private double maxDist = 1000;
-  private Pigeon2 gyro = new Pigeon2(5, "CANivore");
   // +X is forward, Y is left and right, +Z is up
   public static Transform3d robotToLotto = new Transform3d(
       new Translation3d(0.219075, 0.231775, 0.676275), new Rotation3d(0, Math.PI / 9.0, -29.8));
@@ -45,10 +42,8 @@ public class Vision {
     } catch (Exception e) {
       SmartDashboard.putString("fail", "fail");
     } ;
-    // gyroVal = yawSupplier;
-    gyroVal = () -> {
-      return gyro.getYaw();
-    };
+    gyroVal = yawSupplier;
+
     lottoCamera = new PhotonCamera("lotto");
     rottoCamera = new PhotonCamera("rotto");
     new Thread(() -> {

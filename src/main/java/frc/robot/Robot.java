@@ -4,12 +4,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ZeroOutElevatorCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,11 +17,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
+  private ZeroOutElevatorCommand m_ZeroOutElevator;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -30,8 +31,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    ctreConfigs = new CTREConfigs();
     // Instantiate our RobotContainer. This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    PathPlannerServer.startServer(5811);
     m_robotContainer = new RobotContainer();
 
     // This won't work because the robot will be disabled. Also, the elevator subsystem within robot
@@ -54,21 +57,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
-
-
-    // for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
-    // // Calculate the hue - hue is easier for rainbows because the color
-    // // shape is a circle so only one value needs to precess
-    // final int hue = (m_rainbowFirstPixelHue + (i * 180 / m_LEDBuffer.getLength())) % 180;
-    // // Set the value
-    // m_LEDBuffer.setHSV(i, hue, 255, 32);
-    // }
-    // // Increase by to make the rainbow "move"
-    // m_rainbowFirstPixelHue += 3;
-    // // Check bounds
-    // m_rainbowFirstPixelHue %= 180;
-
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -81,7 +69,6 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // m_robotContainer.s_Swerve.resetModulesToAbsolute();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -102,8 +89,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    // m_robotContainer.s_Swerve.resetModulesToAbsolute();
-    // Timer.delay(0.5);
   }
 
   /** This function is called periodically during operator control. */
