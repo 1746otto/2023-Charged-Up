@@ -32,7 +32,6 @@ public class Vision {
   private DoubleSupplier gyroVal;
   private double tolerance = 3000;
   private double maxDist = 1000;
-  private int iTemp;
   private Pigeon2 gyro = new Pigeon2(5, "CANivore");
   // +X is forward, Y is left and right, +Z is up
   public static Transform3d robotToLotto = new Transform3d(
@@ -115,14 +114,9 @@ public class Vision {
         }
         robotEstimatedPose = new Pose3d();
         for (Pose3d pose : poses) {
-          // if (pose == null) {
-          // iTemp++;
-          // continue;
-          // }
-          // Find a different way
           robotEstimatedPose = robotEstimatedPose.plus(new Transform3d(new Pose3d(), pose));
         }
-        robotEstimatedPose = robotEstimatedPose.div(poses.size() - iTemp);
+        robotEstimatedPose = robotEstimatedPose.div(poses.size());
         SmartDashboard.putString("pose",
             robotEstimatedPose.getTranslation().toString() + ", "
                 + Double.toString(robotEstimatedPose.getRotation().getX() / Math.PI * 180) + ", "
