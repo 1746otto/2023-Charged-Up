@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -11,7 +12,7 @@ public class ConeDunkerSubsytem extends SubsystemBase {
   private double current;
   private double currentState;
 
-  ConeDunkerSubsytem() {
+  public ConeDunkerSubsytem() {
     Dunker = new CANSparkMax(DunkerConstants.kCANCoderID, MotorType.kBrushless);
     Dunker.setIdleMode(IdleMode.kBrake);
     Dunker.getEncoder().setPosition(DunkerConstants.KZeroPos);
@@ -36,7 +37,7 @@ public class ConeDunkerSubsytem extends SubsystemBase {
   }
 
   public boolean DownPosition() {
-    return (currentState > DunkerConstants.KDownPosition);
+    return (currentState < DunkerConstants.KDownPosition);
   }
 
   public boolean UpPosition() {
@@ -59,6 +60,8 @@ public class ConeDunkerSubsytem extends SubsystemBase {
   public void periodic() {
     current = Dunker.getOutputCurrent();
     currentState = Dunker.getEncoder().getPosition();
+    SmartDashboard.putNumber("Dunker: ", currentState);
+
 
   }
 }

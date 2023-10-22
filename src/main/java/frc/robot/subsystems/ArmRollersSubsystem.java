@@ -9,6 +9,8 @@ import frc.robot.constants.ArmConstants;
 public class ArmRollersSubsystem extends SubsystemBase {
   private CANSparkMax armRollerMotor;
   private double current;
+  private double shootSpeed = -Math.abs(ArmConstants.kRollerShoot);
+
 
   public ArmRollersSubsystem() {
     armRollerMotor = new CANSparkMax(ArmConstants.kArmRollerMotorID, MotorType.kBrushless);
@@ -31,6 +33,12 @@ public class ArmRollersSubsystem extends SubsystemBase {
   public void armRollerStop() {
     armRollerMotor.stopMotor();
   }
+
+  public void armRollerShoot() {
+    // armRollerMotor.set(-Math.abs(ArmConstants.kRollerShoot));
+    armRollerMotor.set(shootSpeed);
+  }
+
 
   public boolean currentBroken() {
     return (current >= ArmConstants.kArmCurrentMax);

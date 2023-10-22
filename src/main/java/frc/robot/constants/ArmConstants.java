@@ -24,4 +24,6 @@ public final class ArmConstants {
   public static final int kArmRollerMotorID = 31;
   public static final int kCANCoderID = 50;
   public static final double SubstationIntake = -1;
+  public static final int kRollerShoot = 1;
+  public static double kArmBowlPos = -2;
 }

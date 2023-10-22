@@ -20,6 +20,7 @@ import frc.robot.commands.basic.ArmRollerStopCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
+import frc.robot.commands.basic.TheDunkCommand;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -128,12 +129,13 @@ public class RobotContainer {
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
+  private final ConeDunkerSubsytem m_ConeDunkerSubsytem = new ConeDunkerSubsytem();
 
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
   private final Autos autos = new Autos(s_Swerve, m_VisionSubsystem, m_ElevatorSubsystem,
-      m_ArmPosSubystem, m_ArmRollersSubsystem);
+      m_ArmPosSubystem, m_ArmRollersSubsystem, m_ConeDunkerSubsytem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -287,7 +289,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autos.scoreOneMove();
+    return autos.FinalBruh();
   }
 
 
