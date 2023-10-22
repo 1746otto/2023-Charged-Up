@@ -124,7 +124,8 @@ public class RobotContainer {
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
-  private final Vision m_VisionSubsystem = new Vision(s_Swerve.getYaw()::getDegrees);
+  private final Vision m_VisionSubsystem =
+      new Vision(s_Swerve.getYaw()::getDegrees, s_Swerve::addVisionMeasurement);
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
