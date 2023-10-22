@@ -40,6 +40,10 @@ public class Swerve extends SubsystemBase {
      */
     Timer.delay(5.0);
     resetModulesToAbsolute();
+    // It would be beneficial to decrease our vision values significantly.
+    // Probably closer to about equal and with tuned cutoffs and some custom incorperation
+    // parameters we should have very accurate vision that is more reliable after a about ten
+    // seconds than the odometry.
     poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, getYaw(),
         getModulePositions(), new Pose2d());
   }
