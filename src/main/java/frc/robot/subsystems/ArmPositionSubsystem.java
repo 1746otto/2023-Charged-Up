@@ -58,6 +58,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     armConfig.CurrentLimits.StatorCurrentLimit = 130;
     armConfig.Slot0.kP = ArmConstants.kArmP;
+    armConfig.Slot0.kD = ArmConstants.kArmD;
+
     // encoderConfig.MagnetSensor.AbsoluteSensorRange =
     // AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     armEncoder.getConfigurator().apply(encoderConfig);
@@ -113,10 +115,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
     System.out.println("Arm Talon Position: " + (armMotor.getPosition().toString()));
 
     currPos = armEncoder.getAbsolutePosition().getValue();
-    if (Math.abs(currPos - lastPos) > 0.1) {
-      double relPos = currPos * ArmConstants.CANToIntConvert;
-      requestPos = requestPos + (relPos - requestPos);
-    }
+    // if (Math.abs(currPos - lastPos) > 0.1) {
+    // double relPos = currPos * ArmConstants.CANToIntConvert;
+    // requestPos = requestPos + (relPos - requestPos);
+    // }
     lastPos = currPos;
 
     armToRequest(requestPos);

@@ -89,7 +89,7 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -195,5 +195,36 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.8145454545454229,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 1.1709090909090818,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 2.6472727272727075,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 4.938181818181541,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 5.650909090908947,
+      "names": [
+        "event"
+      ]
+    }
+  ]
 }

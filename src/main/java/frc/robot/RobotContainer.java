@@ -218,7 +218,9 @@ public class RobotContainer {
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
 
     // human player intake
-    driverLeftTrigger.onTrue(new ArmRollerIntakeCommand(m_ArmRollersSubsystem));
+    driverLeftTrigger
+        .onTrue(new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.SubstationIntake)));
 
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
 
@@ -246,12 +248,12 @@ public class RobotContainer {
     // Elevator runs down to beam break to get the zero position.
     operatorRightBumper.whileTrue(new BalanceSpeedCommand());
 
-    // operatorStart.onTrue(new InstantCommand(() -> {
-    // s_Swerve.resetModulesToAbsolute();
-    // }).andThen(new WaitCommand(.5)));
+    operatorStart.onTrue(new InstantCommand(() -> {
+      s_Swerve.resetModulesToAbsolute();
+    }).andThen(new WaitCommand(.5)));
     // operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
-    // // Elevator runs down to beam break to get the zero position.
-    // // operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+    // Elevator runs down to beam break to get the zero position.
+    // operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
 
     // /*
     // * operatorLeftTrigger .onTrue(new SequentialCommandGroup(new
