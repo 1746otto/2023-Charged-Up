@@ -710,7 +710,7 @@ public final class Autos {
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
-    // eventMap.put("intake out", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("intake out", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
 
 
     // Make the auton command
@@ -718,10 +718,9 @@ public final class Autos {
         new TheDunkCommand(DunkerSubsytem),
         // goToStartCommand,
         new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-        // new ShootCommand(armPosSubsystem, armRollerSubsystem),
-        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap)
-    // new ShootCommand(armPosSubsystem, armRollerSubsystem)
-    );
+        new ShootCommand(armPosSubsystem, armRollerSubsystem),
+        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
+        new ShootCommand(armPosSubsystem, armRollerSubsystem));
 
 
 

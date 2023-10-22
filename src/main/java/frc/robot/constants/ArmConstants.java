@@ -5,8 +5,8 @@ public final class ArmConstants {
   // TODO: chnage positions to match cancoder.
   public static final double CANToIntConvert = -3.68847227762;
   public static final double kArmRestPos = -.5;
-  public static final double kArmIntakeAndScorePos = -6.3383; // CANCoder: 0.9065 human player pos:
-                                                              // 0.5634
+  public static final double kArmIntakeAndScorePos = -7.75; // CANCoder: 0.9065 human player pos:
+  // 0.5634
   // TODO: change cube intake pos
   // TODO: change positions constants to match cancoder.
   public static final double kArmConeIntakePos = -7.25;// Tal:-2.7741; // CAN:0.7521
@@ -15,7 +15,7 @@ public final class ArmConstants {
 
   public static final double kArmP = .1;
   public static final double kArmD = .0075;
-  public static final double kRollerSpeed = 0.5;
+  public static final double kRollerSpeed = 0.7;
   public static final double kRollerStowSpeed = 0.08;
   public static final double kArmCurrentMax = 70; // 70.0;
   public static final double kArmGearRatio = 3; // 3:1 Previously 9.0
