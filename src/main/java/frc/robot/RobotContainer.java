@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Autos.BalanceAuton;
+import frc.robot.commands.ArmHomeCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
 import frc.robot.commands.DriveBackTo5DegreesCommand;
@@ -10,6 +11,7 @@ import frc.robot.commands.DriveTo5DegreesCommand;
 import frc.robot.commands.FourDimensionalBalancingCommand;
 import frc.robot.commands.OuttakingSequentialCommand;
 import frc.robot.commands.ScoringAlignCommand;
+import frc.robot.commands.ShootCubeHighCommand;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroOutElevatorCommand;
@@ -19,6 +21,8 @@ import frc.robot.commands.basic.ArmRollerOuttakeCommand;
 import frc.robot.commands.basic.ArmRollerStopCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
+import frc.robot.commands.basic.LedConeCommand;
+import frc.robot.commands.basic.LedCubeCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
 import frc.robot.commands.basic.TheDunkCommand;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -41,6 +45,7 @@ import frc.robot.constants.SwerveConstants;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.commands.ElevatorRequestSelectorCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -122,6 +127,9 @@ public class RobotContainer {
   };
   private final Trigger operatorRightTrigger = new Trigger(operatorRightTriggerSupplier);
   private final Trigger operatorLeftTrigger = new Trigger(operatorLeftTriggerSupplier);
+  private final JoystickButton L3 =
+      new JoystickButton(m_operator, XboxController.Button.kLeftStick.value);
+
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -130,6 +138,7 @@ public class RobotContainer {
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
   private final ConeDunkerSubsytem m_ConeDunkerSubsytem = new ConeDunkerSubsytem();
+  private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
 
 
   /* Commands */
@@ -253,37 +262,35 @@ public class RobotContainer {
     operatorStart.onTrue(new InstantCommand(() -> {
       s_Swerve.resetModulesToAbsolute();
     }).andThen(new WaitCommand(.5)));
-    // operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
+    operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
     // Elevator runs down to beam break to get the zero position.
-    // operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+    operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
 
-    // /*
-    // * operatorLeftTrigger .onTrue(new SequentialCommandGroup(new
-    // * ArmRollerStopCommand(m_ArmRollersSubsystem), new
-    // ArmRequestSelectorCommand(m_ArmPosSubystem,
-    // * ArmConstants.kArmRestPos)));
-    // */
-    // operatorY.onTrue(
-    // new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
-    // operatorA.whileTrue(new ParallelCommandGroup(
-    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-    // ElevatorConstants.kConeElevatorIntakePos),
-    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
-    // new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
-    // operatorA.onFalse(new ParallelCommandGroup(
-    // // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-    // // ElevatorConstants.kOriginPosition),
-    // new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
-    // new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem),
-    // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
-    // ElevatorConstants.kOriginPosition)));
-    // L3.toggleOnTrue(new RepeatCommand(new InstantCommand(() -> m_LedSubsystem
-    // .setToHue((int) ((Math.atan2(m_operator.getRawAxis(XboxController.Axis.kLeftX.value),
-    // m_operator.getRawAxis(XboxController.Axis.kLeftY.value)) + Math.PI) * 90 / Math.PI))))
-    // .finallyDo((boolean interrupted) -> m_LedSubsystem.setLedOff()));
-    // operatorRightTrigger.whileTrue(new LedConeCommand(m_LedSubsystem));
-    // operatorLeftTrigger.whileTrue(new LedCubeCommand(m_LedSubsystem));
-    // }
+    /*
+     * operatorLeftTrigger .onTrue(new SequentialCommandGroup(new
+     * ArmRollerStopCommand(m_ArmRollersSubsystem), new ArmRequestSelectorCommand(m_ArmPosSubystem,
+     * ArmConstants.kArmRestPos)));
+     */
+    operatorY.onTrue(
+        new ShootCubeHighCommand(m_ElevatorSubsystem, m_ArmPosSubystem, m_ArmRollersSubsystem));
+    operatorA.whileTrue(new ParallelCommandGroup(
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kConeElevatorIntakePos),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos),
+        new ArmRollerIntakeCommand(m_ArmRollersSubsystem)));
+    operatorA.onFalse(new ParallelCommandGroup(
+        // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+        // ElevatorConstants.kOriginPosition),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem),
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kOriginPosition)));
+    L3.toggleOnTrue(new RepeatCommand(new InstantCommand(() -> m_LedSubsystem
+        .setToHue((int) ((Math.atan2(m_operator.getRawAxis(XboxController.Axis.kLeftX.value),
+            m_operator.getRawAxis(XboxController.Axis.kLeftY.value)) + Math.PI) * 90 / Math.PI))))
+                .finallyDo((boolean interrupted) -> m_LedSubsystem.setLedOff()));
+    operatorRightTrigger.whileTrue(new LedConeCommand(m_LedSubsystem));
+    operatorLeftTrigger.whileTrue(new LedCubeCommand(m_LedSubsystem));
   }
 
 

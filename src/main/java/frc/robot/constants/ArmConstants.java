@@ -26,4 +26,7 @@ public final class ArmConstants {
   public static final double SubstationIntake = -1;
   public static final int kRollerShoot = 1;
   public static double kArmBowlPos = -2;
+
+  // World champs constants
+  public static final double kArmMidShootPos = -3.12;
 }

@@ -82,11 +82,31 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armMotor.set(0.0);
   }
 
+  public void disablePID() {
+    armConfig.Slot0.kP = 0.0;
+    armConfig.Slot0.kP = 0.0;
+    armMotor.getConfigurator().apply(armConfig);
+  }
+
+  public void enablePID() {
+    armConfig.Slot0.kP = ArmConstants.kArmP;
+    armConfig.Slot0.kD = ArmConstants.kArmD;
+    armMotor.getConfigurator().apply(armConfig);
+  }
+
+  public void setHomeSpeed() {
+    armMotor.set(0.2);
+  }
+
   public boolean armAtReq(double reqPosition) {
     // return (armEncoder.getPosition() == reqPosition);
     // return ((armEncoder.getAbsolutePosition().getValue()) <= (reqPosition++)
     // && ((armEncoder.getAbsolutePosition().getValue()) >= (reqPosition--)));
     return armEncoder.getAbsolutePosition().getValue() == reqPosition;
+  }
+
+  public void zeroEncoder() {
+    armEncoder.setPosition(ArmConstants.kArmRestPos);
   }
 
   public boolean armReqisCorrect(double req) {
