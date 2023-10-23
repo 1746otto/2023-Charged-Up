@@ -3,8 +3,8 @@ package frc.robot.constants;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class AutoConstants {
-  public static final double kMaxSpeedMetersPerSecond = 4;
-  public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+  public static final double kMaxSpeedMetersPerSecond = 2.875;
+  public static final double kMaxAccelerationMetersPerSecondSquared = 2.5;
   public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 3;
   public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI * 1.5;
 

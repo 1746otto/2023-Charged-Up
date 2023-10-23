@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class BalancingCommand2 extends CommandBase {
+public class BalancingCommand3 extends CommandBase {
   private final double kP = (1 / 300.0);
   private final double kD = (1 / 4000.0);
   private final double kI = 0.0;
@@ -21,17 +21,17 @@ public class BalancingCommand2 extends CommandBase {
   private double speed;
   private double driveDirection;
 
-  public BalancingCommand2(Swerve s_Swerve) {
+  public BalancingCommand3(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
 
     addRequirements(s_Swerve);
 
 
     if (DriverStation.getAlliance() == Alliance.Blue) {
-      driveDirection = -1;
+      driveDirection = 1;
 
     } else {
-      driveDirection = 1;
+      driveDirection = -1;
     }
 
   }

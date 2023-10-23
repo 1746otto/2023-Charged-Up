@@ -13,14 +13,20 @@ import frc.robot.commands.OuttakingSequentialCommand;
 import frc.robot.commands.ScoringAlignCommand;
 import frc.robot.commands.ShootCubeHighCommand;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.UpdateOdometryCommand;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroOutElevatorCommand;
 import frc.robot.commands.basic.ArmPositionStopCommand;
 import frc.robot.commands.basic.ArmRollerIntakeCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
+import frc.robot.commands.basic.ArmRollerRunInCommand;
+import frc.robot.commands.basic.ArmRollerShootCommand;
 import frc.robot.commands.basic.ArmRollerStopCommand;
+import frc.robot.commands.basic.ArmToSmartDashboardCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.BalanceSpeedCommand;
+import frc.robot.commands.basic.CatapultRunToMax;
+import frc.robot.commands.basic.CatapultRunToMin;
 import frc.robot.commands.basic.LedConeCommand;
 import frc.robot.commands.basic.LedCubeCommand;
 import frc.robot.commands.basic.NormalSpeedCommand;
@@ -33,6 +39,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -45,12 +52,17 @@ import frc.robot.constants.SwerveConstants;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.commands.ElevatorRequestSelectorCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.BalancingCommand;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShootCubeHighCommand;
+import frc.robot.commands.ConeIntakeCommand;
+import frc.robot.commands.CatapultAutonCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -131,14 +143,19 @@ public class RobotContainer {
       new JoystickButton(m_operator, XboxController.Button.kLeftStick.value);
 
 
+  private final JoystickButton L3 =
+      new JoystickButton(m_operator, XboxController.Button.kLeftStick.value);
+
   /* Subsystems */
-  private final Swerve s_Swerve = new Swerve();
+  public final Swerve s_Swerve = new Swerve();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   private final ArmPositionSubsystem m_ArmPosSubystem = new ArmPositionSubsystem();
   private final ArmRollersSubsystem m_ArmRollersSubsystem = new ArmRollersSubsystem();
   private final ConeDunkerSubsytem m_ConeDunkerSubsytem = new ConeDunkerSubsytem();
   private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
+  private final CatapultSubsystem m_CatapultSubsystem = new CatapultSubsystem();
+
 
 
   /* Commands */
@@ -152,11 +169,8 @@ public class RobotContainer {
 
     // Auton Selector
     m_chooser.setDefaultOption("Score only", autos.scoreOne());
-    m_chooser.addOption("Cone,Cube,Cone Top", autos.Bruh());
-    m_chooser.addOption("Bottom Cube Cone", autos.PathPlannerInnerAuton5SquareTriangle());
-    m_chooser.addOption("Top Cube,Balance ", autos.PathPlannerOuterAutonCubeBalance());
-    m_chooser.addOption("Bottom Cone,Balance ", autos.PathPlannerOuterAutonConeBalance());
-    m_chooser.addOption("Top Cube Cone Balance ", autos.pathplannerOuterAuton2ConeCubeBalance());
+    m_chooser.addOption("3 piece bump", autos.threePieceBumpCatapult());
+    m_chooser.addOption("Score,community,balance ", autos.balanceAfterCharge());
     SmartDashboard.putData("Auton Selector: ", m_chooser);
 
 
@@ -180,6 +194,11 @@ public class RobotContainer {
         new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
             () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
             DriverStation::getAlliance));
+
+    // m_VisionSubsystem.setDefaultCommand(
+    // new UpdateOdometryCommand(m_VisionSubsystem, s_Swerve.getYaw()::getDegrees,
+    // s_Swerve::getPose, s_Swerve.poseEstimator::addVisionMeasurement));
+
   }
 
   /**
@@ -190,12 +209,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // ----Driver Controls----
-    // cone off ground
-    driverLeftBumper
-        .onTrue(new ParallelCommandGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos)));
-    driverLeftBumper
-        .onFalse(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos));
+    // Pushing
 
     // Cube intaking
     // cubes off ground
@@ -204,17 +218,19 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
                     new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                        ArmConstants.kArmConeIntakePos)),
+                        ArmConstants.kArmCubeIntakePos)),
                 new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // Cone intaking
-    // spit command
-    driverRightBumper
-        .onTrue(new SequentialCommandGroup(
-            new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                    ArmConstants.kArmIntakeAndScorePos)),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+    driverRightBumper.onTrue(new SequentialCommandGroup(
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kConeElevatorIntakePos),
+        new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmConeIntakePos)),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kOriginPosition)));
+
 
     // driverLeftBumper.onTrue(new SequentialCommandGroup(new ParallelDeadlineGroup(
     // new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
@@ -227,11 +243,13 @@ public class RobotContainer {
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition));
     // driverLeftBumper.onFalse(
     // new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kOriginPosition));
+    // OLD LEFT BUMPER
 
-    // human player intake
+    // humman player station intake
     driverLeftTrigger
         .onTrue(new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.SubstationIntake)));
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.ksubstationPosition)));
+
 
     driverA.whileTrue(new ArmRollerOuttakeCommand(m_ArmRollersSubsystem));
 
@@ -239,7 +257,7 @@ public class RobotContainer {
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem, ElevatorConstants.kMidPosition),
         new WaitCommand(0.8)
             .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kMidPosition)),
-        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidScoringPos)));
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidPos)));
 
     driverX.onTrue(new SequentialCommandGroup(
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
@@ -253,10 +271,14 @@ public class RobotContainer {
             .until(() -> m_ElevatorSubsystem.isElevatorAtReq(ElevatorConstants.kHighPosition)),
         new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmHighScoringPos)));
 
-    driverBack.onTrue(new XLockCommand(s_Swerve));
-    driverStart.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    operatorX.whileTrue(new XLockCommand(s_Swerve));
+    driverStart.onTrue(new InstantCommand(() -> {
+      s_Swerve.gyro.setYaw((DriverStation.getAlliance() == Alliance.Red) ? 180 : 0);
+    }));
+    // bowling piece to mid
+    driverLeftBumper
+        .onTrue(new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmMidShootPos));
 
-    // Elevator runs down to beam break to get the zero position.
     operatorRightBumper.whileTrue(new BalanceSpeedCommand());
 
     operatorStart.onTrue(new InstantCommand(() -> {
@@ -264,7 +286,7 @@ public class RobotContainer {
     }).andThen(new WaitCommand(.5)));
     operatorLeftBumper.whileTrue(new ArmHomeCommand(m_ArmPosSubystem));
     // Elevator runs down to beam break to get the zero position.
-    operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
+    // operatorA.onTrue(new ZeroOutElevatorCommand(m_ElevatorSubsystem));
 
     /*
      * operatorLeftTrigger .onTrue(new SequentialCommandGroup(new
@@ -285,6 +307,8 @@ public class RobotContainer {
         new InstantCommand(() -> m_ArmRollersSubsystem.armRollerStow(), m_ArmRollersSubsystem),
         new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
             ElevatorConstants.kOriginPosition)));
+
+
     L3.toggleOnTrue(new RepeatCommand(new InstantCommand(() -> m_LedSubsystem
         .setToHue((int) ((Math.atan2(m_operator.getRawAxis(XboxController.Axis.kLeftX.value),
             m_operator.getRawAxis(XboxController.Axis.kLeftY.value)) + Math.PI) * 90 / Math.PI))))
@@ -295,9 +319,11 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return autos.FinalBruh();
+    // An Exammple Command will run in autonomous
+    // balance, BL, B2 for practice field
+    return autos.balanceAfterCharge();
   }
 
 
 }
+

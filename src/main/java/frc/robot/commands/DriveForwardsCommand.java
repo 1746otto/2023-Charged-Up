@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class DriveForwardsCommand extends CommandBase {
-  private double kSpeed = .8;
+  private double kSpeed = .2;
   private Swerve s_Swerve;
   private Timer time;
   private int direction = 1;
@@ -22,7 +22,9 @@ public class DriveForwardsCommand extends CommandBase {
 
   @Override
   public void initialize() {
-
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      direction = -1;
+    }
     time.start();
   }
 
@@ -34,6 +36,6 @@ public class DriveForwardsCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return (time.hasElapsed(2));
+    return (time.hasElapsed(3.25));
   }
 }

@@ -9,12 +9,13 @@ public final class ElevatorConstants {
   public static final double kConeIntakePos = 9.0;
   public static final double kCubeIntakePos = 6.75;
   public static final double kLowPosition = 20.0;
-  public static final double kMidPosition = 40.0; // 35.0;
-  public static final double kHighPosition = 45.0; // 51.0;
+  public static final double kMidPosition = 37.0; // 35.0;
+  public static final double kHighPosition = 48.0; // 51.0;
+  public static final double kHighCubePosition = 15.0;
   public static final double kElevatorSpeed = 0.4;
   public static final int kElevatorAnalogInputChannel = 0;
 
   // World champs constants
-  public static final double kHighCubePosition = 15.0;
   public static final double kConeElevatorIntakePos = 3.2;
+  public static final double kAutonHighCubePosition = 30;
 }

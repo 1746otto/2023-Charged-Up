@@ -6,7 +6,8 @@ import frc.robot.constants.SwerveConstants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -22,6 +23,7 @@ public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
   public WPI_Pigeon2 gyro;
   public final SwerveDrivePoseEstimator poseEstimator;
+  private boolean spamRestart = false;
 
 
   public Swerve() {
@@ -38,10 +40,27 @@ public class Swerve extends SubsystemBase {
      * By pausing init for a second before setting module offsets, we avoid a bug with inverting
      * motors. See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
      */
-    Timer.delay(5.0);
+    Timer.delay(1.0);
     resetModulesToAbsolute();
+
+    // for (int i = 0; i < 10; i++) {
+    // Timer.delay(.2);
+    // resetModulesToAbsolute();
+    // for (SwerveModule mod : mSwerveMods) {
+    // if (mod.angleEncoder.getLastError() != ErrorCode.OK)
+    // spamRestart = true;
+    // }
+    // }
+
+
     poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, getYaw(),
         getModulePositions(), new Pose2d());
+  }
+
+  public void setDriveNeutralMode(NeutralMode mode) {
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setModuleNeutralMode(mode);
+    }
   }
 
   public double getMagnitude(Translation2d translation) {
@@ -109,14 +128,21 @@ public class Swerve extends SubsystemBase {
   public void resetModulesToAbsolute() {
     for (SwerveModule mod : mSwerveMods) {
       mod.resetToAbsolute();
+      if (mod.angleEncoder.getLastError() != ErrorCode.OK)
+        spamRestart = true;
     }
   }
 
   public void XLock() {
-    mSwerveMods[0].setAngleNoDeadzone(Rotation2d.fromDegrees(45));
-    mSwerveMods[1].setAngleNoDeadzone(Rotation2d.fromDegrees(135));
-    mSwerveMods[2].setAngleNoDeadzone(Rotation2d.fromDegrees(135));
-    mSwerveMods[3].setAngleNoDeadzone(Rotation2d.fromDegrees(45));
+    double[] mAngles = new double[4];
+    mAngles[0] = (int) (mSwerveMods[0].getPosition().angle.getDegrees() / 180) * 180 + 45;
+    mAngles[1] = (int) (mSwerveMods[1].getPosition().angle.getDegrees() / 180) * 180 + 135;
+    mAngles[2] = (int) (mSwerveMods[2].getPosition().angle.getDegrees() / 180) * 180 + 135;
+    mAngles[3] = (int) (mSwerveMods[3].getPosition().angle.getDegrees() / 180) * 180 + 45;
+    mSwerveMods[0].setAngleNoDeadzone(Rotation2d.fromDegrees(mAngles[0]));
+    mSwerveMods[1].setAngleNoDeadzone(Rotation2d.fromDegrees(mAngles[1]));
+    mSwerveMods[2].setAngleNoDeadzone(Rotation2d.fromDegrees(mAngles[2]));
+    mSwerveMods[3].setAngleNoDeadzone(Rotation2d.fromDegrees(mAngles[3]));
   }
 
   public void addVisionMeasurement(Pose2d pose, double latency) {
@@ -138,6 +164,9 @@ public class Swerve extends SubsystemBase {
           mod.getPosition().angle.getDegrees());
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity",
           mod.getPosition().distanceMeters);
+
     }
+    if (spamRestart)
+      System.out.println("Restart the robot or it will suck!");
   }
 }

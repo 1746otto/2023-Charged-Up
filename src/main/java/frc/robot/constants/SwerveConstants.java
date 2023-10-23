@@ -83,21 +83,21 @@ public final class SwerveConstants {
    * Drive Motor Characterization Values Divide SYSID values by 12 to convert from volts to percent
    * output for CTRE
    */
-  public static final double driveKS = (0.16591 / 12.0); // TODO: This must be tuned cuz its bad
-  public static final double driveKV = (1.8106 / 12.0);
-  public static final double driveKA = (0.32868 / 12.0);
+  public static final double driveKS = (0.22528 / 12.0); // TODO: This must be tuned cuz its bad
+  public static final double driveKV = (1.8397 / 12.0);
+  public static final double driveKA = (0.19052 / 12.0);
 
   /* Swerve Profiling Values */
   /** Meters per Second */
-  public static double maxSpeed = 12; // TODO: This must be tuned to specific robot
+  public static double maxSpeed = 7.5; // TODO: This must be tuned to specific robot
   /** Radians per Second */
-  public static final double maxAngularVelocity = 12; // TODO: This must be tuned to specific robot
+  public static double maxAngularVelocity = 10; // TODO: This must be tuned to specific robot
 
   public static final double autonDriveSpeed = 0.250;
 
   /* Neutral Modes */
-  public static NeutralMode angleNeutralMode = NeutralMode.Brake;
-  public static NeutralMode driveNeutralMode = NeutralMode.Coast;
+  public static NeutralMode angleNeutralMode = NeutralMode.Coast;
+  public static NeutralMode driveNeutralMode = NeutralMode.Brake;
 
   /* Module Specific Constants */
   /* Front Left Module - Module 0 */

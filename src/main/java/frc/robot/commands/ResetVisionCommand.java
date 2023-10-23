@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem.pipelineStates;
 import frc.robot.subsystems.Swerve;
 
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class ResetVisionCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    m_visionSubsystem.setToAprilTag(null);
+    m_visionSubsystem.setLeftState(pipelineStates.APRILTAG);
     m_pose2ds = new Pose2d[VisionConstants.kFilterPasses];
     m_accumulatorCount = 0;
     m_lastRot = 0.0;
@@ -35,9 +36,9 @@ public class ResetVisionCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (m_visionSubsystem.isTargetValid()) {
-      if (m_visionSubsystem.getPose2d().getRotation().getRadians() != m_lastRot) {
-        m_pose2ds[m_accumulatorCount] = m_visionSubsystem.getPose2d();
+    if (m_visionSubsystem.isTargetValidLeft()) {
+      if (m_visionSubsystem.getPose2dLeft().getRotation().getRadians() != m_lastRot) {
+        m_pose2ds[m_accumulatorCount] = m_visionSubsystem.getPose2dLeft();
         m_lastRot = m_pose2ds[m_accumulatorCount].getRotation().getRadians();
         m_accumulatorCount++;
       }
