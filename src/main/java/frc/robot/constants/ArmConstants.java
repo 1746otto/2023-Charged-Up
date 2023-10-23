@@ -29,4 +29,6 @@ public final class ArmConstants {
 
   // World champs constants
   public static final double kArmMidShootPos = -3.12;
+  public static final double kArmMidPos = -7.0;
+  public static final double ksubstationPosition = -1;
 }

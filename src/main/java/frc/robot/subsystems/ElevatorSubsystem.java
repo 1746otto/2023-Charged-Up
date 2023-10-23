@@ -42,8 +42,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     pidController.setOutputRange(-0.7, 0.7);
     elevatorMotor.setIdleMode(IdleMode.kBrake);
     elevatorMotor.getEncoder().setPosition(0);
-    elevatorMotor.setSmartCurrentLimit(1300000000);
-    // elevatorMotor.setInverted(true);
     reqPosition = ElevatorConstants.kOriginPosition;
     // pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
     // pidController.setReference(0, ControlType.kSmartMotion, 0);

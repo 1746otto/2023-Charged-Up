@@ -113,6 +113,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
     return (requestPos == req);
   }
 
+  public double getRequestedPosition() {
+    return armMotor.getPosition().getValue();
+  }
+
   public void setRequest(double request) {
     requestPos = request;
   }

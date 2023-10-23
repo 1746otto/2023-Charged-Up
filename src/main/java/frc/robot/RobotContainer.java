@@ -142,10 +142,6 @@ public class RobotContainer {
   private final JoystickButton L3 =
       new JoystickButton(m_operator, XboxController.Button.kLeftStick.value);
 
-
-  private final JoystickButton L3 =
-      new JoystickButton(m_operator, XboxController.Button.kLeftStick.value);
-
   /* Subsystems */
   public final Swerve s_Swerve = new Swerve();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
@@ -168,10 +164,12 @@ public class RobotContainer {
 
 
     // Auton Selector
-    m_chooser.setDefaultOption("Score only", autos.scoreOne());
-    m_chooser.addOption("3 piece bump", autos.threePieceBumpCatapult());
-    m_chooser.addOption("Score,community,balance ", autos.balanceAfterCharge());
-    SmartDashboard.putData("Auton Selector: ", m_chooser);
+    /*
+     * m_chooser.setDefaultOption("Score only", autos.scoreOne());
+     * m_chooser.addOption("3 piece bump", autos.threePieceBumpCatapult());
+     * m_chooser.addOption("Score,community,balance ", autos.balanceAfterCharge());
+     * SmartDashboard.putData("Auton Selector: ", m_chooser);
+     */
 
 
     // SlewRateLimiter limiterT = new SlewRateLimiter(0.1, -0.1, 0);
@@ -213,13 +211,13 @@ public class RobotContainer {
 
     // Cube intaking
     // cubes off ground
+    // TEST NOW: INTAKE POSITION MIGHT BE WRONG
     driverRightTrigger
-        .onTrue(
-            new SequentialCommandGroup(
-                new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                    new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                        ArmConstants.kArmCubeIntakePos)),
-                new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+        .onTrue(new SequentialCommandGroup(
+            new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+                new ArmRequestSelectorCommand(m_ArmPosSubystem,
+                    ArmConstants.kArmIntakeAndScorePos)),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
 
     // Cone intaking
     driverRightBumper.onTrue(new SequentialCommandGroup(
@@ -321,7 +319,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An Exammple Command will run in autonomous
     // balance, BL, B2 for practice field
-    return autos.balanceAfterCharge();
+    // return autos.balanceAfterCharge();
+    return autos.scoreOne();
   }
 
 
