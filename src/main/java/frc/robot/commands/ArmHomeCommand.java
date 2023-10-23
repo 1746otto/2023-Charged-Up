@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.ArmPositionSubsystem;
 
 public class ArmHomeCommand extends CommandBase {
@@ -24,6 +25,6 @@ public class ArmHomeCommand extends CommandBase {
   public void end(boolean interrupted) {
     armPositionSubsystem.zeroEncoder();
     armPositionSubsystem.enablePID();
-    armPositionSubsystem.armToRequest(0);
+    armPositionSubsystem.armToRequest(ArmConstants.kArmRestPos);
   }
 }
