@@ -39,11 +39,11 @@ public class Vision {
   private int iTemp = 0;
   // +X is forward, Y is left and right, +Z is up
   public static Transform3d robotToLotto =
-      new Transform3d(new Translation3d(0.183385, 0.231707, 0.676275),
+      new Transform3d(new Translation3d(0.203831, 0.22993, 0.6292135),
           new Rotation3d(Units.degreesToRadians(-9.78636928303), Units.degreesToRadians(20),
               Units.degreesToRadians(-29.8)));
   public static Transform3d robotToRotto =
-      new Transform3d(new Translation3d(0.183385, -0.231707, 0.676275),
+      new Transform3d(new Translation3d(0.203831, -0.22993, 0.6292135),
           new Rotation3d(Units.degreesToRadians(9.78636928303), Units.degreesToRadians(20),
               Units.degreesToRadians(29.8)));
 
@@ -116,7 +116,7 @@ public class Vision {
             SmartDashboard.putBoolean("lotto has target", false);
           }
 
-          if (/* rottoLastResult.hasTargets() */ false) {
+          if (rottoLastResult.hasTargets()) {
 
             SmartDashboard.putBoolean("rotto has target", true);
             for (PhotonTrackedTarget target : Vision.rottoLastResult.targets) {
@@ -208,8 +208,8 @@ public class Vision {
     double start = Timer.getFPGATimestamp();
     lottoLastResult = lottoCamera.getLatestResult();
     lottoBestTarget = lottoLastResult.getBestTarget();
-    // rottoLastResult = rottoCamera.getLatestResult();
-    // rottoBestTarget = rottoLastResult.getBestTarget();
+    rottoLastResult = rottoCamera.getLatestResult();
+    rottoBestTarget = rottoLastResult.getBestTarget();
     SmartDashboard.putNumber("Get state time", Timer.getFPGATimestamp() - start);
   }
 }
