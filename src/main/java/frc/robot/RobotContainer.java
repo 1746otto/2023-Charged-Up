@@ -212,12 +212,14 @@ public class RobotContainer {
     // Cube intaking
     // cubes off ground
     // TEST NOW: INTAKE POSITION MIGHT BE WRONG
-    driverRightTrigger
-        .onTrue(new SequentialCommandGroup(
-            new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
-                new ArmRequestSelectorCommand(m_ArmPosSubystem,
-                    ArmConstants.kArmIntakeAndScorePos)),
-            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos)));
+    driverRightTrigger.onTrue(new SequentialCommandGroup(
+        new ParallelDeadlineGroup(new ArmRollerIntakeCommand(m_ArmRollersSubsystem),
+            new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmIntakeAndScorePos),
+            new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+                ElevatorConstants.kNewCubeIntakePos)),
+        new ArmRequestSelectorCommand(m_ArmPosSubystem, ArmConstants.kArmRestPos),
+        new ElevatorRequestSelectorCommand(m_ElevatorSubsystem,
+            ElevatorConstants.kOriginPosition)));
 
     // Cone intaking
     driverRightBumper.onTrue(new SequentialCommandGroup(
