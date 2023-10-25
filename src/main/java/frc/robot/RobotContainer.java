@@ -320,7 +320,7 @@ public class RobotContainer {
     // An Exammple Command will run in autonomous
     // balance, BL, B2 for practice field
     // return autos.balanceAfterCharge();
-    return autos.scoreOne();
+    return autos.FinalBruh();
   }
 
 
