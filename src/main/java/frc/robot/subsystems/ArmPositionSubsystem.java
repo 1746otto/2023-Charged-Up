@@ -86,16 +86,18 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armConfig.Slot0.kP = 0.0;
     armConfig.Slot0.kP = 0.0;
     armMotor.getConfigurator().apply(armConfig);
+    // armMotor.setInverted(true);
   }
 
   public void enablePID() {
     armConfig.Slot0.kP = ArmConstants.kArmP;
     armConfig.Slot0.kD = ArmConstants.kArmD;
     armMotor.getConfigurator().apply(armConfig);
+    armMotor.setInverted(true);
   }
 
   public void setHomeSpeed() {
-    armMotor.set(0.2);
+    armMotor.set(-0.2);
   }
 
   public boolean armAtReq(double reqPosition) {

@@ -23,6 +23,7 @@ public class ArmHomeCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    armPositionSubsystem.armStop();
     armPositionSubsystem.zeroEncoder();
     armPositionSubsystem.enablePID();
     armPositionSubsystem.armToRequest(ArmConstants.kArmRestPos);

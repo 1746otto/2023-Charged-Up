@@ -5,7 +5,7 @@ public final class ArmConstants {
   // TODO: chnage positions to match cancoder.
   public static final double CANToIntConvert = -3.68847227762;
   public static final double kArmRestPos = -.5;
-  public static final double kArmIntakeAndScorePos = -7.75; // CANCoder: 0.9065 human player pos:
+  public static final double kArmIntakeAndScorePos = -7.8; // CANCoder: 0.9065 human player pos:
   // 0.5634
   // TODO: change cube intake pos
   // TODO: change positions constants to match cancoder.
