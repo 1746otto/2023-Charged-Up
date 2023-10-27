@@ -39,12 +39,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     pidController.setP(kP, 0);
     // pidController.setD(kD, 0);
     // pidController.setFF(.005, 0);
-    pidController.setOutputRange(-0.7, 0.7);
+    pidController.setOutputRange(-0.7, .7);
     elevatorMotor.setIdleMode(IdleMode.kBrake);
     elevatorMotor.getEncoder().setPosition(0);
     reqPosition = ElevatorConstants.kOriginPosition;
     // pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
     // pidController.setReference(0, ControlType.kSmartMotion, 0);
+    SmartDashboard.putNumber("Requested Pos: ", reqPosition);
+  }
+
+  public double getPosition() {
+    return currState;
   }
 
   public void elevatorRunUp() {
@@ -101,9 +106,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     currState = elevatorMotor.getEncoder().getPosition();
-    beamBreakLastState = ((Math.floor(beamBreak.getVoltage()) > 0) && (elevatorMotor.get() < 0));
+
+    beamBreakLastState = ((Math.floor(beamBreak.getVoltage()) > 0)
+        && (reqPosition == ElevatorConstants.kOriginPosition));
     runToRequest(reqPosition);
-    SmartDashboard.putNumber("Elevator: ", currState);
+    // SmartDashboard.putNumber("Elevator: ", currState);
+    // if (reqPosition != SmartDashboard.getNumber("Requested Pos: ", reqPosition)) {
+    // reqPosition = SmartDashboard.getNumber("Requested Pos: ", currState);
+    // }
     SmartDashboard.putBoolean("Beambreak: ", beamBreakBroken());
     SmartDashboard.putBoolean("LimitSwitch: ", limitSwitchActivated());
 

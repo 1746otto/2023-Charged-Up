@@ -10,6 +10,7 @@ import java.util.function.DoubleSupplier;
 // import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import frc.lib.math.Conversions;
 import frc.robot.constants.ArmConstants;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DutyCycle;
 // import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
 // import com.ctre.phoenix.sensors.CANCoder;
@@ -69,6 +70,8 @@ public class ArmPositionSubsystem extends SubsystemBase {
     armEncoder.getPosition().waitForUpdate(0.1);
     requestPos = ArmConstants.kArmRestPos;
     lastPos = armEncoder.getAbsolutePosition().getValue();
+    SmartDashboard.putNumber("Arm Requested Pos: ", currPos);
+
   }
 
   public void armToRequest(double requestedPosition) {
@@ -108,7 +111,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
   }
 
   public void zeroEncoder() {
-    armEncoder.setPosition(ArmConstants.kArmRestPos);
+    armEncoder.setPosition(-.05);
   }
 
   public boolean armReqisCorrect(double req) {
@@ -139,6 +142,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
     System.out.println("Arm CANCoder: " + (armEncoder.getAbsolutePosition().toString()));
     SmartDashboard.putNumber("Arm Talon Position: ", armMotor.getPosition().getValue());
     System.out.println("Arm Talon Position: " + (armMotor.getPosition().toString()));
+
+    // if (requestPos != SmartDashboard.getNumber("Arm Requested Pos: ", requestPos)) {
+    // requestPos = SmartDashboard.getNumber("Arm Requested Pos: ", requestPos);
+    // }
 
     currPos = armEncoder.getAbsolutePosition().getValue();
     // if (Math.abs(currPos - lastPos) > 0.1) {
