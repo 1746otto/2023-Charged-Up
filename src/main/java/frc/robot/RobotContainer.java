@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -151,8 +152,8 @@ public class RobotContainer {
   private final ConeDunkerSubsytem m_ConeDunkerSubsytem = new ConeDunkerSubsytem();
   private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
   private final CatapultSubsystem m_CatapultSubsystem = new CatapultSubsystem();
-
-
+  private final Vision vision =
+      new Vision(s_Swerve.getYaw()::getDegrees, s_Swerve::addVisionMeasurement);
 
   /* Commands */
   private final ScoringAlignCommand m_scoringAlignCommand = new ScoringAlignCommand(s_Swerve, true);
@@ -161,7 +162,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
+    Vision.getLastResult();
 
     // Auton Selector
     /*
