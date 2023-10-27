@@ -143,7 +143,10 @@ public class ArmPositionSubsystem extends SubsystemBase {
     currPos = armEncoder.getAbsolutePosition().getValue();
     // if (Math.abs(currPos - lastPos) > 0.1) {
     // double relPos = currPos * ArmConstants.CANToIntConvert;
-    // requestPos = requestPos + (relPos - (lastPos * ArmConstants.CANToIntConvert));
+    // // requestPos = requestPos - (relPos - (lastPos * ArmConstants.CANToIntConvert));
+    // requestPos = requestPos + ((currPos * ArmConstants.kCANTickToFalConversion) // trying old
+    // constant
+    // - (lastPos * ArmConstants.kCANTickToFalConversion));
     // }
     lastPos = currPos;
 
