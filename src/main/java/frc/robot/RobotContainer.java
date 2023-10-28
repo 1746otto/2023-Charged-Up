@@ -4,6 +4,7 @@ import frc.robot.Autos.BalanceAuton;
 import frc.robot.commands.ArmHomeCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BalancingCommand;
+import frc.robot.commands.BalancingCommand3;
 import frc.robot.commands.DriveBackTo5DegreesCommand;
 import frc.robot.commands.DriveForwardsCommand;
 import frc.robot.commands.DriveOverChargeStationCommand;

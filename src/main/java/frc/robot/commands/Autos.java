@@ -96,12 +96,15 @@ public final class Autos {
     return new TheDunkCommand(DunkerSubsytem);
   }
 
-  /*
-   * public Command balanceAfterCharge() { Command autonCommand = new SequentialCommandGroup(new
-   * TheDunkCommand(DunkerSubsytem), DriveOverChargeStationCommand(), new WaitCommand(0.1), new
-   * DriveTo5DegreesCommand(swerve), new BalancingCommand2(swerve)) .finallyDo((boolean interrupted)
-   * -> swerve.gyro.setYaw(swerve.gyro.getYaw() + 180)); return autonCommand; }
-   */
+
+  public Command balanceAfterCharge() {
+    Command autonCommand = new SequentialCommandGroup(new TheDunkCommand(DunkerSubsytem),
+        new DriveOverChargeStationCommand(swerve), new WaitCommand(0.1),
+        new DriveTo5DegreesCommand(swerve), new BalancingCommand2(swerve))
+            .finallyDo((boolean interrupted) -> swerve.gyro.setYaw(swerve.gyro.getYaw() + 180));
+    return autonCommand;
+  }
+
 
 
   public Command moveBalance() {
@@ -731,22 +734,22 @@ public final class Autos {
 
 
     // Make the auton command
-    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
-        // new TheDunkCommand(DunkerSubsytem),
-        // goToStartCommand,
-        new SequentialCommandGroup(
-            new FollowPathWithEvents(
-                controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-            new ShootCommand(armPosSubsystem, armRollerSubsystem),
-            new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
-                eventMap)).raceWith(
+    SequentialCommandGroup autonCommmand =
+        new SequentialCommandGroup(new TheDunkCommand(DunkerSubsytem),
+            // goToStartCommand,
+            new SequentialCommandGroup(
+                new FollowPathWithEvents(
+                    controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
+                new ShootCommand(armPosSubsystem, armRollerSubsystem),
+                new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
+                    eventMap)).raceWith(
 
-                    new AutonGyroReset((DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180,
-                        swerve.getYaw()::getDegrees, swerve.gyro::setYaw)),
-        new BalancingCommand2(swerve));
+                        new AutonGyroReset((DriverStation.getAlliance() == Alliance.Red)
+                            ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                            : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                                + 180,
+                            swerve.getYaw()::getDegrees, swerve.gyro::setYaw)),
+            new BalancingCommand3(swerve));
 
 
 

@@ -195,9 +195,12 @@
       }
     }
   ],
+  "maxVelocity": 6.0,
+  "maxAcceleration": 3.0,
+  "isReversed": null,
   "markers": [
     {
-      "position": 0.7,
+      "position": 0.8,
       "names": [
         "intake out"
       ]
@@ -215,7 +218,7 @@
       ]
     },
     {
-      "position": 5.05,
+      "position": 5.1,
       "names": [
         "intake out"
       ]

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -33,8 +34,8 @@ public class Vision {
   private AprilTagFieldLayout tags;
   private DoubleSupplier gyroVal;
   private BiConsumer<Pose2d, Double> addVisionMeasurement;
-  private double tolerance = 3000;
-  private double maxDist = 1000;
+  private double tolerance = Units.degreesToRadians(5);
+  private double maxDist = 2;
   private Thread somethingThread;
   private int iTemp = 0;
   // +X is forward, Y is left and right, +Z is up
@@ -109,8 +110,8 @@ public class Vision {
               // thread. So we make sure not to pass in any values that are older than WPILib's pose
               // estimator can handle.
               try {
-              addVisionMeasurement.accept(lottoEstimatedPose.toPose2d(),
-                  lottoLastResult.getTimestampSeconds());
+                addVisionMeasurement.accept(lottoEstimatedPose.toPose2d(),
+                    lottoLastResult.getTimestampSeconds());
               } catch (Exception e) {
                 int x = 2;
               }
@@ -164,8 +165,8 @@ public class Vision {
             } else {
               // Same issue as with this as on lotto.
               try {
-              addVisionMeasurement.accept(rottoEstimatedPose.toPose2d(),
-                  rottoLastResult.getTimestampSeconds());
+                addVisionMeasurement.accept(rottoEstimatedPose.toPose2d(),
+                    rottoLastResult.getTimestampSeconds());
               } catch (Exception e) {
                 int x = 1;
               }
@@ -218,6 +219,7 @@ public class Vision {
     });
     somethingThread.setName("vision");
     somethingThread.start();
+    File file = new File("positionLogs.txt");
   }
 
   public static void getLastResult() {
