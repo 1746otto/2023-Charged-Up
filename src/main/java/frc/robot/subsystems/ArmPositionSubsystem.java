@@ -147,7 +147,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // requestPos = SmartDashboard.getNumber("Arm Requested Pos: ", requestPos);
     // }
 
-    currPos = armEncoder.getAbsolutePosition().getValue();
+    // currPos = armEncoder.getAbsolutePosition().getValue();
     // if (Math.abs(currPos - lastPos) > 0.1) {
     // double relPos = currPos * ArmConstants.CANToIntConvert;
     // // requestPos = requestPos - (relPos - (lastPos * ArmConstants.CANToIntConvert));

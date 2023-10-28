@@ -18,6 +18,7 @@ public class ShootCommand extends SequentialCommandGroup {
             new ArmRequestSelectorCommand(armPositionSubsystem, ArmConstants.kArmBowlPos),
             new ArmRollerRunInCommand(armRollersSubsystem)).withTimeout(0.5),
         new WaitCommand(0.25), new ArmRollerShootCommand(armRollersSubsystem).withTimeout(.5),
-        new ArmRequestSelectorCommand(armPositionSubsystem, ArmConstants.kArmRestPos));
+        new ArmRequestSelectorCommand(armPositionSubsystem, ArmConstants.kArmRestPos)
+            .withTimeout(0.75));
   }
 }

@@ -324,7 +324,9 @@ public class RobotContainer {
     // An Exammple Command will run in autonomous
     // balance, BL, B2 for practice field
     // return autos.balanceAfterCharge();
-    return autos.FinalBruh();
+    return new ParallelCommandGroup(new TheDunkCommand(m_ConeDunkerSubsytem),
+        new WaitCommand(.1).andThen(autos.FinalBruh()));
+    // return autos.balanceAfterCharge();
   }
 
 

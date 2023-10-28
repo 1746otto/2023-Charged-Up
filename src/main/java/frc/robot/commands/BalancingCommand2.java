@@ -5,6 +5,7 @@ import frc.robot.subsystems.Swerve;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -73,6 +74,6 @@ public class BalancingCommand2 extends CommandBase {
     System.out.println(velocities[0]);
     System.out.println(Math.floor(s_Swerve.gyro.getRoll() / 2.5) == 0.0);
     System.out.println(Math.floor(velocities[0]) == 0.0);
-    return (Math.floor(s_Swerve.gyro.getRoll() / 7.5) == 0.0);
+    return (Math.floor(s_Swerve.gyro.getRoll() / 7.5) == 0.0) || Timer.getMatchTime() <= 0;
   }
 }
