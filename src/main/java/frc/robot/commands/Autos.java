@@ -13,6 +13,7 @@ import frc.robot.subsystems.ArmRollersSubsystem;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -668,8 +669,15 @@ public final class Autos {
     // } else {
     // swerve.gyro.setYaw(0);
     // }
+    PathPlannerState allianceState = PathPlannerTrajectory
+        .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
+
+    // swerve.gyro.setYaw(allianceState.holonomicRotation.getDegrees());
+
     swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        pathGroup.get(0).getInitialHolonomicPose());
+        new Pose2d(allianceState.poseMeters.getTranslation(), allianceState.holonomicRotation));
+
+
 
     SmartDashboard.putString("Initial Pose", pathGroup.get(0).getInitialPose().toString());
 
@@ -718,17 +726,27 @@ public final class Autos {
 
     // Now we create an event map that will hold the name of the marker and the corresponding event.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intake out", new IntakeCubeAutonCommand(armPosSubsystem, armRollerSubsystem));
+    eventMap.put("intake out",
+        new IntakeCubeAutonCommand(elevatorSubsystem, armPosSubsystem, armRollerSubsystem));
 
 
     // Make the auton command
     SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
-        new TheDunkCommand(DunkerSubsytem),
+        // new TheDunkCommand(DunkerSubsytem),
         // goToStartCommand,
-        new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-        new ShootCommand(armPosSubsystem, armRollerSubsystem),
-        new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(), eventMap),
-        new ShootCommand(armPosSubsystem, armRollerSubsystem));
+        new SequentialCommandGroup(
+            new FollowPathWithEvents(
+                controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
+            new ShootCommand(armPosSubsystem, armRollerSubsystem),
+            new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
+                eventMap)).raceWith(
+
+                    new AutonGyroReset((DriverStation.getAlliance() == Alliance.Red)
+                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                            + 180,
+                        swerve.getYaw()::getDegrees, swerve.gyro::setYaw)),
+        new BalancingCommand2(swerve));
 
 
 

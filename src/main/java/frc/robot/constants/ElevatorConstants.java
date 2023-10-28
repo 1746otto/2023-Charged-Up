@@ -19,4 +19,6 @@ public final class ElevatorConstants {
   // World champs constants
   public static final double kConeElevatorIntakePos = 3.2;
   public static final double kAutonHighCubePosition = 30;
+  public static final double kCubeElevatorIntakePos = 4;
+
 }
