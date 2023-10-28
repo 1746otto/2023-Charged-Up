@@ -39,11 +39,11 @@ public class Vision {
   private int iTemp = 0;
   // +X is forward, Y is left and right, +Z is up
   public static Transform3d robotToLotto =
-      new Transform3d(new Translation3d(0.203831, 0.22993, 0.6292135),
+      new Transform3d(new Translation3d(0.203831, -0.22993, 0.6292135),
           new Rotation3d(Units.degreesToRadians(-9.78636928303), Units.degreesToRadians(20),
               Units.degreesToRadians(-29.8)));
   public static Transform3d robotToRotto =
-      new Transform3d(new Translation3d(0.203831, -0.22993, 0.6292135),
+      new Transform3d(new Translation3d(0.203831, 0.22993, 0.6292135),
           new Rotation3d(Units.degreesToRadians(9.78636928303), Units.degreesToRadians(20),
               Units.degreesToRadians(29.8)));
 
@@ -108,8 +108,12 @@ public class Vision {
               // is an issue where it doesn't end up throwing errors. Instead it just freezes the
               // thread. So we make sure not to pass in any values that are older than WPILib's pose
               // estimator can handle.
+              try {
               addVisionMeasurement.accept(lottoEstimatedPose.toPose2d(),
                   lottoLastResult.getTimestampSeconds());
+              } catch (Exception e) {
+                int x = 2;
+              }
             }
             SmartDashboard.putString("lotto pose", lottoEstimatedPose.getTranslation().toString()
                 + ", " + Double.toString(lottoEstimatedPose.getRotation().getX() / Math.PI * 180)
@@ -159,8 +163,12 @@ public class Vision {
               SmartDashboard.putBoolean("Rotto 1.5+ latency issuen", true);
             } else {
               // Same issue as with this as on lotto.
+              try {
               addVisionMeasurement.accept(rottoEstimatedPose.toPose2d(),
                   rottoLastResult.getTimestampSeconds());
+              } catch (Exception e) {
+                int x = 1;
+              }
             }
             SmartDashboard.putString("rotto pose", rottoEstimatedPose.getTranslation().toString()
                 + ", " + Double.toString(rottoEstimatedPose.getRotation().getX() / Math.PI * 180)

@@ -139,9 +139,9 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
     SmartDashboard.putNumber("Arm CANCoder: ", (armEncoder.getAbsolutePosition().getValue()));
-    System.out.println("Arm CANCoder: " + (armEncoder.getAbsolutePosition().toString()));
+    // System.out.println("Arm CANCoder: " + (armEncoder.getAbsolutePosition().toString()));
     SmartDashboard.putNumber("Arm Talon Position: ", armMotor.getPosition().getValue());
-    System.out.println("Arm Talon Position: " + (armMotor.getPosition().toString()));
+    // System.out.println("Arm Talon Position: " + (armMotor.getPosition().toString()));
 
     // if (requestPos != SmartDashboard.getNumber("Arm Requested Pos: ", requestPos)) {
     // requestPos = SmartDashboard.getNumber("Arm Requested Pos: ", requestPos);
