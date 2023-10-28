@@ -744,21 +744,30 @@ public final class Autos {
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
 
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Bruh",
+    List<PathPlannerTrajectory> pathGroup;
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+    pathGroup = PathPlanner.loadPathGroup("Bruh",
         new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    } else {
+      
+    pathGroup = PathPlanner.loadPathGroup("BruhRed",
+        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    }
     // if (DriverStation.getAlliance() == Alliance.Blue) {
     // swerve.gyro.setYaw(180);
     // } else {
     // swerve.gyro.setYaw(0);
     // }
-    PathPlannerState allianceState = PathPlannerTrajectory
-        .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
+    // PathPlannerState allianceState = PathPlannerTrajectory
+    // .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
 
     // swerve.gyro.setYaw(allianceState.holonomicRotation.getDegrees());
 
     swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        new Pose2d(allianceState.poseMeters.getTranslation(), allianceState.holonomicRotation));
+        new Pose2d(pathGroup.get(0).getInitialState().poseMeters.getTranslation(),
+            pathGroup.get(0).getInitialState().holonomicRotation));
 
 
 
@@ -803,7 +812,7 @@ public final class Autos {
       controllerGroup.add(
           new PPSwerveControllerCommand(traj, swerve::getPose, SwerveConstants.swerveKinematics,
               new PIDController(7.5, 0, 0), new PIDController(7.5, 0, 0),
-              new PIDController(4.5, 0, 0), swerve::setModuleStates, true, swerve));
+              new PIDController(4.5, 0, 0), swerve::setModuleStates, false, swerve));
     }
 
 
