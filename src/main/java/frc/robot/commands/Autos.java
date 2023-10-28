@@ -99,8 +99,8 @@ public final class Autos {
 
   public Command balanceAfterCharge() {
     Command autonCommand = new SequentialCommandGroup(new TheDunkCommand(DunkerSubsytem),
-        new DriveOverChargeStationCommand(swerve), new WaitCommand(0.1),
-        new DriveTo5DegreesCommand(swerve), new BalancingCommand2(swerve))
+        overchargeStationBalanceCommand(), new WaitCommand(0.1), new DriveTo5DegreesCommand(swerve),
+        new BalancingCommand2(swerve))
             .finallyDo((boolean interrupted) -> swerve.gyro.setYaw(swerve.gyro.getYaw() + 180));
     return autonCommand;
   }
