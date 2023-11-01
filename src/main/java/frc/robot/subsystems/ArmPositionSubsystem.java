@@ -107,6 +107,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // return (armEncoder.getPosition() == reqPosition);
     // return ((armEncoder.getAbsolutePosition().getValue()) <= (reqPosition++)
     // && ((armEncoder.getAbsolutePosition().getValue()) >= (reqPosition--)));
+    // This needs to have a tolerance. Probably why our commands kept failing at worlds. >:(
     return armEncoder.getAbsolutePosition().getValue() == reqPosition;
   }
 

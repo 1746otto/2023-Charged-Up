@@ -19,9 +19,10 @@ public class IntakeCubeAutonCommand extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new ElevatorRequestSelectorCommand(elevatorSub,
                 ElevatorConstants.kCubeElevatorIntakePos),
-            new ArmRequestSelectorCommand(armPosSub, ArmConstants.kArmIntakeAndScorePos)),
-        new WaitCommand(0.25), new ArmRollerIntakeCommand(armRollerSub).withTimeout(1.25),
-        new ArmRequestSelectorCommand(armPosSub, ArmConstants.kArmRestPos));
+            new ArmRequestSelectorCommand(armPosSub, ArmConstants.kArmIntakeAndScorePos))
+                .withTimeout(.25),
+        new ArmRollerIntakeCommand(armRollerSub).withTimeout(1.25),
+        new ArmRequestSelectorCommand(armPosSub, ArmConstants.kArmRestPos).withTimeout(.5));
 
   }
 }

@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.basic.ArmRequestSelectorCommand;
 import frc.robot.commands.basic.ArmRollerOuttakeCommand;
+import frc.robot.commands.basic.ArmRollerShootCommand;
 import frc.robot.commands.basic.TheDunkCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
@@ -53,7 +54,7 @@ public final class Autos {
   ElevatorSubsystem elevatorSubsystem;
   ArmPositionSubsystem armPosSubsystem;
   ArmRollersSubsystem armRollerSubsystem;
-  ConeDunkerSubsytem DunkerSubsytem;
+  ConeDunkerSubsytem DunkerSubsystem;
 
   private boolean hasZeroed = false;
 
@@ -67,7 +68,7 @@ public final class Autos {
     this.visionSubsystem = visionSubsystem;
     this.armPosSubsystem = armPosSubsystem;
     this.armRollerSubsystem = armRollerSubsystem;
-    this.DunkerSubsytem = DunkerSystem;
+    this.DunkerSubsystem = DunkerSystem;
 
     resetGyroCommand = new InstantCommand(() -> {
       if (DriverStation.getAlliance() == Alliance.Red && !hasZeroed) {
@@ -93,12 +94,12 @@ public final class Autos {
   }
 
   public Command Dunk() {
-    return new TheDunkCommand(DunkerSubsytem);
+    return new TheDunkCommand(DunkerSubsystem);
   }
 
 
   public Command balanceAfterCharge() {
-    Command autonCommand = new SequentialCommandGroup(new TheDunkCommand(DunkerSubsytem),
+    Command autonCommand = new SequentialCommandGroup(new TheDunkCommand(DunkerSubsystem),
         overchargeStationBalanceCommand(), new WaitCommand(1.7), new DriveTo5DegreesCommand(swerve),
         new BalancingCommand2(swerve))
             .finallyDo((boolean interrupted) -> swerve.gyro.setYaw(swerve.gyro.getYaw() + 180));
@@ -746,14 +747,14 @@ public final class Autos {
 
     List<PathPlannerTrajectory> pathGroup;
     if (DriverStation.getAlliance() == Alliance.Blue) {
-    pathGroup = PathPlanner.loadPathGroup("Bruh",
-        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+      pathGroup = PathPlanner.loadPathGroup("Bruh",
+          new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+              AutoConstants.kMaxAccelerationMetersPerSecondSquared));
     } else {
-      
-    pathGroup = PathPlanner.loadPathGroup("BruhRed",
-        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+
+      pathGroup = PathPlanner.loadPathGroup("BruhRed",
+          new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+              AutoConstants.kMaxAccelerationMetersPerSecondSquared));
     }
     // if (DriverStation.getAlliance() == Alliance.Blue) {
     // swerve.gyro.setYaw(180);
@@ -825,22 +826,24 @@ public final class Autos {
 
     // Make the auton command
 
-    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
-        // goToStartCommand,
-        new SequentialCommandGroup(
-            new FollowPathWithEvents(
-                controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-            new ShootCommand(armPosSubsystem, armRollerSubsystem),
-            new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
-                eventMap).withTimeout(5.875)).raceWith(
+    Command autonCommmand = new ParallelCommandGroup(new TheDunkCommand(DunkerSubsystem),
+        new WaitCommand(.1).andThen(new SequentialCommandGroup(
+            // goToStartCommand,
+            new SequentialCommandGroup(
+                new FollowPathWithEvents(controllerGroup.get(0), pathGroup.get(0).getMarkers(),
+                    eventMap),
+                new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.125),
+                new InstantCommand(() -> armPosSubsystem.armToRequest(ArmConstants.kArmRestPos)),
+                new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
+                    eventMap).withTimeout(5.875)).raceWith(
 
-                    new AutonGyroReset((DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180,
-                        swerve.getYaw()::getDegrees, swerve.gyro::setYaw)),
-        // Path isn't ending, look into this.
-        new BalancingCommand2(swerve), new ShootCommand(armPosSubsystem, armRollerSubsystem));
+                        new AutonGyroReset((DriverStation.getAlliance() == Alliance.Red)
+                            ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                            : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
+                                + 180,
+                            swerve.getYaw()::getDegrees, swerve.gyro::setYaw)),
+            // Path isn't ending, look into this.
+            new BalancingCommand2(swerve), new ShootCommand(armPosSubsystem, armRollerSubsystem))));
 
 
 
@@ -854,21 +857,27 @@ public final class Autos {
     // We store each path in the deploy/Path Planner/ folder.
     // You can have multiple constraints for each path, but for our purposes it is not required.
 
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Bruh2.5",
-        new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
-            AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    List<PathPlannerTrajectory> pathGroup;
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      pathGroup = PathPlanner.loadPathGroup("Bruh2.5",
+          new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+              AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+          System.out.println("blue");
+    } else {
+
+      pathGroup = PathPlanner.loadPathGroup("Bruh2.5Red",
+          new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond,
+              AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    }
     // if (DriverStation.getAlliance() == Alliance.Blue) {
     // swerve.gyro.setYaw(180);
     // } else {
     // swerve.gyro.setYaw(0);
-    // }
-    PathPlannerState allianceState = PathPlannerTrajectory
-        .transformStateForAlliance(pathGroup.get(0).getInitialState(), DriverStation.getAlliance());
-
+    // }  
     // swerve.gyro.setYaw(allianceState.holonomicRotation.getDegrees());
 
     swerve.poseEstimator.resetPosition(swerve.gyro.getRotation2d(), swerve.getModulePositions(),
-        new Pose2d(allianceState.poseMeters.getTranslation(), allianceState.holonomicRotation));
+        new Pose2d(pathGroup.get(0).getInitialState().poseMeters.getTranslation(), pathGroup.get(0).getInitialState().holonomicRotation));
 
 
 
@@ -921,23 +930,28 @@ public final class Autos {
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("intake out",
         new IntakeCubeAutonCommand(elevatorSubsystem, armPosSubsystem, armRollerSubsystem));
+    eventMap.put("shoot", new ShootCommand(armPosSubsystem, armRollerSubsystem));
 
 
     // Make the auton command
-    SequentialCommandGroup autonCommmand = new SequentialCommandGroup(
-        // goToStartCommand,
-        new SequentialCommandGroup(
-            new FollowPathWithEvents(
-                controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
-            new ShootCommand(armPosSubsystem, armRollerSubsystem),
-            new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
-                eventMap)).raceWith(
+    Command autonCommmand = new ParallelCommandGroup(new TheDunkCommand(DunkerSubsystem),
+        new WaitCommand(.1).andThen(new SequentialCommandGroup(
+            // goToStartCommand,
+            new SequentialCommandGroup(
+                new FollowPathWithEvents(
+                    controllerGroup.get(0), pathGroup.get(0).getMarkers(), eventMap),
+                new ArmRollerShootCommand(armRollerSubsystem).withTimeout(.125),
+                new InstantCommand(() -> armPosSubsystem.armToRequest(ArmConstants.kArmRestPos)),
+                new FollowPathWithEvents(controllerGroup.get(1), pathGroup.get(1).getMarkers(),
+                    eventMap)).raceWith(
 
-                    new AutonGyroReset((DriverStation.getAlliance() == Alliance.Red)
-                        ? pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                        : pathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees()
-                            + 180,
-                        swerve.getYaw()::getDegrees, swerve.gyro::setYaw)));
+                        new AutonGyroReset(
+                            (DriverStation.getAlliance() == Alliance.Red)
+                                ? pathGroup.get(0).getInitialHolonomicPose().getRotation()
+                                    .getDegrees()
+                                : pathGroup.get(0).getInitialHolonomicPose().getRotation()
+                                    .getDegrees() + 180,
+                            swerve.getYaw()::getDegrees, swerve.gyro::setYaw)))));
 
 
 
