@@ -41,18 +41,18 @@ public class ArmPositionSubsystem extends SubsystemBase {
   private TalonFXConfiguration armConfig;
   // private TalonFX armMotor;
   // CANCoder
-  private CANcoderConfiguration encoderConfig;
+  // private CANcoderConfiguration encoderConfig;
   // private CANcoder armEncoder;
   private double requestPos;
 
-  private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID, "rio");
+  // private CANcoder armEncoder = new CANcoder(ArmConstants.kCANCoderID, "rio");
   private TalonFX armMotor = new TalonFX(ArmConstants.kArmPosMotorID, "rio");
 
   private double lastPos;
   private double currPos;
 
   public ArmPositionSubsystem() {
-    encoderConfig = new CANcoderConfiguration();
+    // encoderConfig = new CANcoderConfiguration();
     armConfig = new TalonFXConfiguration();
     armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     armConfig.CurrentLimits.SupplyCurrentLimit = 130;
@@ -63,13 +63,13 @@ public class ArmPositionSubsystem extends SubsystemBase {
 
     // encoderConfig.MagnetSensor.AbsoluteSensorRange =
     // AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    armEncoder.getConfigurator().apply(encoderConfig);
+    // armEncoder.getConfigurator().apply(encoderConfig);
     armMotor.getConfigurator().apply(armConfig);
     armMotor.setInverted(true);
-    armEncoder.getPosition().setUpdateFrequency(100);
-    armEncoder.getPosition().waitForUpdate(0.1);
+    // armEncoder.getPosition().setUpdateFrequency(100);
+    // armEncoder.getPosition().waitForUpdate(0.1);
     requestPos = ArmConstants.kArmRestPos;
-    lastPos = armEncoder.getAbsolutePosition().getValue();
+    // lastPos = armEncoder.getAbsolutePosition().getValue();
     SmartDashboard.putNumber("Arm Requested Pos: ", currPos);
 
   }
@@ -108,11 +108,11 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // return ((armEncoder.getAbsolutePosition().getValue()) <= (reqPosition++)
     // && ((armEncoder.getAbsolutePosition().getValue()) >= (reqPosition--)));
     // This needs to have a tolerance. Probably why our commands kept failing at worlds. >:(
-    return armEncoder.getAbsolutePosition().getValue() == reqPosition;
+    return false;// armEncoder.getAbsolutePosition().getValue() == reqPosition;
   }
 
   public void zeroEncoder() {
-    armEncoder.setPosition(-.05);
+    // armEncoder.setPosition(-.05);
   }
 
   public boolean armReqisCorrect(double req) {
@@ -139,7 +139,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // armMotor.setSelectedSensorPosition(armEncoder.getAbsolutePosition()
     // * (ArmConstants.kArmGearRatio * ArmConstants.kCANTickToFalConversion)); // cancoder: 4096
     // // Falcon: 20
-    SmartDashboard.putNumber("Arm CANCoder: ", (armEncoder.getAbsolutePosition().getValue()));
+    // SmartDashboard.putNumber("Arm CANCoder: ", (armEncoder.getAbsolutePosition().getValue()));
     // System.out.println("Arm CANCoder: " + (armEncoder.getAbsolutePosition().toString()));
     SmartDashboard.putNumber("Arm Talon Position: ", armMotor.getPosition().getValue());
     // System.out.println("Arm Talon Position: " + (armMotor.getPosition().toString()));
@@ -156,7 +156,7 @@ public class ArmPositionSubsystem extends SubsystemBase {
     // constant
     // - (lastPos * ArmConstants.kCANTickToFalConversion));
     // }
-    lastPos = currPos;
+    // lastPos = currPos;
 
     armToRequest(requestPos);
   }
