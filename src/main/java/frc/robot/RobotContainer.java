@@ -182,24 +182,25 @@ public class RobotContainer {
   }
 
   private void configureDefaultCommands() {
-    s_Swerve.setDefaultCommand(
-        /*
-         * new TeleopSwerve( s_Swerve, () -> -driver.getRawAxis((int)
-         * limiterT.calculate(translationAxis)), () ->
-         * -driver.getRawAxis((int)limiterT.calculate(strafeAxis)), () ->
-         * -driver.getRawAxis(rotationAxis), () -> false //robotCentric.getAsBoolean()
-         * 
-         * )
-         */
-        new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
-            () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
-            DriverStation::getAlliance));
+    // s_Swerve.setDefaultCommand(
+    /*
+     * new TeleopSwerve( s_Swerve, () -> -driver.getRawAxis((int)
+     * limiterT.calculate(translationAxis)), () ->
+     * -driver.getRawAxis((int)limiterT.calculate(strafeAxis)), () ->
+     * -driver.getRawAxis(rotationAxis), () -> false //robotCentric.getAsBoolean()
+     * 
+     * )
+     */
+    // new TeleopSwerve(s_Swerve, () -> -m_driver.getRawAxis(translationAxis),
+    // () -> -m_driver.getRawAxis(strafeAxis), () -> -m_driver.getRawAxis(rotationAxis),
+    // DriverStation::getAlliance));
 
     // m_VisionSubsystem.setDefaultCommand(
     // new UpdateOdometryCommand(m_VisionSubsystem, s_Swerve.getYaw()::getDegrees,
     // s_Swerve::getPose, s_Swerve.poseEstimator::addVisionMeasurement));
 
   }
+
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
